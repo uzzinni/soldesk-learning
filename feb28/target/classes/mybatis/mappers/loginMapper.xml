@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="login">
+	
+	<select id="login" resultType="loginDTO" parameterType="loginDTO">
+		SELECT count(*) as count, user_name
+		FROM user
+		WHERE user_id=#{user_id } AND user_pw=#{user_pw }
+	</select>	
+		
+</mapper>

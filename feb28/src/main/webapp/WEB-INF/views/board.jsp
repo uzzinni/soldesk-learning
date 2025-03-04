@@ -13,6 +13,18 @@
 	<%@ include file="menu.jsp" %>
 	<h1>board</h1>
 	서버에서 준 이름 : ${name1 }
+	
+	<c:choose>
+		<c:when test="${sessionScope.user_name eq null }">
+			<h2>로그인 해주세요.</h2>
+		</c:when>
+		<c:otherwise>
+			<h2>${sessionScope.user_name }님 반값습니다.</h2>	
+		</c:otherwise>
+	</c:choose>
+	
+	
+	
 	<!-- EL -->
 	<hr>
 	<!-- JSTL로 찍겠습니다 -->
