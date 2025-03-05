@@ -29,4 +29,13 @@ public class BoardService {
 		map.put("user_no", 1);
 		boardDAO.write(map);
 	}
+
+	public void write1(BoardDTO dto) {
+		boardDAO.write1(dto);
+	}
+
+	public BoardDTO detail(int board_no) {
+		//필요 로직이 있다면 적어주세요.
+		return boardDAO.detail(board_no);
+	}
 }

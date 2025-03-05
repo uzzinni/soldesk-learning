@@ -34,6 +34,14 @@ public class BoardDAO {
 	public void write(Map<String, Object> map) {
 		sqlSession.insert("board.write2", map);
 	}
+
+	public void write1(BoardDTO dto) {
+		sqlSession.insert("board.write1", dto);
+	}
+
+	public BoardDTO detail(int board_no) {
+		return sqlSession.selectOne("board.detail", board_no);
+	}
 		
 	
 }

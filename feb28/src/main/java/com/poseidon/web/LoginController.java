@@ -79,3 +79,25 @@ public class LoginController {
 	
 	
 }
+// 2025-03-05 웹페이지 화면 구축
+// ECMA script = java script       .js
+
+// node.js ---- TypeScript
+// 추론타입 var name = 10;
+// 자바스크립트 확장 .jsx
+
+// 바닐라 스크립트
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -20,5 +20,17 @@
 		INSERT INTO board (board_title, board_content, user_no)
 		VALUES( #{board_title}, #{board_content}, #{user_no} )
 	</insert>
+	
+	<insert id="write1" parameterType="boardDTO">
+		INSERT INTO board (board_title, board_content, user_no)
+		VALUES( #{board_title}, #{board_content}, (SELECT user_no FROM user WHERE user_id=#{user_id}) ) 
+	</insert>
+	
+	<select id="detail" resultType="boardDTO" parameterType="Integer">
+		SELECT *
+		FROM board
+		WHERE board_no=#{board_no}	
+	</select>
+	
 		
 </mapper>

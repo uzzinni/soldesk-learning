@@ -4,4 +4,11 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
+
+	<!-- Human -->
+	<bean id="human" class="com.poseidon.web.Human">
+		<property name="age" value="120"/>
+		<property name="name" value="홍길동"/>
+	</bean>
+
 </beans>

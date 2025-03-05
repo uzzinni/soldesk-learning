@@ -8,6 +8,40 @@
 <meta charset="UTF-8">
 <title>보드</title>
 <link rel="stylesheet" href="css/menu.css">
+<style type="text/css">
+table {
+	width: 800px;
+	margin: 0 auto;
+	height: 500px;
+	border-spacing: 0px;
+	margin-bottom: 10px;
+	background-color: gray;
+}
+
+tr:hover {
+	background-color: #c0c0c0;
+}
+
+td{
+	text-align: center;
+	border-bottom: 1px solid black;
+}
+.row1{
+
+}
+.row3{
+	width: 50%;
+	text-align: left;
+}
+
+</style>
+<script type="text/javascript">
+// 자바스크립트 영역
+function detail() {
+	//console.log(no + 'detail을 클릭했습니다.');
+	location.href="./detail?board_no=" + no;
+}
+</script>
 </head>
 <body>
 	<%@ include file="menu.jsp" %>
@@ -43,7 +77,7 @@
 	 -->
 	<c:choose>
 		<c:when test="${fn:length(list) gt 0 }">
-			<table border="1">
+			<table>
 				<tr>
 					<td>번호</td>
 					<td>제목</td>
@@ -53,11 +87,11 @@
 				</tr>
 				<c:forEach items="${list }" var="dto">
 					<tr>
-						<td>${dto.board_no }</td>
-						<td>${dto.board_title }</td>
-						<td>${dto.user_name }</td>
-						<td>${dto.board_date }</td>
-						<td>${dto.board_like }</td>
+						<td class="row1">${dto.board_no }</td>
+						<td class="row3" onclick="detail(${dto.board_no })">${dto.board_title }</td>
+						<td class="row1">${dto.user_name }</td>
+						<td class="row1">${dto.board_date }</td>
+						<td class="row1">${dto.board_like }</td>
 					</tr>
 				</c:forEach>
 			</table>
