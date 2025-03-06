@@ -37,7 +37,7 @@ td{
 </style>
 <script type="text/javascript">
 // 자바스크립트 영역
-function detail() {
+function detail(no){
 	//console.log(no + 'detail을 클릭했습니다.');
 	location.href="./detail?board_no=" + no;
 }
