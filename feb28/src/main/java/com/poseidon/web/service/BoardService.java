@@ -38,4 +38,8 @@ public class BoardService {
 		//필요 로직이 있다면 적어주세요.
 		return boardDAO.detail(board_no);
 	}
+	
+	public int del(BoardDTO dto) {
+		return boardDAO.del(dto);
+	}
 }

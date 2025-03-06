@@ -37,6 +37,34 @@
 	text-align: right;
 }
 </style>
+<script type="text/javascript">
+function del() {
+	//alert('삭제를 눌렀습니다.');
+	if(confirm('이 글을 삭제하시겠습니까?')) {
+		//alert('${detail.board_no }번 글을 삭제합니다.');
+		//location.href="";
+		//스크립트가 post 전송하기
+		let form = document.createElement('form');	//form 생성
+		form.setAttribute('action', './del');
+		form.setAttribute('method', 'post');
+		
+		//input 구성요소 만들기
+		let input = document.createElement('input');
+		input.setAttribute('type', 'hidden');
+		input.setAttribute('name', 'board_no');
+		input.setAttribute('value', ${detail.board_no});
+		
+		//form 속에 input 붙이기
+		form.appendChild(input);
+		
+		//html 속 body에 form 붙이기
+		document.body.appendChild(form);
+		
+		form.submit();
+		
+	}
+}
+</script>
 </head>
 <body>
 <%@ include file="menu.jsp" %>
@@ -47,7 +75,13 @@
 	</div>
 	<div class="detail-info">
 		<div class="detail-user">
-			${detail.user_id }/${detail.user_name }
+			${detail.user_name }님이 씀
+			<c:if test="${detail.user_id eq sessionScope.user_id }">
+			
+			<img alt="삭제하기" src="./img/delete.png">
+			<img alt="수정하기" src="./img/edit.png">
+			</c:if>
+			
 		</div>
 		<div class="detail-date">
 			${detail.board_date }

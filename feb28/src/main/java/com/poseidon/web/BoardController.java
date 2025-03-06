@@ -65,6 +65,13 @@ public class BoardController {
 			String title = request.getParameter("board_title");
 			String content = request.getParameter("board_content");
 			
+			//특수기호 < &lt; > &gt;
+			title.replaceAll("<", "&lt;");
+			title.replaceAll(">", "&gt;");
+			
+			//줄바꿈 처리
+			content = content.replaceAll("\n", "<br>");
+			
 			//DTO 만들기
 			BoardDTO dto = new BoardDTO();
 			dto.setBoard_title(title);
@@ -111,6 +118,33 @@ public class BoardController {
 		BoardDTO detail = boardService.detail(board_no);
 		model.addAttribute("detail", detail);
 		return "detail";
+		}
+	
+	//post 방식 /del
+	@PostMapping("/del")
+	public String delete(@RequestParam(name = "board_no", required = true) int board_no,
+						 @SessionAttribute(name = "user_id", required = false) String user_id) {
+		//BoardDTO dto를 파라미터로 받아서 처리하는 방법
+		//System.out.println(dto.getBoard_no());
+		if(user_id != null) {
+			
+			//BoardDTO에 담기
+			BoardDTO dto = new BoardDTO();
+			dto.setBoard_no(board_no);
+			dto.setUser_id(user_id);
+	
+			//Service에 일 시키기
+			int result = boardService.del(dto);
+			if(result == 1) {
+				return "redirect:/board";
+			} else {
+				return "error";
+			}
+			
+		} else {
+			//로그인 하지 않았을 때
+			return "redirect:/login";
+		}		
 	}
 	
 	

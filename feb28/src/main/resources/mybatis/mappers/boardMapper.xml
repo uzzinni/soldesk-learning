@@ -32,5 +32,11 @@
 		WHERE board_no=#{board_no} AND board_del=1
 	</select>
 	
+	<update id="del" parameterType="boardDTO">
+		UPDATE board SET board_del=0
+		WHERE board_no=#{board_no}
+		AND user_no=(SELECT board_no FROM user WHERE user_id=#{user_id} )
+	</update>
+	
 		
 </mapper>
