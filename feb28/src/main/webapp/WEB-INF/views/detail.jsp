@@ -38,6 +38,18 @@
 }
 </style>
 <script type="text/javascript">
+window.onload = function() {
+	//document.getElementById('edit').addEventListener('click', edit);
+	document.getElementById('edit').onclick = function() {edit();};
+	//alert(document.getElementById('edit').src);	//이미지 경로 보기
+}
+
+function edit() {
+	if(confirm('수정하시겠습니까?')) {
+		location.href="/update?board_no=${detail.board_no }";
+	}
+}
+
 function del() {
 	//alert('삭제를 눌렀습니다.');
 	if(confirm('이 글을 삭제하시겠습니까?')) {
@@ -78,18 +90,21 @@ function del() {
 			${detail.user_name }님이 씀
 			<c:if test="${detail.user_id eq sessionScope.user_id }">
 			
-			<img alt="삭제하기" src="./img/delete.png">
-			<img alt="수정하기" src="./img/edit.png">
+			<img onclick="del()" alt="삭제하기" src="./img/delete.png">
+			<img onclick="edit()" alt="수정하기" src="./img/edit.png">
 			</c:if>
 			
 		</div>
 		<div class="detail-date">
 			${detail.board_date }
 		</div>
+		
+		<div class="detail-content">
+			${detail.board_content }
+		</div>
 	</div>
-</div>
+</div> <!-- detail-div 끝 -->
 
-${detail.board_content }<br>
 ${detail.board_like }<br>
 
 

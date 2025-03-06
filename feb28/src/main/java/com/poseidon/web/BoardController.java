@@ -150,6 +150,28 @@ public class BoardController {
 		}		
 	}
 	
+	// 글 수정하기 http://localhost:8080/update?board_no=41
+	@GetMapping("/update")
+	public String update(Model model,
+			@RequestParam(name = "board_no", required = true) int board_no,
+			@SessionAttribute(name = "user_id", required = false) String user_id) {
+		
+		if(user_id != null) {
+			//DTO에 값 넣기
+			BoardDTO dto = new BoardDTO();
+			dto.setBoard_no(board_no);
+			dto.setUser_id(user_id);
+			
+			//BoardDTO result = boardService.update(dto);
+			
+			//정확하게 왔다면 model에 붙이기
+			
+			return "update";
+		} else {
+			return "redirect:/login";	// 로그인 값이 없을 때
+		}
+
+	}
 	
 	
 }
