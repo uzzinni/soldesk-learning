@@ -16,12 +16,16 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.poseidon.web.dto.BoardDTO;
 import com.poseidon.web.service.BoardService;
+import com.poseidon.web.util.Util;
 
 @Controller
 public class BoardController {
 	
 	@Autowired
 	private BoardService boardService;
+	
+	@Autowired
+	private Util util;
 
 	// 보드 화면 출력 /board
 	@GetMapping("/board")
@@ -66,16 +70,15 @@ public class BoardController {
 			String content = request.getParameter("board_content");
 			
 			//특수기호 < &lt; > &gt;
-			title.replaceAll("<", "&lt;");
-			title.replaceAll(">", "&gt;");
+			title = util.htmlTag(title);
 			
 			//줄바꿈 처리
-			content = content.replaceAll("\n", "<br>");
+			content = util.htmlTag(content);
 			
 			//DTO 만들기
 			BoardDTO dto = new BoardDTO();
-			dto.setBoard_title(title);
-			dto.setBoard_content(content);
+			dto.setBoard_title(util.htmlTag(title));
+			dto.setBoard_content(util.newLine(content));
 			dto.setUser_id(user_id);
 			boardService.write1(dto);
 			
