@@ -42,4 +42,8 @@ public class BoardService {
 	public int del(BoardDTO dto) {
 		return boardDAO.del(dto);
 	}
+
+	public BoardDTO update(BoardDTO dto) {
+		return boardDAO.update(dto);
+	}
 }

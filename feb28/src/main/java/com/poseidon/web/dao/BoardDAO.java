@@ -47,6 +47,10 @@ public class BoardDAO {
 	public int del(BoardDTO dto) {
 		return sqlSession.update("board.del", dto);
 	}
+
+	public BoardDTO update(BoardDTO dto) {
+		return sqlSession.selectOne("board.update", dto);
+	}
 		
 	
 }

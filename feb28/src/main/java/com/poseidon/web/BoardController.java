@@ -55,7 +55,6 @@ public class BoardController {
 		} else {
 			return "redirect:/login";
 		}
-		
 	} 
 	
 	// 값을 가지고 옵니다 : 글쓰기를 눌렀을 때 동작
@@ -121,7 +120,7 @@ public class BoardController {
 		BoardDTO detail = boardService.detail(board_no);
 		model.addAttribute("detail", detail);
 		return "detail";
-		}
+	}
 	
 	//post 방식 /del
 	@PostMapping("/del")
@@ -143,14 +142,13 @@ public class BoardController {
 			} else {
 				return "error";
 			}
-			
 		} else {
 			//로그인 하지 않았을 때
 			return "redirect:/login";
 		}		
 	}
 	
-	// 글 수정하기 http://localhost:8080/update?board_no=41
+	// 글 수정하기
 	@GetMapping("/update")
 	public String update(Model model,
 			@RequestParam(name = "board_no", required = true) int board_no,
@@ -162,16 +160,13 @@ public class BoardController {
 			dto.setBoard_no(board_no);
 			dto.setUser_id(user_id);
 			
-			//BoardDTO result = boardService.update(dto);
+			BoardDTO result = boardService.update(dto);
 			
 			//정확하게 왔다면 model에 붙이기
-			
+			model.addAttribute("update", result);
 			return "update";
 		} else {
 			return "redirect:/login";	// 로그인 값이 없을 때
 		}
-
 	}
-	
-	
 }

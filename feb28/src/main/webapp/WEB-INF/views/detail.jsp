@@ -46,7 +46,7 @@ window.onload = function() {
 
 function edit() {
 	if(confirm('수정하시겠습니까?')) {
-		location.href="/update?board_no=${detail.board_no }";
+		location.href="./update?board_no=${detail.board_no }";
 	}
 }
 
