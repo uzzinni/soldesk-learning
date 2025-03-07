@@ -162,6 +162,9 @@ public class BoardController {
 			
 			BoardDTO result = boardService.update(dto);
 			
+			//content에 있는 <br>을 다시 원래대로 복구하기
+			result.setBoard_content(util.renewLine(result.getBoard_content()));
+			
 			//정확하게 왔다면 model에 붙이기
 			model.addAttribute("update", result);
 			return "update";
