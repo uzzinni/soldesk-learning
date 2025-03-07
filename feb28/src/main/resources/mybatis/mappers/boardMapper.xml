@@ -5,6 +5,25 @@
 
 <mapper namespace="board">
 
+	<!-- ResultMap을 사용하게 되면 해야 하는 일 -->
+	<resultMap type="com.poseidon.web.dto.TempDTO" id="temp">
+		<id column="board_no" javaType="Integer" property="no"/>
+		<result column="board_title" javaType="String" property="title"/>
+		<result column="board_content" javaType="String" property="content"/>
+		<result column="board_date" javaType="String" property="date"/>
+		<result column="board_like" javaType="Integer" property="like"/>
+		<result column="user_no" javaType="Integer" property="u_no"/>
+		<result column="user_id" javaType="String" property="u_id"/>
+		<result column="user_name" javaType="String" property="u_name"/>
+	
+	</resultMap>
+	<select id="temp" parameterType="com.poseidon.web.dto.TempDTO" resultMap="temp">
+		SELECT b.*, u.user_name, u.user_id
+		FROM board b JOIN user
+		u ON b.uesr_no=u.user_no
+		WHERE b.board_no=#{no} AND b.board_del=1
+	</select>
+
 	<select id="boardList" resultType="boardDTO">
 		SELECT board_no, board_title,
 		board_date, board_like, user_no, user_name
@@ -35,12 +54,15 @@
 	</insert>
 
 
-	<select id="detail" resultType="boardDTO"  parameterType="Integer">
-		SELECT b.*, u.user_name, u.user_id
-		FROM board b JOIN user
-		u ON b.user_no=u.user_no
-		WHERE board_no=#{board_no} AND board_del=1
-	</select>
+	<select id="detail" resultType="boardDTO"  parameterType="boardDTO">
+      	SELECT b.*, u.user_name, u.user_id
+      	FROM board b JOIN user
+      	u ON b.user_no=u.user_no
+      	WHERE b.board_no=#{board_no} AND b.board_del=1
+      	<if test="user_id != null">
+      	AND b.user_no=(SELECT user_no FROM user WHERE user_id=#{user_id})
+      	</if>
+   	</select>
 
 	<update id="del" parameterType="boardDTO">
 		UPDATE board SET board_del=0
@@ -57,7 +79,11 @@
 	</select>
 
 	<update id="update2" parameterType="boardDTO">
-		UPDATE board SET board_title=#{board_title}, board_content=#{board_content} 
+		UPDATE board 
+		<set>
+			<if test="board_title != null">board_title=#{board_title},</if>
+			<if test="board_content != null">board_content=#{board_content}</if>
+		</set>
 		WHERE board_no=#{board_no} AND user_no=(SELECT user_no FROM user WHERE user_id=#{user_id})	
 	</update>
 

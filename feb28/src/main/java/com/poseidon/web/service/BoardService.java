@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.poseidon.web.dao.BoardDAO;
 import com.poseidon.web.dto.BoardDTO;
+import com.poseidon.web.dto.TempDTO;
 import com.poseidon.web.util.Util;
 
 @Service
@@ -38,9 +39,8 @@ public class BoardService {
 		boardDAO.write1(dto);
 	}
 
-	public BoardDTO detail(int board_no) {
-		//필요 로직이 있다면 적어주세요.
-		return boardDAO.detail(board_no);
+	public BoardDTO detail(BoardDTO dto) {
+		return boardDAO.detail(dto);
 	}
 
 	public int del(BoardDTO dto) {
@@ -61,4 +61,9 @@ public class BoardService {
 		
 		boardDAO.update2(dto);
 	}
+
+	public TempDTO temp(TempDTO dto) {
+		return boardDAO.temp(dto);
+	}
+
 }

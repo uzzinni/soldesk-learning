@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.poseidon.web.dto.BoardDTO;
+import com.poseidon.web.dto.TempDTO;
 import com.poseidon.web.service.BoardService;
 import com.poseidon.web.util.Util;
 
@@ -108,16 +109,12 @@ public class BoardController {
 	// http://localhost:8080/web/detail?board_no=32
 	// http://localhost:8080/web/detail
 	@GetMapping("/detail")
-	public String detail(Model model,
-			@RequestParam(value = "board_no", required = true, defaultValue = "1") int board_no ) {
-		//HttpServletRequest request 사용할때
-		//System.out.println(request.getParameter("board_no"));
-		//System.out.println(board_no);
-		
-		// boardService가 일하게 하기
-		BoardDTO detail = boardService.detail(board_no);
-		model.addAttribute("detail", detail);
-		return "detail";
+	public String detail(Model model, @RequestParam("board_no") int board_no) {
+	    BoardDTO dto = new BoardDTO();
+	    dto.setBoard_no(board_no);  // ✅ DTO 객체에 board_no 값 저장
+	    BoardDTO detail = boardService.detail(dto);  // ✅ BoardDTO 객체를 넘김
+	    model.addAttribute("detail", detail);
+	    return "detail";
 	}
 	
 	//post 방식 /del
@@ -184,8 +181,33 @@ public class BoardController {
 		} else {			
 			return "redirect:/login"; 
 		}
+	}
+	
+	//ResultMap 사용해보기
+	//TempDTO 만들어서 사용하겠습니다.
+	@GetMapping("/temp")
+	public String temp(Model model,
+         @RequestParam(value = "board_no", required = true, defaultValue = "1") int board_no) {
+		// 1. TempDTO 만들기
+		TempDTO dto = new TempDTO();
+		dto.setNo(board_no);
+		
+		TempDTO result = boardService.temp(dto);
+		model.addAttribute("detail", result);
+		return "temp";
+		
+		
 		
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 }
