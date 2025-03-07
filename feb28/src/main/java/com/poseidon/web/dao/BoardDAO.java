@@ -42,17 +42,17 @@ public class BoardDAO {
 	public BoardDTO detail(int board_no) {
 		return sqlSession.selectOne("board.detail", board_no);
 	}
-
-	// 진짜 삭제하는 것이 아니라 데이터베이스에 board_del 값을 0으로 변경한다.
+	
+	//우리는 진짜 삭제를 하는 것이 아니라 데이터베이스에 board_del값을 0으로 변경합니다.
 	public int del(BoardDTO dto) {
 		return sqlSession.update("board.del", dto);
 	}
 
-	public BoardDTO update(BoardDTO dto) {	//수정하기 버튼을 눌렀을 때 원본 값을 가지고 jsp에 찍어주기 위해서
+	public BoardDTO update(BoardDTO dto) { //수정하기 버튼을 눌렀을 때 원본 값을 가지고 jsp에 찍어주기 위해서
 		return sqlSession.selectOne("board.update", dto);
 	}
 
-	public void update2(BoardDTO dto) {	// 내용을 수정한 후 버튼을 눌렀을 때 데이터베이스에 저장하기
+	public void update2(BoardDTO dto) { // 내용을 수정한 후 버튼을 눌렀을 때 데이터베이스에 저장하기
 		sqlSession.update("board.update2", dto);
 	}
 		

@@ -42,7 +42,7 @@ public class BoardService {
 		//필요 로직이 있다면 적어주세요.
 		return boardDAO.detail(board_no);
 	}
-	
+
 	public int del(BoardDTO dto) {
 		return boardDAO.del(dto);
 	}
@@ -52,13 +52,11 @@ public class BoardService {
 	}
 
 	public void update2(BoardDTO dto) {
-		//제목에 html <,> 특수기호로 변경해주세요
+		//제목에 html <, > 특수기호로 변경해주세요 
 		dto.setBoard_title(util.htmlTag(dto.getBoard_title()));
-		
 		//본문 내용에 <,> 특수기호로 변경해주세요
 		dto.setBoard_content(util.htmlTag(dto.getBoard_content()));
-		
-		//본문 내용에 엔터를 <br>로 변경해주세요
+		//본문 내용에 엔터를  <br>로 변경해주세요
 		dto.setBoard_content(util.newLine(dto.getBoard_content()));
 		
 		boardDAO.update2(dto);

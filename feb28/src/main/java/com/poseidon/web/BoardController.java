@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -55,6 +54,7 @@ public class BoardController {
 		} else {
 			return "redirect:/login";
 		}
+		
 	} 
 	
 	// 값을 가지고 옵니다 : 글쓰기를 눌렀을 때 동작
@@ -67,10 +67,8 @@ public class BoardController {
 		if(user_id != null) {
 			String title = request.getParameter("board_title");
 			String content = request.getParameter("board_content");
-			
 			//특수기호 < &lt; > &gt;
 			title = util.htmlTag(title);
-			
 			//줄바꿈 처리
 			content = util.htmlTag(content);
 			
@@ -124,36 +122,37 @@ public class BoardController {
 	
 	//post 방식 /del
 	@PostMapping("/del")
-	public String delete(@RequestParam(name = "board_no", required = true) int board_no,
-						 @SessionAttribute(name = "user_id", required = false) String user_id) {
+	public String delete(
+			@RequestParam(name = "board_no", required = true) int board_no,  
+			@SessionAttribute(name = "user_id", required = false) String user_id) {
 		//BoardDTO dto를 파라미터로 받아서 처리하는 방법
 		//System.out.println(dto.getBoard_no());
 		if(user_id != null) {
 			
-			//BoardDTO에 담기
+			// BoardDTO에 담기
 			BoardDTO dto = new BoardDTO();
 			dto.setBoard_no(board_no);
 			dto.setUser_id(user_id);
-	
-			//Service에 일 시키기
+			//Service에게 일 시키기 
 			int result = boardService.del(dto);
 			if(result == 1) {
 				return "redirect:/board";
+				
 			} else {
-				return "error";
+				return "error";				
 			}
+			
 		} else {
 			//로그인 하지 않았을 때
 			return "redirect:/login";
-		}		
+		}
 	}
-	
-	// 글 수정하기
+
+	//글 수정하기 http://localhost:8080/update?board_no=41
 	@GetMapping("/update")
-	public String update(Model model,
-			@RequestParam(name = "board_no", required = true) int board_no,
+	public String update(Model model, 
+			@RequestParam(name = "board_no", required = true) int board_no,  
 			@SessionAttribute(name = "user_id", required = false) String user_id) {
-		
 		if(user_id != null) {
 			//DTO에 값 넣기
 			BoardDTO dto = new BoardDTO();
@@ -162,49 +161,31 @@ public class BoardController {
 			
 			BoardDTO result = boardService.update(dto);
 			
-			//content에 있는 <br>을 다시 원래대로 복구하기
+			// content에 있는 <br>을 다시 원래대로 복구하기
 			result.setBoard_content(util.renewLine(result.getBoard_content()));
 			
 			//정확하게 왔다면 model에 붙이기
 			model.addAttribute("update", result);
+						
 			return "update";
-		} else {
-			return "redirect:/login";	// 로그인 값이 없을 때
+		} else {			
+			return "redirect:/login"; //로그인 값이 없을때
 		}
 	}
-	
-	//2025-03-07 웹 페이지 화면 구축
-	//사용자가 글 수정을 완료하고 저장하기를 눌렀을 때 /update post
+
+	// 2025-03-07 웹페이지 화면 구축
+	//사용자가 글 수정을 완료하고 저장하기를 눌렀을 때  /update post 
 	@PostMapping("/update")
 	public String update(BoardDTO dto, @SessionAttribute(name = "user_id", required = false) String user_id) {
 		if(user_id != null) {
 			dto.setUser_id(user_id);
-			boardService.update2(dto);	//이름 중복 : 진짜 수정된 값 저장하기
+			boardService.update2(dto); //이름 중복 : 진짜 수정된 값 저장하기
 			return "redirect:/detail?board_no=" + dto.getBoard_no();
-		} else {
-			return "redirect:/login";
+		} else {			
+			return "redirect:/login"; 
 		}
+		
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 }
