@@ -48,7 +48,7 @@
 	<h1>글 수정하기</h1>
 	
 	<div class="write-div">
-		<form action="./write1" method="post">
+		<form action="./update" method="post">
 			<input name="board_title" id="title" class="" placeholder="제목을 입력하세요." required="required" value="${update.board_title} }">
 			<textarea name="board_content" id="content" class="" placeholder="내용을 입력하세요">${update.board_content}</textarea>
 			<input type="hidden" name="board_no" value="${update.board_no }">

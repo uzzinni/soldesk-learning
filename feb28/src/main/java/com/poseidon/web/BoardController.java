@@ -172,4 +172,39 @@ public class BoardController {
 			return "redirect:/login";	// 로그인 값이 없을 때
 		}
 	}
+	
+	//2025-03-07 웹 페이지 화면 구축
+	//사용자가 글 수정을 완료하고 저장하기를 눌렀을 때 /update post
+	@PostMapping("/update")
+	public String update(BoardDTO dto, @SessionAttribute(name = "user_id", required = false) String user_id) {
+		if(user_id != null) {
+			dto.setUser_id(user_id);
+			boardService.update2(dto);	//이름 중복 : 진짜 수정된 값 저장하기
+			return "redirect:/detail?board_no=" + dto.getBoard_no();
+		} else {
+			return "redirect:/login";
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

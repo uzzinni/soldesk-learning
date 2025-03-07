@@ -48,8 +48,12 @@ public class BoardDAO {
 		return sqlSession.update("board.del", dto);
 	}
 
-	public BoardDTO update(BoardDTO dto) {
+	public BoardDTO update(BoardDTO dto) {	//수정하기 버튼을 눌렀을 때 원본 값을 가지고 jsp에 찍어주기 위해서
 		return sqlSession.selectOne("board.update", dto);
+	}
+
+	public void update2(BoardDTO dto) {	// 내용을 수정한 후 버튼을 눌렀을 때 데이터베이스에 저장하기
+		sqlSession.update("board.update2", dto);
 	}
 		
 	

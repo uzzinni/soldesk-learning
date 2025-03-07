@@ -39,12 +39,17 @@
 	</update>
 	
 	<select id="update" parameterType="boardDTO" resultType="boardDTO">
-      SELECT b.*, u.user_name, u.user_id
-      FROM board b JOIN user u ON b.user_no=u.user_no
-      WHERE b.board_no=#{board_no} 
-      AND b.board_del=1
-      AND b.user_no=(SELECT user_no FROM user WHERE user_id=#{user_id})      
+      	SELECT b.*, u.user_name, u.user_id
+      	FROM board b JOIN user u ON b.user_no=u.user_no
+      	WHERE b.board_no=#{board_no} 
+      	AND b.board_del=1
+      	AND b.user_no=(SELECT user_no FROM user WHERE user_id=#{user_id})      
    </select>
+   
+   <update id="update2" parameterType="boardDTO">
+		UPDATE board SET board_title=#{board_title}, board_content=#{board_content}
+		WHERE board_no=#{board_no} AND user_no=(SELECT user_no FROM user WHERE user_id=#{user_id})   		
+   </update>
 	
 		
 </mapper>
