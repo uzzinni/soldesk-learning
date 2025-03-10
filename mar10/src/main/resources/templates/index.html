@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h1>index</h1>
+	<!-- 타임리프 th:text 텍스트 출력 -->
+	데이터 출력 <span th:text="${text }">출력됩니다.</span>
+	
+	
+	<div th:text="${name }"></div>
+	[[${name }]]
+	
+	[[${list }]]
+	<hr>
+	<ul th:each="name : ${list }">
+		<li th:text="${name }"></li>
+	</ul>
+	<hr>
+	<table border="1">
+		<thead>
+		<tr>
+			<th>이름</th>
+		</tr>
+		</thead>
+		<tbody>
+			<tr th:each="name : ${list }">
+				<td>[[${name }]]</td>
+			</tr>
+		</tbody>
+	</table>	
+	
+	<hr>
+	
+	<th:block th:each="name : ${list }">
+		[[${name }]]
+	</th:block>
+	<hr>
+	
+	<ul th:each="name, i : ${list }">
+		<li>[[${i.index }]] / [[${i.size }]] / [[${name }]]</li>
+	</ul>
+	
+	[[${list.size }]]개의 데이터가 있습니다.
+	
+	
+	
+	
+</body>
+</html>

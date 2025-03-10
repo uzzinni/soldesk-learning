@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>게시판</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/board.css}">
+</head>
+<body>
+	<h1>게시판</h1>
+	<table>
+		<thead>
+			<tr>
+				<th class="tr1">번호</th>
+				<th class="tr3">제목</th>
+				<th class="tr1">쓴날짜</th>
+				<th class="tr1">글쓴이</th>
+				<th class="tr1">좋아요</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="dto : ${list}">
+				<td th:text="${dto.board_no }"></td>
+				<td class="title" th:utext="${dto.board_title }" th:onclick="|location.href='@{|/detail/${dto.board_no }|}'|"></td>
+				<td th:text="${dto.user_name }">글쓴이</td>
+				<td>[[${dto.board_date } ]]</td>
+				<td th:text="${dto.board_like }"></td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+</html>
