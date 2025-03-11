@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.poseidon.dao.BoardDAO">
+	<select id="boardList" resultType="boardDTO">
+		SELECT board_no, board_title,
+		board_date, board_like, user_no, user_name
+		FROM viewboard
+		LIMIT 0, 10
+	</select>
+	
+	<select id="detail" parameterType="boardDTO" resultType="boardDTO">
+		SELECT b.*, u.user_id, u.user_name
+		FROM board b JOIN user u ON b.user_no=u.user_no
+		WHERE b.board_no=#{board_no}
+	</select>
+	
+</mapper>

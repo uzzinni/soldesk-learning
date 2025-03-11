@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/board.css}">
+</head>
+<body>
+	<th:block th:insert="~{menu.html :: menu}"></th:block>
+	<h1>board</h1>
+	
+	<table>
+		<tr>
+			<th>변호</th>
+			<th>제목</th>
+			<th>글쓴이</th>
+			<th>날짜</th>
+			<th>좋아요</th>
+		</tr>
+		<tr th:each="dto : ${list }">
+			<td th:text="${dto.board_no }">번호</td>
+			<td th:onclick="|location.href='@{|/detail/${dto.board_no }|}'|" th:utext="${dto.board_title }"></td>
+			<td th:text="${dto.user_name }"></td>
+			<td th:text="${dto.board_date }"></td>
+			<td th:text="${dto.board_like }"></td>		
+		</tr>
+	</table>
+	
+	<div th:each="row, i : ${list }">
+		 [[${i.index }]] / [[${row.board_no }]] <br>
+	</div>
+	
+	<!-- if else -->
+	<div th:if="${list ne null }">데이터가 없습니다.</div>
+	<div th:unless="${list eq null }">데이터가 있습니다.</div>
+	
+	<th:block th:with="temp=5">
+		<div th:switch="${temp }">
+			<div th:case="1">temp는 1입니다.</div>
+			<div th:case="2">temp는 2입니다.</div>
+			<div th:case="4">temp는 5입니다.</div>
+			<div th:case="6">temp는 6입니다.</div>
+			<div th:case="10">temp는 10입니다.</div>
+		</div>
+	</th:block>
+	
+	<hr>
+	
+	http://localhost/index
+	<a th:href="@{/index }">index</a>
+	<br>
+	http://localhost/index?board=100
+	<a th:href="@{/index(board=100) }">index</a>
+	<br>
+	http://localhost/index?board=100&uuid=1234
+	<a th:href="@{/index(board=100, uuid=1234) }">index</a>
+	<br>
+	http://localhost/detail?board_no=123
+	<a th:href="@{/detail(board_no=123) }">index</a>
+	<hr>
+	
+	[[${list }]]
+	
+</body>
+</html>
