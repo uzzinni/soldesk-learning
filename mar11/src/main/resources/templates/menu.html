@@ -3,18 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <title>메뉴입니다</title>
+<th:block th:fragment="head">
+	  <meta charset="utf-8" />
+      <meta name="viewport"
+         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+      <meta name="description" content="사이트 정보" />
+      <meta name="author" content="관리이름" />
+
+      <meta name="keyword" content="java">
+      <title>타이틀</title>
+      <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+      <!-- 메뉴 스타일시트 -->
+      <link rel="stylesheet" href="/css/menu.css">
+</th:block>
+
 </head>
 <body>
 <!-- 여기에 메뉴를 만듭니다 -->
 
 <nav th:fragment="menu">
 	<ul>
-		<li>홈</li>
-		<li>보드</li>
-		<li>공지사항</li>
-		<li>회원가입</li>
-		<li>로그인</li>
-		<li>로그아웃</li>
+		<li><a href="/"><img alt="홈" src="/img/home.png"></a></li>
+		<li><a href="/board">보드</a></li>
+		<li><a href="/notice">공지사항</a></li>
+		<li><a href="/join">회원가입</a></li>
+		<li><a href="/login">로그인</a></li>
+		<li><a href="/logout">로그아웃</a></li>
 	</ul>
 </nav>
 
