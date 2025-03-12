@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<th:block th:insert="~{menu.html :: head}"></th:block>
+<script type="text/javascript">
+function check(){
+	//alert("로그인 버튼을 눌렀습니다");
+	let id = document.getElementById('id').value;
+	let pw = document.getElementById('pw').value;
+	//alert("당신이 입력한 아이디는 : " + id + "/암호는 : " + pw);
+
+	//정규식 영문자로 시작하고 5글자 이상인지 검사
+	const idPattern = /^[a-zA-z].{4,}$/;
+	
+	if(!idPattern.test(id)){
+		alert("올바른 아이디를 입력하세요.\n아이디는 영문자, 숫자 포함 5글자 이상입니다.");
+		document.getElementById('id').focus();
+		return false;
+	}
+	//암호 검사 -> 정규식 검사로 변경
+	if(pw.length < 5){		//특수문자는 아래 코드. 이거는 일단 5글자 이상인 조건.
+		alert("올바른 암호를 입력하세요.\n암호는 영문자,숫자,특수문자를 사용해 5글자 이상이어야 합니다.");
+		document.getElementById('pw').focus();
+		return false;
+	}
+	
+	
+	/*let pwPattern = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{5,}$/;
+	if(!pwPattern.test(pw)){
+		alert("올바른 암호를 입력하세요.\n암호는 영문자,숫자,특수문자를 사용해 5글자 이상이어야 합니다.");
+		document.getElementById('pw').focus();
+		return false;
+	}
+	*/
+	
+}
+</script>
+</head>
+<body>
+	<th:block th:insert="~{menu.html :: menu}"></th:block>
+	
+	
+	<div class="login-div">
+		<img alt="login" src="/img/login.png">
+		<form action="/login" method="post" onsubmit="return check()">
+			<input type="text" id="id" name="id" placeholder="아이디를 입력하세요">
+			<input type="password" id="pw" name="pw" placeholder="암호를 입력하세요">
+			<button type="reset">reset</button>
+			<button type="submit">login</button>
+		</form>
+	</div>
+
+
+	<th:block th:insert="~{menu.html :: footer}"></th:block>
+</body>
+</html>
