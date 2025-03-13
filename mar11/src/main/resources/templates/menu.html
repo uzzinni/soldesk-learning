@@ -16,6 +16,9 @@
       <!-- 메뉴 스타일시트 -->
       <link rel="stylesheet" href="/css/menu.css">
 </th:block>
+<script type="text/javascript">
+function logout(){if(confirm("정말로 로그아웃 하시겠습니까?")){location.replace("/logout");}}
+</script>
 
 </head>
 <body>
@@ -27,8 +30,8 @@
 		<li><a href="/board">보드</a></li>
 		<li><a href="/notice">공지사항</a></li>
 		<li><a href="/join">회원가입</a></li>
-		<li><a href="/login">로그인</a></li>
-		<li><a href="/logout">로그아웃</a></li>
+		<li th:if="${session.user_id eq null}"><a href="/login">로그인</a></li>
+		<li th:unless="${session.user_id eq null}"><a href="#" onclick="logout()">[[${session.user_name}]]로그아웃</a></li>
 	</ul>
 </nav>
 
