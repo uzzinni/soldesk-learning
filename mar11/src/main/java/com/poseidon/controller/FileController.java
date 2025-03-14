@@ -24,13 +24,13 @@ import jakarta.servlet.http.HttpServletResponse;
 public class FileController {
 	
 	@Autowired
-	private ResourceLoader resourceLoader;	//경로를 얻어오기 위해서
+	private ResourceLoader resourceLoader; // 경로 얻어오기 위해서
 	
 	@GetMapping("/file")
 	public String file() {
 		return "file";
 	}
-	
+
 	@PostMapping("/file")
 	public String file(@RequestParam("file") MultipartFile file) throws IOException {
 		System.out.println("file name : " + file.getOriginalFilename());
@@ -41,50 +41,50 @@ public class FileController {
 		String classpath = resourceLoader.getResource("classpath:static/upload/").getFile().getAbsolutePath();
 		System.out.println(classpath);
 		File uploadDir = new File(classpath);
-		//만약에 저 경로가 없다면?
+		// 만약에 저 경로가 없다면?
 		if(!uploadDir.exists()) {
 			uploadDir.mkdirs();
 		}
 		
-		//저장할 파일명 -> UUID 뽑아서 연결하기
+		//저장할 파일명 -> UUID뽑아서 연결하기
 		UUID uuid = UUID.randomUUID();
-		System.out.println(uuid.toString());
+		System.out.println(uuid.toString()); // 5ca88c0b-249f-4e53-b7e5-03b28392ae51
 		
 		//년월일시분초 뽑아보기
-		LocalDateTime ldt = LocalDateTime.now();
+		LocalDateTime ldt = LocalDateTime.now(); // 2025-03-14T20:00:38.580812400
 		System.out.println(ldt.toString());
-		String format = ldt.format(DateTimeFormatter.ofPattern("YYYYMMDDHHmmss"));
-		System.out.println(format);
+		String format = ldt.format(DateTimeFormatter.ofPattern("YYYYMMddHHmmss"));
+		System.out.println(format); // 20250314200242
 		
 		//저장 경로 : 디렉토리 + 파일명
 		// C:\workspace-sts4\mar11\bin\main\static\ upload\파일명
 		File saveFile = new File(uploadDir, format + uuid.toString() + file.getOriginalFilename());
-		
+
 		//전송
 		file.transferTo(saveFile);
 		
 		return "file";
 	}
 	
-	 @ResponseBody
-	 @GetMapping("/download@{file}")
-	 public	void down(@PathVariable("file")	String file, HttpServletResponse response)	throws	IOException	{
-		 System.out.println("들어온 파일명 : " + file);
-		 //경로 뽑아오기
-		 String	classpath =	resourceLoader.getResource("classpath:static/upload/").getFile().getAbsolutePath();
-		 File uploadDir = new File(classpath);
-		 
-		 File serverFile = new File(uploadDir, file);
 	
-		 byte[]	fileByte = FileCopyUtils.copyToByteArray(serverFile);
-	 
-		 response.setContentType("application/octet-stream");
-		 response.setHeader("Content-Disposition", "attachment;	fileName=\"" + URLEncoder.encode(classpath + "/" + file, "UTF-8") +	"\";");
-		 response.setHeader("Content-Transfer-Encoding", "binary");
-		 response.getOutputStream().write(fileByte);
-		 response.getOutputStream().flush();
-		 response.getOutputStream().close();
-	 }
-	
+	@ResponseBody
+	@GetMapping("/download@{file}")
+	public void down(@PathVariable("file") String file, HttpServletResponse response) throws IOException {
+		System.out.println("들어온 파일명 : " + file);
+		//경로 뽑아오기
+		String classpath = resourceLoader.getResource("classpath:static/upload/").getFile().getAbsolutePath();
+		File uploadDir = new File(classpath);
+		
+		File serverFile = new File(uploadDir, file);
+		
+		byte[] fileByte = FileCopyUtils.copyToByteArray(serverFile);
+		
+		response.setContentType("application/octet-stream");
+		response.setHeader("Content-Disposition","attachment; fileName=\"" + URLEncoder.encode(classpath + "/" + file, "UTF-8") + "\";");
+		response.setHeader("Content-Transfer-Encoding", "binary");
+		response.getOutputStream().write(fileByte);
+		response.getOutputStream().flush();
+		response.getOutputStream().close();
+	}
 	
 }
