@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko"	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>index</title>
+<th:block th:insert="~{menu.html :: head}"></th:block>
+</head>
+<body>
+	<th:block th:insert="~{menu.html :: menu}"></th:block>
+	<h1>index</h1>
+	
+	<!-- 파일 업로드 : 2025-03-14 웹 페이지 화면 구축 -->
+	<form action="/file" enctype="multipart/form-data" method="post">
+		<input type="file" name="file">
+		<button type="submit">전송하기</button>
+	</form>
+	
+	<hr>
+	<img alt="upimg" src="/upload/login.png">
+	
+	<th:block th:insert="~{menu.html :: footer}"></th:block>
+</body>
+</html>
