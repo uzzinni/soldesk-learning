@@ -11,7 +11,7 @@
 	<section>
 		<div class="container px-5">
 			<h1>board</h1>
-			<table class="table">
+			<table class="table table-hover">
 				<tr>
 					<th>번호</th>
 					<th>제목</th>
@@ -24,7 +24,10 @@
 					<td th:onclick="|location.href='@{|/detail/${dto.board_no }|}'|"
 						th:utext="${dto.board_title }"></td>
 					<td th:text="${dto.user_name }"></td>
-					<td th:text="${dto.board_date }"></td>
+					
+					<td th:if="${#dates.format(#calendars.createNow(), 'yyyy-MM-dd') eq #temporals.format(dto.board_date, 'yyyy-MM-dd')}" th:text="${#temporals.format(dto.board_date, 'HH:mm')}"></td>
+               		<td th:unless="${#dates.format(#calendars.createNow(), 'yyyy-MM-dd') eq #temporals.format(dto.board_date, 'yyyy-MM-dd')}" th:text="${#temporals.format(dto.board_date, 'yyyy-MM-dd')}"></td>
+               
 					<td th:text="${dto.board_like }"></td>
 				</tr>
 			</table>

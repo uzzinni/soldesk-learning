@@ -6,23 +6,43 @@
 <body>
 	<!-- 메뉴넣기 -->
 	<th:block th:insert="~{menu.html :: menu}"></th:block>
-	<section id="features">
+	<section>
 		<div class="container px-5">
-	<h1>톺아보기</h1>
-	<div>
-		<div th:text="${detail.board_title }">제목</div>
-		<div th:text="${detail.user_name }">글쓴이</div>
-		<div th:text="${detail.board_date }">쓴날짜</div>
-		<div th:utext="${detail.board_content }">내용</div>
-		<div th:text="${detail.board_like }">좋아요</div>
-	</div>
-	되돌아가기 버튼
-	<button th:onclick="|location.href='@{/board}'|">게시판으로</button>
-	<button onclick="history.back()">게시판으로2</button>
-	</div>
+			<h1>톺아보기</h1>
+			<div class="">
+				<div class="row mt-4">				
+					<div class="col fs-2 border-bottom border-2">
+						<div class="badge text-bg-primary" th:text="${detail.board_like }">좋아요</div>
+						[[${detail.board_title }]]
+					</div>
+				</div>
+				<div class="row border-bottom border-1" style="background-color: #c0c0c0; opacity: 0.2;">				
+					<div class="col text-left" th:text="${detail.user_name }">글쓴이</div>
+					<div class="col text-right">
+						<!-- 타임리프 함수입니다 -->
+						[[${#temporals.format(detail.board_date, 'yyyy년 MM월 dd일 HH시 mm분 ss초')}]]
+					</div>
+				</div>
+				<div class="row mb-3" style="min-height: 50vh;">
+					<div class="col" th:utext="${detail.board_content }">내용</div>
+				</div>
+				
+			</div>
+			되돌아가기 버튼
+			<button th:onclick="|location.href='@{/board}'|">게시판으로</button>
+			<button onclick="history.back()">게시판으로2</button>
+			
+			<!-- 댓글창 -->
+         	<div class="my-3">
+            	<div class="input-group">
+               		<textarea class="form-control" aria="btn btn-primary"></textarea>
+               		<button class="btn btn-primary input-group-append">댓글쓰기</button>
+            	</div>
+         	</div>
+		</div>
 	</section>
-	
-	
+
+
 	<th:block th:insert="~{menu.html :: footer}"></th:block>
 </body>
 </html>
