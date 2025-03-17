@@ -10,7 +10,7 @@
 	<th:block th:insert="~{menu.html :: menu}"></th:block>
 	<section>
 		<div class="container px-5">
-			<h1>board</h1>
+			<h1 class="my-3">board</h1>
 			<table class="table table-hover">
 				<tr>
 					<th>번호</th>
@@ -26,8 +26,8 @@
 					<td th:text="${dto.user_name }"></td>
 					
 					<td th:if="${#dates.format(#calendars.createNow(), 'yyyy-MM-dd') eq #temporals.format(dto.board_date, 'yyyy-MM-dd')}" th:text="${#temporals.format(dto.board_date, 'HH:mm')}"></td>
-               		<td th:unless="${#dates.format(#calendars.createNow(), 'yyyy-MM-dd') eq #temporals.format(dto.board_date, 'yyyy-MM-dd')}" th:text="${#temporals.format(dto.board_date, 'yyyy-MM-dd')}"></td>
-               
+					<td th:unless="${#dates.format(#calendars.createNow(), 'yyyy-MM-dd') eq #temporals.format(dto.board_date, 'yyyy-MM-dd')}" th:text="${#temporals.format(dto.board_date, 'yyyy-MM-dd')}"></td>
+					
 					<td th:text="${dto.board_like }"></td>
 				</tr>
 			</table>

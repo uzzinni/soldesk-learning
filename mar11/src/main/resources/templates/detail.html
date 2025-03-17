@@ -2,6 +2,36 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
 <th:block th:insert="~{menu.html :: head}"></th:block>
+<script type="text/javascript" th:inline="javascript">
+function comment(){
+	let comment = document.querySelector('#comment');
+	if(comment.value == "" || comment.value.length < 5){
+		alert('댓글은 다섯글자 이상 작성해주세요.');
+	} else {
+		if(confirm('등록하시겠습니까?')){
+			let form = document.createElement("form");
+			form.setAttribute("action", "/comment");
+			form.setAttribute("method", "post");
+			
+			let data = document.createElement('input');
+			data.setAttribute("type", "text");
+			data.setAttribute("name", "comment");
+			data.setAttribute("value", comment.value);
+			
+			let bno = document.createElement('input');
+			bno.setAttribute("type", "number");
+			bno.setAttribute("name", "board_no");
+			//bno.setAttribute("value", [[${detail.board_no}]]);
+			
+			form.appendChild(data);
+			form.appendChild(bno);
+			document.body.appendChild(form);
+			form.submit();
+		}
+	}
+	//alert(comment.value === '' || comment == '');
+}
+</script>
 </head>
 <body>
 	<!-- 메뉴넣기 -->
@@ -19,8 +49,8 @@
 				<div class="row border-bottom border-1" style="background-color: #c0c0c0; opacity: 0.2;">				
 					<div class="col text-left" th:text="${detail.user_name }">글쓴이</div>
 					<div class="col text-right">
-						<!-- 타임리프 함수입니다 -->
-						[[${#temporals.format(detail.board_date, 'yyyy년 MM월 dd일 HH시 mm분 ss초')}]]
+						<!-- 타임리프 함수입니다 temporals.format(값, '출력형식')-->
+					 	[[${#temporals.format(detail.board_date, 'yyyy년 MM월 dd일 HH시 mm분 ss초')}]]
 					</div>
 				</div>
 				<div class="row mb-3" style="min-height: 50vh;">
@@ -33,12 +63,13 @@
 			<button onclick="history.back()">게시판으로2</button>
 			
 			<!-- 댓글창 -->
-         	<div class="my-3">
-            	<div class="input-group">
-               		<textarea class="form-control" aria="btn btn-primary"></textarea>
-               		<button class="btn btn-primary input-group-append">댓글쓰기</button>
-            	</div>
-         	</div>
+			<div class="my-3">
+				<div class="input-group">
+					<textarea id="comment" class="form-control" aria="btn btn-primary"></textarea>
+					<button onclick="comment()" class="btn btn-primary input-group-append">댓글쓰기</button>
+				</div>
+			</div>
+			
 		</div>
 	</section>
 
