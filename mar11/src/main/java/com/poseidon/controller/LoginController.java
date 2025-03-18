@@ -22,9 +22,14 @@ public class LoginController {
 		
 	//  http://localhost/login
 	@GetMapping("/login")
-	public String login() {
-		System.out.println(" 요청이 들어왔습니다 ============= ");
-		return "login";
+	public String login(HttpSession session) {
+		//System.out.println(" 요청이 들어왔습니다 ============= ");
+		//세션이 있는 사람이 들어오면 index로 갑니다.
+		if(session.getAttribute("user_id") != null) {
+			return "redirect:/index";
+		} else {			
+			return "login";
+		}
 	}
 	
 	@PostMapping("/login")

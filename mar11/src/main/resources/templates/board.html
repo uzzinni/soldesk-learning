@@ -21,13 +21,13 @@
 				</tr>
 				<tr th:each="dto : ${list }">
 					<td th:text="${dto.board_no }">번호</td>
-					<td th:onclick="|location.href='@{|/detail/${dto.board_no }|}'|"
-						th:utext="${dto.board_title }"></td>
+					<td th:onclick="|location.href='@{|/detail/${dto.board_no }|}'|">
+						[[${dto.board_title }]] 
+						<small th:if="${dto.commentcount ne 0 }" class="badge badge-pill bg-success">[[${dto.commentcount }]]</small>
+					</td>
 					<td th:text="${dto.user_name }"></td>
-					
 					<td th:if="${#dates.format(#calendars.createNow(), 'yyyy-MM-dd') eq #temporals.format(dto.board_date, 'yyyy-MM-dd')}" th:text="${#temporals.format(dto.board_date, 'HH:mm')}"></td>
 					<td th:unless="${#dates.format(#calendars.createNow(), 'yyyy-MM-dd') eq #temporals.format(dto.board_date, 'yyyy-MM-dd')}" th:text="${#temporals.format(dto.board_date, 'yyyy-MM-dd')}"></td>
-					
 					<td th:text="${dto.board_like }"></td>
 				</tr>
 			</table>
