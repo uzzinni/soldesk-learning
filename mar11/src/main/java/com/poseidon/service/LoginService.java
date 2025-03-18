@@ -9,11 +9,12 @@ import com.poseidon.dao.LoginDAO;
 
 @Service
 public class LoginService {
-	
+
 	@Autowired
-	private LoginDAO loginDAO;
+	private LoginDAO loginDAO; 
 	
 	public Map<String, Object> login(Map<String, Object> map) {
+		
 		return loginDAO.login(map);
 	}
 

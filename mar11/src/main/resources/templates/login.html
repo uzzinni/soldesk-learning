@@ -4,10 +4,8 @@
 <th:block th:insert="~{menu.html :: head}"></th:block>
 <script type="text/javascript">
 function check(){
-	//alert("로그인 버튼을 눌렀습니다");
 	let id = document.getElementById('id').value;
 	let pw = document.getElementById('pw').value;
-	//alert("당신이 입력한 아이디는 : " + id + "/암호는 : " + pw);
 
 	//정규식 영문자로 시작하고 5글자 이상인지 검사
 	const idPattern = /^[a-zA-z].{4,}$/;
@@ -17,42 +15,29 @@ function check(){
 		document.getElementById('id').focus();
 		return false;
 	}
-	//암호 검사 -> 정규식 검사로 변경
-	if(pw.length < 5){		//특수문자는 아래 코드. 이거는 일단 5글자 이상인 조건.
+	// 암호 검사 -> 정규식 검사로 변경
+	// let pwPattern = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{5,}$/;
+	// !pwPattern.test(pw)
+	if(pw.length < 5){
 		alert("올바른 암호를 입력하세요.\n암호는 영문자,숫자,특수문자를 사용해 5글자 이상이어야 합니다.");
 		document.getElementById('pw').focus();
 		return false;
 	}
 	
-	
-	/*let pwPattern = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{5,}$/;
-	if(!pwPattern.test(pw)){
-		alert("올바른 암호를 입력하세요.\n암호는 영문자,숫자,특수문자를 사용해 5글자 이상이어야 합니다.");
-		document.getElementById('pw').focus();
-		return false;
-	}
-	*/
 	
 }
 </script>
 <style type="text/css">
 .login-div {
 	width: 200px;
-	height: 300px;
-	margin : 0 auto;
+	min-height: 100px;
+	margin: 0 auto;
 	border: 1px solid black;
-	text-align : center;
+	text-align: center;
 	margin-top: 200px;
 	padding: 10px;
 }
-
-
-
-
-
 </style>
-
-
 </head>
 <body>
 	<th:block th:insert="~{menu.html :: menu}"></th:block>

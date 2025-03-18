@@ -88,3 +88,23 @@ public class FileController {
 	}
 	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+ * 
+ * 가나다.png
+ * 
+ */ 
