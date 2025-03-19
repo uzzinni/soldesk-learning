@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery연습하기</title>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+//jquer사용해보기
+// $(선택자).명령();
+// 선택자. html, id, class
+
+// 시작 문장
+//$(document).ready(function(){
+$(function() {
+	$("h1").click(function(){
+		$(this).hide();
+	});
+	$("#btn").click(function(){
+		$("h1").css("color","green");
+		$("p").css("fontSize","30px");
+		$("p").css("border","1px solid red");
+		$("p").css("backgroundColor","#c0c0c0");
+		$("p").text("버튼을 클릭했어요.");
+	});
+	//이미지 변경하기
+	$("img").click(function(){
+		$(this).attr("src", "/img/on.png");
+	});
+	//선택자
+	var img = $("img");
+	$("p").text(img.length + "개가 있습니다.");
+	
+	//append사용하기
+	$(".add").click(function(){
+		// (A).append(B) ->  A속에 B가 마지막 요소로
+		//$(".list").append("<li>두번째</li>");
+		//$(".list").prepend("<li>두번째</li>");
+		// (A).appendTo(B) -> A가 B 마지막에 추가
+		$("<li>l</li>").appendTo(".list");
+	});
+	
+	$("#before").click(function(){
+		$(".list").before("<p>before</p>");
+		$(".list").after("<p>after</p>");
+	});
+	
+	//clone
+	$("#clone").click(function(){
+		$("#first").clone().appendTo(".list");
+	});
+	
+	//replaceAll
+	$("#replaceAll").click(function(){
+		$("#first").replaceAll(".item");
+		$("button").remove();
+		$("h1").empty();
+	});
+});
+</script>
+</head>
+<body>
+	<!-- 2025-03-19 웹 서비스 구축 -->
+	<!-- 1. jquery 파일 연결하기 -->
+	<h1>jquery</h1>
+	<h1>제이쿼리 수업입니다</h1>
+	<p>글 내용</p>
+	<button id="btn">클릭하세요</button>
+	<hr>
+	<img alt="" src="/img/off.png">
+	<img alt="" src="/img/off.png">
+	<hr>
+	
+	<ul class="list">
+		<li class="item" id="first">첫번째</li>
+		<li class="item">두번째</li>
+		<li class="item">세번째</li>
+		<li class="item">네번째</li>
+	</ul>
+	<button class="add">추가</button>
+	<button id="before">before</button>
+	<button id="clone">clone</button>
+	<button id="replaceAll">replaceAll</button>
+	
+	<table>
+		<tr>
+			<td></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td></td>
+		</tr>
+	</table>
+	
+	
+</body>
+</html>

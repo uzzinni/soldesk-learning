@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jq2</title>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+$(function(){
+	$(".click").click(function(){
+		//$(".div2").parent().css("border","1px solid red");
+		$(".div3").parents("div").css("border", "1px solid red");
+	});
+	
+	//댓글 글자수 제한하기
+	$("#comment").keyup(function(){
+		let comment = $(this).val();
+		//$("#result").text(comment);
+		$("#commentBtn").text("댓글쓰기\n" + comment.length + "/200자");
+		if(comment.length > 200) {
+			$(this).val($(this).val().substring(0, 200));
+		}
+	});
+});
+
+</script>
+<style type="text/css">
+div {
+	border: 1px dotted green;
+}
+</style>
+</head>
+<body>
+	<div class="div1">
+		div1
+		<div class="div2">
+			div2
+			<div class="div3">
+				div3
+			</div>
+		</div>
+	</div>
+	<button class="click">click</button>
+	<hr>
+	<div class="commentDiv">
+		<textarea id="comment"></textarea>
+		<button id="commentBtn">댓글쓰기</button>
+	</div>
+</body>
+</html>
