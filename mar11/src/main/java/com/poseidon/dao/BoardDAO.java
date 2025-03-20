@@ -1,5 +1,6 @@
 package com.poseidon.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,5 +25,9 @@ public interface BoardDAO {
 
 	@Select("SELECT * FROM viewcomment WHERE board_no=#{no}")
 	List<Map<String, Object>> commentList(int no);
+
+	void commentAJAX(HashMap<String, Object> map);
+
+	Map<String, Object> commentDetailAjax(HashMap<String, Object> map);
 
 }

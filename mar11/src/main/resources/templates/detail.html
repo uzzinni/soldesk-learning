@@ -2,35 +2,44 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
 <th:block th:insert="~{menu.html :: head}"></th:block>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script type="text/javascript" th:inline="javascript">
-function comment(){
-	let comment = document.querySelector('#comment');
-	if(comment.value == "" || comment.value.length < 5){
-		alert('댓글은 다섯글자 이상 작성해주세요.');
-	} else {
-		if(confirm('등록하시겠습니까?')){
-			let form = document.createElement("form");
-			form.setAttribute("action", "/comment");
-			form.setAttribute("method", "post");
-			
-			let data = document.createElement('input');
-			data.setAttribute("type", "hidden");
-			data.setAttribute("name", "comment");
-			data.setAttribute("value", comment.value);
-			
-			let bno = document.createElement('input');
-			bno.setAttribute("type", "hidden");
-			bno.setAttribute("name", "board_no");
-			bno.setAttribute("value", '[[${detail.board_no}]]');
-			
-			form.appendChild(data);
-			form.appendChild(bno);
-			document.body.appendChild(form);
-			form.submit();
-		}
-	}
-	//alert(comment.value === '' || comment == '');
-}
+//jQuery 2025-03-20 웹 시스템 구축 (ajax 기초)
+$(function(){
+	// 숨기기 .hide() <-> .show()
+	$("#commentInsertForm").hide();
+	// 보이기
+	$("#comment-insert-btn").click(function(){
+		//$("#commentInsertForm").show();
+		//$("#commentInsertForm").slideToggle('slow');
+		$("#commentInsertForm").show("slide", {direction:'left'}, 1000);
+	});
+
+	//ajax 연습1
+	$("#comment-btn").click(function(){
+		let comment = $("#comment").val();
+		if(comment.length < 5){
+			alert("댓글은 다섯글자 이상 입력하세요.");
+		} else {			
+			$.ajax({
+				url  : '/ajaxEx', 		// url주소
+				type : 'post', 			// get/post
+				data : JSON.stringify({board_no : '[[${detail.board_no }]]', comment : comment }), // 서버가 받아서 볼 데이터 : json
+				dataType : 'json', 		// 서버에서 보내주는 값
+				contentType: 'application/json',
+				success : function(data){ // 통신에 성공했다면 할 작업
+					//$("h1").text(data.c_no);
+					$(".commentList").append("저장되나요?");
+				},  
+				error : function(status, error){ 	// 에러	
+					$("h1").text("문제가 발생했습니다.");
+				}
+			}); //end ajax
+		} // end else 
+	}); // click event
+	
+	
+});
 </script>
 </head>
 <body>
@@ -61,13 +70,13 @@ function comment(){
 			되돌아가기 버튼
 			<button th:onclick="|location.href='@{/board}'|">게시판으로</button>
 			<button onclick="history.back()">게시판으로2</button>
-			
+			<button id="comment-insert-btn">댓글쓰기</button>
 			<!-- 댓글창 -->
-			<div class="my-2 shadow">
+			<div id="commentInsertForm" class="my-2 shadow">
 				<div class="input-group">
 					<textarea id="comment" class="form-control" aria="btn btn-primary"></textarea>
-					<button th:if="${session.user_id ne null}" onclick="comment()" class="btn btn-primary input-group-append">댓글쓰기</button>
-					<button th:unless="${session.user_id ne null}" onclick="location.href='/login'" class="btn btn-primary input-group-append">댓글쓰기</button>
+					<button th:if="${session.user_id ne null}" id="comment-btn" class="btn btn-primary input-group-append">댓글쓰기</button>
+					<button th:unless="${session.user_id ne null}" onclick="location.href='/login'" class="btn btn-primary input-group-append">로그인해주세요</button>
 				</div>
 			</div>
 			
@@ -78,8 +87,8 @@ function comment(){
 			<div class="my-2">
 				[[${#lists.size(commentList) }]]개의 글이 있습니다.
 			</div>
-			<div th:if="${#lists.size(commentList) > 0}" class="m-2"> <!-- 댓글리스트 -->
-				<div th:each="comment : ${commentList }" class="my-2 shadow">
+			<div th:if="${#lists.size(commentList) > 0}" class="commentList m-2"> <!-- 댓글리스트 -->
+				<div th:each="comment : ${commentList }" class="commentItem my-2 shadow">
 					<div class="row py-1 rounded" style="background-color: #c0c0c0;">
 						<div class="col-6" th:text="|${comment.user_name }님|">글쓴이</div>
 						<div class="col-3"><i class="bi bi-alarm-fill"></i> [[${comment.c_date }]]</div>
