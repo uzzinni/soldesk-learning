@@ -35,7 +35,7 @@ public class JqueryController {
 	@ResponseBody
 	@GetMapping("/ajaxEx")
 	public String ajaxEx(@RequestParam("test") String test) {
-		System.out.println("test : " + test);
+		//System.out.println("test : " + test);
 		return "Ok!";
 	}
 	
@@ -44,12 +44,11 @@ public class JqueryController {
 		//if검사
 		//map에 세션을 추가해주세요. -> user_id
 		map.put("user_id", session.getAttribute("user_id"));
-		System.out.println("map :" + map);// board_no, comment, user_id
+		//System.out.println("map :" + map);// board_no, comment, user_id
 		
 		//int result = boardService.comment(map);
 		Map<String, Object> result = boardService.commentAJAX(map);
-		System.out.println("result : " + result); // map
-		
+		//System.out.println("result : " + result); // map
 		
 		return result; // json을 출력합니다.
 	}

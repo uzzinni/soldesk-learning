@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery연습하기</title>
+<th:block th:insert="~{menu.html :: head}"></th:block>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+	integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+	crossorigin="anonymous"></script>
+<script type="text/javascript">
+	$(function() {
+		let commentDiv = $('<div></div>').attr('class', 'commentItem my-2 shadow');
+		let row1 = $('<div></div>').attr('class', 'row py-1 rounded').css('backgroundColor', '#c0c0c0');
+		let col6 = $('<div></div>').attr('class', 'col-6').text('나비');//글쓴이  : 진짜 찍어줄 값.
+		row1.append(col6); // 글쓴이를 row에 붙입니다.
+		let col3 = $('<div></div>').attr('class','col-3').html('<i class="bi bi-alarm-fill me-2"></i>'+'시간');
+		row1.append(col3); // 작성시간을 row에 붙입니다.
+		let like = $('<div></div>').attr('class','col-3').html('<i class="bi bi-hand-thumbs-up-fill me-2"></i>' + '0');
+		row1.append(like);
+		//본문내용 만들기 row2 
+		let row2 = $("<div></div>").attr('class','row');
+		//본문내용 들어가는 col p-3
+		let colp3 = $("<div></div>").attr('class','col p-3').text('본문내용이 여기 들어갑니다.').css('min-height','50px');
+		//붙이기
+		row2.append(colp3);
+		//붙이기 commantDiv 속에 row1
+		commentDiv.append(row1).append(row2);
+		
+		$(".commentList").append(commentDiv);
+	});
+</script>
+</head>
+<body>
+	<section>
+		<div class="container px-5">
+			<h1>톺아보기</h1>
+			<th:block th:insert="~{menu.html :: menu}"></th:block>
+			<div class="commentList m-2">
+				<!-- 댓글리스트 -->
+				<div class="commentItem my-2 shadow">
+					<div class="row py-1 rounded" style="background-color: #c0c0c0;">
+						<div class="col-6">포세이돈님</div>
+						<div class="col-3">
+							<i class="bi bi-alarm-fill me-2"></i> 2025-03-21 18:10:15
+						</div>
+						<div class="col-3">
+							<i class="bi bi-hand-thumbs-up-fill"></i> 0
+						</div>
+					</div>
+					<div class="row">
+						<div class="col p-3" style="min-height: 50px;">ㄹㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷ</div>
+					</div>
+				</div>
+				<div class="commentItem my-2 shadow">
+					<div class="row py-1 rounded" style="background-color: #c0c0c0;">
+						<div class="col-6">포세이돈님</div>
+						<div class="col-3">
+							<i class="bi bi-alarm-fill me-2"></i> 2025-03-21 18:10:56
+						</div>
+						<div class="col-3">
+							<i class="bi bi-hand-thumbs-up-fill"></i> 0
+						</div>
+					</div>
+					<div class="row">
+						<div class="col p-3" style="min-height: 50px;">ㄹㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷ</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<th:block th:insert="~{menu.html :: footer}"></th:block>
+</body>
+</html>

@@ -2,44 +2,83 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
 <th:block th:insert="~{menu.html :: head}"></th:block>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+	integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+	crossorigin="anonymous"></script>
 <script type="text/javascript" th:inline="javascript">
-//jQuery 2025-03-20 웹 시스템 구축 (ajax 기초)
-$(function(){
-	// 숨기기 .hide() <-> .show()
-	$("#commentInsertForm").hide();
-	// 보이기
-	$("#comment-insert-btn").click(function(){
-		//$("#commentInsertForm").show();
-		//$("#commentInsertForm").slideToggle('slow');
-		$("#commentInsertForm").show("slide", {direction:'left'}, 1000);
-	});
+	//jQuery 2025-03-20 웹 시스템 구축 (ajax 기초)
+	$(function() {
+		$("#commentInsertForm").hide();
+		// 지난 방식
+		/* $("#comment-insert-btn").click(function() {
+			//$("#commentInsertForm").show();
+			//$("#commentInsertForm").slideToggle('slow');
+			//$("#commentInsertForm").show("slide", {direction : 'left'}, 1000); //문제가 발생합니다.
+		}); */
+		
+		//toggle
+		$("#comment-insert-btn").click(function() {
+			$("#commentInsertForm").toggle('slow'); // 이전 상태에 따라서 현재 상태를 반대로 바꿔주는 기능
+		});
+		
+		//ajax 연습1
+		$("#comment-btn").click(function() {
+			let comment = $("#comment").val();
+			if (comment.length < 5) {
+				alert("댓글은 다섯글자 이상 입력하세요.");
+			} else {
+				if (confirm("저장하시겠습니까?")) {
+					let commentList = $(".commentList");
+					$.ajax({
+						url : '/ajaxEx', // url주소
+						type : 'post', // get/post
+						data : JSON.stringify({
+							board_no : '[[${detail.board_no }]]',
+							comment : comment
+						}), // 서버가 받아서 볼 데이터 : json
+						dataType : 'json', // 서버에서 보내주는 값
+						contentType : 'application/json',
+						success : function(data) { // 통신에 성공했다면 할 작업
+							//alert(data.c_no);
+							// jquery로 동적 div만들기 2025-03-21 웹 시스템 구축
+							let commentDiv = $('<div></div>').attr('class', 'commentItem my-2 shadow');
+							let row1 = $('<div></div>').attr('class', 'row py-1 rounded').css('backgroundColor', '#c0c0c0');
+							let col6 = $('<div></div>').attr('class', 'col-6').text(data.user_name); //user_name을 넣어주세요.
+							row1.append(col6); // 글쓴이를 row에 붙입니다.
+							let col3 = $('<div></div>').attr('class','col-3').html('<i class="bi bi-alarm-fill me-2"></i>'+ data.c_date);
+							row1.append(col3); // 작성시간을 row에 붙입니다.
+							let like = $('<div></div>').attr('class','col-3').html('<i class="bi bi-hand-thumbs-up-fill me-2"></i>' + data.c_like);
+							row1.append(like);
+							let row2 = $("<div></div>").attr('class','row'); //본문내용 만들기 row2
+							//본문내용 들어가는 col p-3
+							//let colp3 = $("<div></div>").attr('class','col p-3').text(data.c_comment).css('min-height','50px');
+							row2.append($("<div></div>").attr('class','col p-3').text(data.c_comment).css('min-height','50px'));
+							//붙이기 commantDiv 속에 row1
+							commentDiv.append(row1).append(row2);			
+							$(".commentList").append(commentDiv);// 최종 붙이기
+						},
+						error : function(status, error) { // 에러	
+							$("h1").text("문제가 발생했습니다.");
+						},
+						complete : function(){ // 성공, 에러 상관없이 완료 될 경우 호출 될 것.
+							//$("h1").text('작업을 완료했습니다.');
+							$("#comment").val(""); // 댓글쓰기에 남아있는 글 삭제하기
+						}
+						
+					}); //end ajax
+				} // end confirm
+			} //end if
+		}); // click event
 
-	//ajax 연습1
-	$("#comment-btn").click(function(){
-		let comment = $("#comment").val();
-		if(comment.length < 5){
-			alert("댓글은 다섯글자 이상 입력하세요.");
-		} else {			
-			$.ajax({
-				url  : '/ajaxEx', 		// url주소
-				type : 'post', 			// get/post
-				data : JSON.stringify({board_no : '[[${detail.board_no }]]', comment : comment }), // 서버가 받아서 볼 데이터 : json
-				dataType : 'json', 		// 서버에서 보내주는 값
-				contentType: 'application/json',
-				success : function(data){ // 통신에 성공했다면 할 작업
-					//$("h1").text(data.c_no);
-					$(".commentList").append("저장되나요?");
-				},  
-				error : function(status, error){ 	// 에러	
-					$("h1").text("문제가 발생했습니다.");
-				}
-			}); //end ajax
-		} // end else 
-	}); // click event
-	
-	
-});
+		
+		//댓글 삭제 cdelete
+		//$(".cdelete").click(function(){});
+		$(".cdelete").on("click", function(){
+			//alert("댓글 삭제를 클릭했습니다.");
+			let c_no = $(this).siblings(".c_no"); //html(), val(), text()
+			alert("형제 요소 : " + c_no.text());
+		});
+	});
 </script>
 </head>
 <body>
@@ -49,23 +88,25 @@ $(function(){
 		<div class="container px-5">
 			<h1>톺아보기</h1>
 			<div class="">
-				<div class="row mt-4">				
+				<div class="row mt-4">
 					<div class="col fs-2 border-bottom border-2">
 						<div class="badge text-bg-primary" th:text="${detail.board_like }">좋아요</div>
 						[[${detail.board_title }]]
 					</div>
 				</div>
-				<div class="row border-bottom border-1" style="background-color: #c0c0c0;">				
+				<div class="row border-bottom border-1"
+					style="background-color: #c0c0c0;">
 					<div class="col text-left" th:text="|${detail.user_name }님이 씀|">글쓴이</div>
 					<div class="col text-right">
 						<!-- 타임리프 함수입니다 temporals.format(값, '출력형식')-->
-					 	[[${#temporals.format(detail.board_date, 'yyyy년 MM월 dd일 HH시 mm분 ss초')}]]
+						[[${#temporals.format(detail.board_date, 'yyyy년 MM월 dd일 HH시 mm분
+						ss초')}]]
 					</div>
 				</div>
 				<div class="row mb-3" style="min-height: 50vh;">
 					<div class="col" th:utext="${detail.board_content }">내용</div>
 				</div>
-				
+
 			</div>
 			되돌아가기 버튼
 			<button th:onclick="|location.href='@{/board}'|">게시판으로</button>
@@ -75,33 +116,48 @@ $(function(){
 			<div id="commentInsertForm" class="my-2 shadow">
 				<div class="input-group">
 					<textarea id="comment" class="form-control" aria="btn btn-primary"></textarea>
-					<button th:if="${session.user_id ne null}" id="comment-btn" class="btn btn-primary input-group-append">댓글쓰기</button>
-					<button th:unless="${session.user_id ne null}" onclick="location.href='/login'" class="btn btn-primary input-group-append">로그인해주세요</button>
+					<button th:if="${session.user_id ne null}" id="comment-btn"
+						class="btn btn-primary input-group-append">댓글쓰기</button>
+					<button th:unless="${session.user_id ne null}"
+						onclick="location.href='/login'"
+						class="btn btn-primary input-group-append">로그인해주세요</button>
 				</div>
 			</div>
-			
+
 			<!-- 로그인 여부 -->
-			<!-- [[${session.user_name ne null}]] / [[${session.user_id ne null}]] --> 
-			
+			<!-- [[${session.user_name ne null}]] / [[${session.user_id ne null}]] -->
+
 			<!-- 댓글 내용 출력하기 ________  댓글의 수 : -->
-			<div class="my-2">
-				[[${#lists.size(commentList) }]]개의 글이 있습니다.
-			</div>
-			<div th:if="${#lists.size(commentList) > 0}" class="commentList m-2"> <!-- 댓글리스트 -->
-				<div th:each="comment : ${commentList }" class="commentItem my-2 shadow">
+			<div class="my-2">[[${#lists.size(commentList) }]]개의 글이 있습니다.</div>
+			<div th:if="${#lists.size(commentList) > 0}" class="commentList m-2">
+				<!-- 댓글리스트 -->
+				<div th:each="comment : ${commentList }"
+					class="commentItem my-2 shadow">
 					<div class="row py-1 rounded" style="background-color: #c0c0c0;">
-						<div class="col-6" th:text="|${comment.user_name }님|">글쓴이</div>
-						<div class="col-3"><i class="bi bi-alarm-fill"></i> [[${comment.c_date }]]</div>
-						<div class="col-3" ><i class="bi bi-hand-thumbs-up-fill"></i> [[${comment.c_like }]]</div>
+						<div class="col-6">
+							[[${comment.user_name}]]님 <!--  [[${comment.user_id}]] [[${session.user_id}]] -->
+							<th:block th:if="${comment.user_id eq session.user_id}">
+								<div class="c_no d-none">[[${comment.c_no}]]</div>
+								<button type="button" class="cupdate btn btn-outline-info btn-sm">수정</button>
+								<button type="button" class="cdelete btn btn-outline-danger btn-sm">삭제</button>
+							</th:block>
+						</div>
+						<div class="col-3">
+							<i class="bi bi-alarm-fill me-2"></i>[[${comment.c_date }]]
+						</div>
+						<div class="col-3">
+							<i class="bi bi-hand-thumbs-up-fill"></i>[[${comment.c_like }]]
+						</div>
 					</div>
 					<div class="row">
-						<div class="col p-3" th:utext="${comment.c_comment }" style="min-height: 50px;"></div>
+						<div class="col p-3" th:utext="${comment.c_comment }"
+							style="min-height: 50px;"></div>
 					</div>
 				</div>
 			</div>
 			<div th:unless="${#lists.size(commentList) > 0}">댓글이 없습니다.</div>
-			
-			
+
+
 		</div>
 	</section>
 

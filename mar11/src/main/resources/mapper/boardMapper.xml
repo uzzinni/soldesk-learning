@@ -16,7 +16,7 @@
 	</select>
 	
 	<insert id="commentAJAX" parameterType="Map">
-		INSERT INTO comment (board_no, c_comment, user_no)
+		INSERT INTO comment (board_no, c_comment, user_no) 
 		VALUES (#{board_no}, #{comment}, (SELECT user_no FROM user WHERE user_id=#{user_id}))
 		<selectKey resultType="Integer" keyProperty="c_no" order="AFTER">
 			SELECT LAST_INSERT_ID()
@@ -25,9 +25,9 @@
 	
 	<select id="commentDetailAjax" parameterType="Map" resultType="Map">
 		SELECT *
-		FROM comment
+		FROM viewcomment
 		WHERE c_no = #{c_no}
-	
 	</select>
+	
 	
 </mapper>
