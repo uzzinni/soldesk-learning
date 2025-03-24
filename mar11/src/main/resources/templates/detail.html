@@ -75,8 +75,11 @@
 		//$(".cdelete").click(function(){});
 		$(".cdelete").on("click", function(){
 			//alert("댓글 삭제를 클릭했습니다.");
-			let c_no = $(this).siblings(".c_no"); //html(), val(), text()
+			let c_no = $(this).siblings(".c_no");
+			//html() : tag까지 가져옴, text() : text만 가져옴 , val() : value가 있을 경우
 			alert("형제 요소 : " + c_no.text());
+			//부모의 commentItem까지 올라가서 remove();
+			$(this).parents(".commentItem").remove();
 		});
 	});
 </script>
@@ -99,8 +102,7 @@
 					<div class="col text-left" th:text="|${detail.user_name }님이 씀|">글쓴이</div>
 					<div class="col text-right">
 						<!-- 타임리프 함수입니다 temporals.format(값, '출력형식')-->
-						[[${#temporals.format(detail.board_date, 'yyyy년 MM월 dd일 HH시 mm분
-						ss초')}]]
+						[[${#temporals.format(detail.board_date, 'yyyy년 MM월 dd일 HH시 mm분 ss초')}]]
 					</div>
 				</div>
 				<div class="row mb-3" style="min-height: 50vh;">
@@ -131,8 +133,7 @@
 			<div class="my-2">[[${#lists.size(commentList) }]]개의 글이 있습니다.</div>
 			<div th:if="${#lists.size(commentList) > 0}" class="commentList m-2">
 				<!-- 댓글리스트 -->
-				<div th:each="comment : ${commentList }"
-					class="commentItem my-2 shadow">
+				<div th:each="comment : ${commentList }" class="commentItem my-2 shadow">
 					<div class="row py-1 rounded" style="background-color: #c0c0c0;">
 						<div class="col-6">
 							[[${comment.user_name}]]님 <!--  [[${comment.user_id}]] [[${session.user_id}]] -->
