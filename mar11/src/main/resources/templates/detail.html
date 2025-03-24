@@ -75,12 +75,92 @@
 		//$(".cdelete").click(function(){});
 		$(".cdelete").on("click", function(){
 			//alert("댓글 삭제를 클릭했습니다.");
-			let c_no = $(this).siblings(".c_no");
-			//html() : tag까지 가져옴, text() : text만 가져옴 , val() : value가 있을 경우
-			alert("형제 요소 : " + c_no.text());
-			//부모의 commentItem까지 올라가서 remove();
-			$(this).parents(".commentItem").remove();
+			if(confirm('삭제하시겠습니까?')){				
+				let c_no = $(this).siblings(".c_no");
+				//html() : tag까지 가져옴, text() : text만 가져옴 , val() : value가 있을 경우
+				//alert("형제 요소 : " + c_no.text());
+				//부모의 commentItem까지 올라가서 remove();
+				// 2025-03-24 웹 서비스 구축
+				// ajax 통신을 해서 controller -> post / c_no, board_no, user_id --> JSON / {result : 1}
+				let commentItem = $(this).parents(".commentItem");
+				
+				//ajax
+				$.ajax({
+					url : '/cdelete',
+					type: 'post',
+					dataType : 'json',
+					data : JSON.stringify({c_no : c_no.text(), board_no : '[[${detail.board_no }]]' }),
+					contentType : 'application/json',
+					success : function(data){ //{result : 1} 성공시 1
+						//alert(data.result);
+						if(data.result == 1){
+							//$(this).parents(".commentItem").remove();
+							commentItem.remove(); //그때 화면에서 지워.
+						} else {
+							//에러. modal
+							alert('삭제불가');
+						}
+					},
+					error : function(status, error){
+						alert("문제가 발생했습니다." + error);
+					},
+					complete : function(){
+						$("h1").text('작업을 완료했습니다.');
+					}
+				});
+			}
 		});
+		
+		//댓글 수정 cupdate
+		$('.cupdate').on('click', function(){
+			$('#inputCno').remove();
+			if(confirm('댓글을 수정하시겠습니까?')){
+				//c_no가져오기 = 삭제하기와 동일
+				let c_no = $(this).siblings(".c_no");
+				//c_comment 가져오기 == 이름이 동일해서 class comment를 추가했어요.
+				let c_comment = $(this).closest('.commentItem').find('.comment').children('.col');
+				//c_no값을 가져오기 위해서 동적 input을 만들고 거기에 값을 넣었습니다.
+				let inputCno = $('<input>').attr('id', 'inputCno').attr('class','d-none').val(c_no.text());
+				$('#message-text').after(inputCno);//text아래에 붙이기
+				
+				$('#message-text').val(c_comment.text());
+				//모달 동작하기
+				$('#exampleModal').modal('show');
+			} // end if
+		}); // end .update
+		
+		//댓글을 수정하고 저장버튼을 눌렀을때 #cupdate
+		$('#cupdate').on('click', function(){
+			if(confirm('수정한 내용을 저장하시겠습니까?')){				
+				let c_no = $('#inputCno').val(); //cno
+				let board_no = '[[${detail.board_no}]]'; //board_no
+				let c_comment = $('#message-text').val();//수정된 댓글
+				//alert("cno:" + c_no + "\nboard_no : " + board_no + "\nc_comment : " + c_comment);
+				
+				//ajax
+				$.ajax({
+					url : '/cupdate',
+					type : 'post',
+					data : JSON.stringify({c_no : c_no, board_no : board_no, c_comment : c_comment}),
+					contentType : 'application/json',
+					dataType : 'JSON',
+					success : function(data){
+						alert('수정완료');
+						location.reload(true);
+					},
+					error :  function(error){
+						alert(error);
+					},
+					complete : function(){
+						$('#exampleModal').modal('hide'); //모달 닫아주기 위해서 만들었습니다.
+					}
+				});
+				
+				
+			} // end if
+		}); //end #cupdate
+		
+		
 	});
 </script>
 </head>
@@ -150,17 +230,42 @@
 							<i class="bi bi-hand-thumbs-up-fill"></i>[[${comment.c_like }]]
 						</div>
 					</div>
-					<div class="row">
-						<div class="col p-3" th:utext="${comment.c_comment }"
-							style="min-height: 50px;"></div>
+					<div class="row comment">
+						<div class="col p-3" th:utext="${comment.c_comment }" style="min-height: 50px;"></div>
 					</div>
 				</div>
 			</div>
-			<div th:unless="${#lists.size(commentList) > 0}">댓글이 없습니다.</div>
+			<div th:unless="${#lists.size(commentList) > 0}">
+			<div class="my-2">댓글이 없습니다.</div>
+			<div class="commentList m-2"> </div>
+			</div>
 
 
 		</div>
 	</section>
+	<!-- Button trigger modal -->
+	<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  		Launch demo modal
+	</button>
+
+	<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"  aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+			<div class="mb-3">
+            	<label for="message-text" class="col-form-label">댓글 수정</label>
+            	<textarea class="form-control" id="message-text" style="height: 200px"></textarea>
+          	</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+        <button type="button" id="cupdate" class="btn btn-primary">저장하기</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 
 	<th:block th:insert="~{menu.html :: footer}"></th:block>

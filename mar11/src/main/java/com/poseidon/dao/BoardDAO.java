@@ -30,4 +30,8 @@ public interface BoardDAO {
 
 	Map<String, Object> commentDetailAjax(HashMap<String, Object> map);
 
+	int cdelete(Map<String, Object> map);
+
+	int cupdate(Map<String, Object> map);
+
 }
