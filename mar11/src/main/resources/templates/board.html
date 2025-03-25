@@ -1,10 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-
-
 <th:block th:insert="~{menu.html :: head}"></th:block>
-
 </head>
 <body>
 	<th:block th:insert="~{menu.html :: menu}"></th:block>
@@ -31,6 +28,10 @@
 					<td th:text="${dto.board_like }"></td>
 				</tr>
 			</table>
+			<!-- 로그인 한 사용자에게 보이는 글쓰기 버튼을 만들어주세요.
+			2025-03-25 웹 시스텝 구축 글쓰기, AOP -->
+			<button th:if="${session.user_id ne null}" type="button" class="btn btn-info" onclick="location.href='/write'">글쓰기</button>
+			<a th:if="${session.user_id ne null}" href="/write" class="btn btn-info">글쓰기</a>
 		</div>
 	</section>
 

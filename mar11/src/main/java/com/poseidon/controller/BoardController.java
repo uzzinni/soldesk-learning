@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.poseidon.dto.BoardDTO;
@@ -93,5 +94,35 @@ public class BoardController {
  		CONSTRAINT FK_user FOREIGN KEY (user_no) REFERENCES user (user_no) ON UPDATE NO ACTION ON DELETE NO ACTION
  		);
 	 */
+	
+	//글쓰기 화면 열어주기
+	@GetMapping("/write") 
+	public String write(HttpSession session) {
+		
+		if(session.getAttribute("user_id") != null) {			
+			return "write";
+		} else {
+			return "redirect:/login";
+		}
+	}
+	
+	//RequestParam : url쿼리, form을 전송받을 때 
+	//RequestBody : ajax, json 데이터 추출할 때. Rest API
+	@PostMapping("/write")
+	public String write(@RequestParam Map<String, Object> map) {
+		//System.out.println("글쓰기에서 오는 값 : " + map); // title, content
+		
+		int result = boardService.write(map);
+		//System.out.println("저장완료  : " + map); //title, content, ?, ?
+		
+		return "redirect:/detail/"+map.get("board_no"); //   http://localhost/detail/46
+	}
+	
+	@PostMapping("/deletePost")
+	public String deletePost(@RequestParam Map<String, Object> map) {
+		//System.out.println(map);
+		int result = boardService.deletePost(map);
+		return "redirect:/board";
+	}
 	
 }

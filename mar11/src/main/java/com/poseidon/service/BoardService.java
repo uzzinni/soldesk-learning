@@ -67,6 +67,21 @@ public class BoardService {
 			map.put("user_id", user_id);
 			return boardDAO.cupdate(map);
 		}
+
+		public int write(Map<String, Object> map) {
+			// util을 이용해서 user_id가져오기
+			if(util.getUser_id() != null) {				
+				map.put("user_id", util.getUser_id());
+				return boardDAO.write(map);
+			} else {
+				return 0;
+			}
+		}
+
+		public int deletePost(Map<String, Object> map) {
+			map.put("user_id", util.getUser_id());
+			return boardDAO.deletePost(map);
+		}
 		
 		
 }

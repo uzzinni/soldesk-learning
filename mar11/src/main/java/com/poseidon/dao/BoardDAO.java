@@ -34,4 +34,8 @@ public interface BoardDAO {
 
 	int cupdate(Map<String, Object> map);
 
+	int write(Map<String, Object> map);
+
+	int deletePost(Map<String, Object> map);
+
 }

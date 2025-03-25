@@ -35,8 +35,24 @@
 	</update>
 	
 	<update id="cupdate" parameterType="Map">
-		UPDATE comment SET c_comment=#{c_comment} 
-		WHERE c_no=#{c_no} AND board_no=#{board_no} AND user_no=(SELECT user_no FROM user WHERE user_id=#{user_id})
+		<![CDATA[	
+			UPDATE comment SET c_comment=#{c_comment} 
+			WHERE c_no=#{c_no} AND board_no=#{board_no} AND user_no=(SELECT user_no FROM user WHERE user_id=#{user_id})
+		]]>
+	</update>
+	
+	<insert id="write" parameterType="Map">
+		INSERT INTO board (board_title, board_content, user_no) 
+		VALUES (#{title}, #{content}, (SELECT user_no FROM user WHERE user_id=#{user_id}))
+		<selectKey resultType="Integer" keyProperty="board_no" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+	
+	
+	<update id="deletePost" parameterType="Map">
+		UPDATE board SET board_del=0 
+		WHERE board_no=#{board_no} AND user_no=(SELECT user_no FROM user WHERE user_id=#{user_id})
 	</update>
 	
 	
