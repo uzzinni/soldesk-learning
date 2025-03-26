@@ -5,11 +5,10 @@
 	
 	
 	
-	
 	<select id="login" parameterType="HashMap" resultType="HashMap">
 		SELECT count(*) as count, user_name 
 		FROM user
-		WHERE user_id=#{id} AND user_pw=#{pw}
+		vvWHERE user_id=#{id} AND AES_DECRYPT(UNHEX(user_pw), #{id})=#{pw}
 	</select>
 	
 	
