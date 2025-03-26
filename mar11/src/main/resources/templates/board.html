@@ -32,6 +32,19 @@
 			2025-03-25 웹 시스텝 구축 글쓰기, AOP -->
 			<button th:if="${session.user_id ne null}" type="button" class="btn btn-info" onclick="location.href='/write'">글쓰기</button>
 			<a th:if="${session.user_id ne null}" href="/write" class="btn btn-info">글쓰기</a>
+			<!-- paging -->
+			<div class="text-center">
+				<div class="btn-group">
+					<button class="btn btn-warning"><</button>
+				</div>
+				<div class="btn-group col" th:each="num : ${#numbers.sequence(1,10)}">
+					<button class="btn btn-warning">[[${num}]]</button>
+				</div>
+				<div class="btn-group col">
+					<button class="btn btn-warning">></button>
+				</div>
+			</div>
+			
 		</div>
 	</section>
 

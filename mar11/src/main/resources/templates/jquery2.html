@@ -7,16 +7,17 @@
 <script type="text/javascript">
 $(function(){
 	$(".click").click(function(){
-		//$(".div2").parent().css("border","1px solid red");
-		$(".div3").parents("div").css("border", "1px solid red");
+		//$(".div1").parent().css("border","1px solid red");
+		$(".div3").parents("div").css("border","1px solid red");
 	});
+	
 	
 	//댓글 글자수 제한하기
 	$("#comment").keyup(function(){
 		let comment = $(this).val();
 		//$("#result").text(comment);
 		$("#commentBtn").text("댓글쓰기\n" + comment.length + "/200자");
-		if(comment.length > 200) {
+		if(comment.length > 200){
 			$(this).val($(this).val().substring(0, 200));
 		}
 	});
@@ -24,7 +25,7 @@ $(function(){
 
 </script>
 <style type="text/css">
-div {
+div{
 	border: 1px dotted green;
 }
 </style>
@@ -45,5 +46,8 @@ div {
 		<textarea id="comment"></textarea>
 		<button id="commentBtn">댓글쓰기</button>
 	</div>
+	<p id="result"></p>
+	
+	
 </body>
 </html>

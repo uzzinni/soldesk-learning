@@ -91,12 +91,10 @@
 					data : JSON.stringify({c_no : c_no.text(), board_no : '[[${detail.board_no }]]' }),
 					contentType : 'application/json',
 					success : function(data){ //{result : 1} 성공시 1
-						//alert(data.result);
 						if(data.result == 1){
 							//$(this).parents(".commentItem").remove();
 							commentItem.remove(); //그때 화면에서 지워.
-						} else {
-							//에러. modal
+						} else {//에러. modal
 							alert('삭제불가');
 						}
 					},
@@ -247,10 +245,12 @@
 				</div>
 
 			</div>
-			되돌아가기 버튼
-			<button th:onclick="|location.href='@{/board}'|">게시판으로</button>
-			<button onclick="history.back()">게시판으로2</button>
-			<button id="comment-insert-btn">댓글쓰기</button>
+			<!-- 되돌아가기 버튼 -->
+			<div class="btn-group">
+			<button class="btn btn-info" th:onclick="|location.href='@{/board}'|">게시판으로</button>
+			<button class="btn btn-info" onclick="history.back()">게시판으로2</button>
+			<button class="btn btn-danger" id="comment-insert-btn">댓글쓰기</button>
+			</div>
 			<!-- 댓글창 -->
 			<div id="commentInsertForm" class="my-2 shadow">
 				<div class="input-group">
