@@ -4,27 +4,32 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.HttpSessionRequiredException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.poseidon.service.LoginService;
+import com.poseidon.util.Util;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 
 @Controller
+@RequiredArgsConstructor
 //@RequestMapping("/login")
 public class LoginController {
 	
-	@Autowired
-	private LoginService loginService;
+	private final LoginService loginService;
+	private final Util util;
 		
 	//  http://localhost/login
 	@GetMapping("/login")
-	public String login(HttpSession session) {
+	public String login() {
 		//System.out.println(" 요청이 들어왔습니다 ============= ");
 		//세션이 있는 사람이 들어오면 index로 갑니다.
+		HttpSession session = util.getRequest().getSession();
 		if(session.getAttribute("user_id") != null) {
 			return "redirect:/index";
 		} else {			
@@ -33,7 +38,7 @@ public class LoginController {
 	}
 	
 	@PostMapping("/login")
-	public String login(HttpSession session, @RequestParam Map<String, Object> map) { // {id=poseidon, pw=01234567}
+	public String login(@RequestParam Map<String, Object> map) { // {id=poseidon, pw=01234567}
 		//System.out.println(map);
 		Map<String, Object> result = loginService.login(map);
 		//System.out.println(result);
@@ -42,6 +47,7 @@ public class LoginController {
 		if(Integer.parseInt(String.valueOf(result.get("count"))) == 1) {
 			// 아이디, 암호가 일치합니다.
 			// session만들기   user_name, user_id
+			HttpSession session = util.getRequest().getSession();
 			session.setAttribute("user_name", result.get("user_name"));
 			session.setAttribute("user_id", map.get("id"));
 			// /board로 가기

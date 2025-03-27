@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 @Mapper
 public interface AopDAO {
-	@Insert("INSERT INTO iplog (iip, iurl, icomment) VALUES (#{iip}, #{iurl}, #{icomment})")
-	public void savelog(Map<String, Object> map);
+	@Insert("INSERT INTO iplog (iip, iurl, icomment) VALUES (#{ip}, #{uri}, #{data})")
+	public void saveLog(Map<String, Object> map);
 }

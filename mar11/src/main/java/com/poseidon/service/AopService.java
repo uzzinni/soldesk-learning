@@ -13,8 +13,8 @@ public class AopService {
 	@Autowired
 	private AopDAO aopDAO;
 
-	public void sevelog(Map<String, Object> map) {
-		aopDAO.savelog(map);
+	public void saveLog(Map<String, Object> map) {
+		aopDAO.saveLog(map);
 	}
 	
 }

@@ -13,48 +13,54 @@ import jakarta.servlet.http.HttpSession;
 @Component
 public class Util {
 
+	// 중복 정리 Request 를 반환하는 메소드
+	public HttpServletRequest getRequest() {
+		return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+	}
+
+	// 경로 가져오기
+	public String getURI() {
+		return getRequest().getRequestURI();
+	}
+
 	public String getUser_id() {
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
-				.getRequest();
-		HttpSession session = request.getSession();
+		HttpSession session = getRequest().getSession();
 		return (String) session.getAttribute("user_id");
 	}
 
 	public String getIP() {
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
-				.getRequest();
-		String ip = request.getHeader("X-Forwarded-For");
+		String ip = getRequest().getHeader("X-Forwarded-For");
 
 		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-			ip = request.getHeader("Proxy-Client-IP");
+			ip = getRequest().getHeader("Proxy-Client-IP");
 		}
 
 		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-			ip = request.getHeader("WL-Proxy-Client-IP");
+			ip = getRequest().getHeader("WL-Proxy-Client-IP");
 		}
 
 		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-			ip = request.getHeader("HTTP_CLIENT_IP");
+			ip = getRequest().getHeader("HTTP_CLIENT_IP");
 		}
 
 		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-			ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+			ip = getRequest().getHeader("HTTP_X_FORWARDED_FOR");
 		}
 
 		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-			ip = request.getHeader("X-Real-IP");
+			ip = getRequest().getHeader("X-Real-IP");
 		}
 
 		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-			ip = request.getHeader("X-RealIP");
+			ip = getRequest().getHeader("X-RealIP");
 		}
 
 		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-			ip = request.getHeader("REMOTE_ADDR");
+			ip = getRequest().getHeader("REMOTE_ADDR");
 		}
 
 		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-			ip = request.getRemoteAddr();
+			ip = getRequest().getRemoteAddr();
 		}
 
 		if (ip.equals("0:0:0:0:0:0:0:1") || ip.equals("127.0.0.1")) {
