@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h1>보드</h1>
+	
+	<table>
+		<tr>
+			<td>번호</td>
+			<td>제목</td>
+			<td>날짜</td>
+			<td>글쓴이</td>
+		</tr>
+		<tr th:each="row : ${list}">
+			<td th:text="${row.bno}"></td>
+			<td th:text="${row.btitle}"></td>
+			<td th:text="${row.bdate}"></td>
+			<td th:text="${row.name}"></td>
+		</tr>
+	</table>
+
+</body>
+</html>
