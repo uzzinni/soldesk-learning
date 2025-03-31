@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h1>보드2</h1>
+	<table>
+		<tr>
+			<th>번호</th>
+			<th>제목</th>
+			<th>글쓴이</th>
+			<th>날짜</th>
+			<th>삭제</th>
+		</tr>
+		<tr th:each="row : ${list}">
+			<td th:text="${row.bno}"></td>
+			<td th:text="${row.btitle}"></td>
+			<td th:text="${row.name}"></td>
+			<td th:text="${row.bdate}"></td>
+			<td><button th:onclick="|location.href='@{/delete(bno=${row.bno})}'|">삭제</button></td>
+		</tr>
+	</table>
+	<a href="/insert">insert</a>
+</body>
+</html>
