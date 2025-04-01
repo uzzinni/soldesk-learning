@@ -16,7 +16,7 @@
 		</tr>
 		<tr th:each="row : ${list}">
 			<td th:text="${row.bno}"></td>
-			<td th:text="${row.btitle}"></td>
+			<td th:onclick="|location.href='@{/detail(bno=${row.bno}, pageNo=1)}'|">[[${row.btitle}]]</td>
 			<td th:text="${row.name}"></td>
 			<td th:text="${row.bdate}"></td>
 			<td><button th:onclick="|location.href='@{/delete(bno=${row.bno})}'|">삭제</button></td>

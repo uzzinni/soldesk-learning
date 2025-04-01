@@ -2,6 +2,7 @@ package com.poseidon.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,14 @@ public class BoardService {
 
 	public void insert() {
 		// 레코드 생성
-		Board board = new Board("insert연습입니다.", "인서트 연습 본문입니다.", "임길동");
+		//Board board = new Board("insert연습입니다.", "인서트 연습 본문입니다.", "임길동");
+		//빌더 
+		Board board = Board.builder()
+						.btitle("insert연습입니다.")
+						.bcontent("인서트 연습 본문입니다.")
+						.name("임길동")
+						.build();
+		
 		// repository에게 일 시키기
 		// boardRepository.save(board);
 		// 여러 데이터 저장하기
@@ -39,12 +47,17 @@ public class BoardService {
 		list.add(new Board("insert10번째","10번째 본문","신길동"));
 		
 		boardRepository.saveAll(list);
+		
+		list.forEach(l -> System.out.println(l.getBno()));
 	}
 
 	public void delete(Board board) {
-		//boardRepository.deleteById(bno);	//PK
-		boardRepository.delete(board);		//entity
-		
+		//boardRepository.deleteById(bno); // PK=int
+		boardRepository.delete(board); // entity
+	}
+
+	public Optional<Board> detail(int bno) {
+		return boardRepository.findById(bno);
 	}
 
 }
