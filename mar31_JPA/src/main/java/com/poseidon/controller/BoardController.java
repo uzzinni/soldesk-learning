@@ -12,15 +12,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.poseidon.entity.Board;
 import com.poseidon.service.BoardService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 // 2025-03-31 웹 시스템 구축 : H2 + hikari + JPA
+@Tag(name = "BoardController", description = "보드 관련 기능이 있습니다.")
 @Controller
 @RequiredArgsConstructor
 public class BoardController {
 
 	private final BoardService boardService;
 	
+	@Operation(summary = "보드 출력", description = "게시판을 출력하는 코드입니다.")
 	@GetMapping({"/", "/board"})
 	public String board(Model model) {
 		// DB에 데이터 불러오기
@@ -33,6 +37,7 @@ public class BoardController {
 	
 	
 	//insert 예시
+	@Operation(summary = "게시글 추가", description = "게시글이 없어서 게시글 10개 생성합니다.")
 	@GetMapping("/insert")
 	public String insert() {
 		boardService.insert();
@@ -41,6 +46,7 @@ public class BoardController {
 	
 	
 	//delete 예   http://localhost/delete?bno=1
+	@Operation(summary = "게시글 삭제", description = "게시글을 삭제합니다.")
 	@GetMapping("/delete")
 	public String delete(Board board) {
 		//@RequestParam(name="bno", required = true) int bno
@@ -51,6 +57,7 @@ public class BoardController {
 		return "redirect:/board";
 	}
 	
+	@Operation(summary = "연습 API", description = "게시글을 json으로 변환하여 출력합니다.")
 	@ResponseBody
 	@GetMapping("/api")
 	public List<Board> api(){
@@ -61,6 +68,7 @@ public class BoardController {
 	//gson
 	
 	// http://localhost/detail?bno=57&pageNo=1
+	@Operation(summary = "게시글 상세보기", description = "bno와 pageNo가 들어오면 데이터베이스에서 글 하나 출력합니다.")
 	@GetMapping("/detail")
 	public String detail(@RequestParam(name="bno", required = true) int bno
 					   , @RequestParam(name="pageNo", required = false, defaultValue = "1") int pageNo
@@ -77,6 +85,7 @@ public class BoardController {
 			return "detail";
 		} else {			
 			return "error";
+			
 		}
 		
 	}
