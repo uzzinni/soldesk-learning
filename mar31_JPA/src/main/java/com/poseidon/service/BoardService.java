@@ -60,6 +60,11 @@ public class BoardService {
 		return boardRepository.findById(bno);
 	}
 
+	public void insert(Board board) {
+		boardRepository.save(board);
+		
+	}
+
 }
 
 //Web ---> Controller ---> Service ---> Repository --> DB
