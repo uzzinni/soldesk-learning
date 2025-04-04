@@ -14,8 +14,12 @@ public class BoardService {
 	@Autowired
 	private BoardDAO boardDAO;
 
-	public List<Map<String, Object>> board() throws Exception {
-		return boardDAO.board();
+	public List<Map<String, Object>> board(Map<String, Object> map) throws Exception {
+		return boardDAO.board(map);
+	}
+
+	public int getBoardCount(Map<String, Object> map) {
+		return boardDAO.getBoardCount(map);
 	}
 
 }

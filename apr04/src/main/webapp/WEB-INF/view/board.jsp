@@ -1,11 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="ui" uri="http://egovframework.gov/ctl/ui" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>미디어쿼리</title>
-<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<title>2025-04-04 웹 서비스 구축</title>
+<script type="text/javascript">
+	function linkPage(pageNo){
+		location.href = "./board.do?currentPageNo="+pageNo;
+	}   
+</script>
 </head>
 <body>
 	<div class="container">
@@ -28,6 +33,7 @@
 			<td>${b.boarddate }</td>
 		</tr></c:forEach>
 	</table>
+	<ui:pagination paginationInfo="${paginationInfo}" type="image" jsFunction="linkPage"/>
 	</div>
 </body>
 </html>

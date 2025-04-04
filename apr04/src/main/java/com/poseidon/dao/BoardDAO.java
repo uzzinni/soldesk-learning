@@ -13,8 +13,12 @@ public class BoardDAO{
 	@Autowired
 	private SqlSessionTemplate sqlSession;
 	
-	public List<Map<String, Object>> board() {
-		return sqlSession.selectList("sample.board");
+	public List<Map<String, Object>> board(Map<String, Object> map) {
+		return sqlSession.selectList("sample.board", map);
 	}
 
+	public int getBoardCount(Map<String, Object> map) {
+		return sqlSession.selectOne("sample.getBoardCount", map);
+	}
+	
 }

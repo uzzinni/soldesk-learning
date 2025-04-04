@@ -8,8 +8,15 @@
 		]]> 
 	</select>
 	
-	<select id="board" resultType="hashMap">
-		SELECT * FROM board2 LIMIT 0, 10
+	<select id="board" parameterType="hashMap" resultType="hashMap">
+		SELECT * 
+		FROM board2 
+		LIMIT #{firstIndex}, #{recordCountPerPage}
+	</select>
+	
+	<select id="getBoardCount" parameterType="hashMap" resultType="Integer">
+		SELECT count(*)
+		FROM board2
 	</select>
 
 </mapper>
