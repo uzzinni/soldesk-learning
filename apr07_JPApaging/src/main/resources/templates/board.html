@@ -24,7 +24,56 @@
 			<td><button th:onclick="|location.href='@{/delete(bno=${row.bno})}'|">삭제</button></td>
 		</tr>
 	</table>
+	<!-- paging -->
+	<div>
+		 서버에서 오는 값 확인해보기 <br>
+		 pageNo : [[${pageNo}]] <br>
+		 Page&lt;Board&gt;에서 오는 값 : totalPage : [[${list.totalPages}]]<br>
+		 이전페이지 있음? hasPrevious : [[${list.hasPrevious}]]<br>
+		 다음 페이지로 갈 수 있어? hasNext : [[${list.hasNext}]]<br>
+		 지금 있는 페이지 번호 number : [[${list.number}]] <br>
+		 size : [[${list.size}]] <br>
+		 isFirst : [[${list.isFirst}]]<br>
+		 isLast : [[${list.isLast}]]<br>
+		 NumberOfElements : [[${list.numberOfElements}]] <br>
+		 nextPageable :[[${list.nextPageable}]]<br>
+	</div>
+	
+	<div class="paging m-3">
+		<ul class="pagination justify-content-center">
+			<li class="page-item" th:classappend="${list.isFirst} ? disabled">
+				<a class="page-link" th:href="@{|?pageNo=1|}">처음</a>
+			</li>
+			<li class="page-item" th:classappend="${pageNo - 1} lt 1 ? disabled">
+				<a class="page-link" th:href="@{|?pageNo=${pageNo - 1}|}">이전</a>
+			</li>
+			<li class="page-item" th:each="row : ${#numbers.sequence(1, list.totalPages)}" th:classappend="${row eq pageNo} ? active">
+				<a class="page-link" th:text="${row}" th:href="@{|?pageNo=${row}|}"></a>
+			</li>
+			<li class="page-item" th:classappend="${pageNo + 1 gt list.totalPages} ? disabled">
+				<a class="page-link" th:href="@{|?pageNo=${pageNo + 1}|}">다음</a>
+			</li>
+			<li class="page-item" th:classappend="${list.isLast} ? disabled">
+				<a class="page-link" th:href="@{|?pageNo=${list.totalPages}|}">끝</a>
+			</li>
+		</ul>		
+	</div>
+	
+	
 	<a href="/insert">insert</a>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
 </html>
+
+<!--
+2025-04-07 웹 시스템 구축
+1. import 해주세요.
+2. DB정보 변경해주세요.
+3. 구동해주세요.
+
+JPA 페이징
+메일 보내기
+
+
+ 
+ -->

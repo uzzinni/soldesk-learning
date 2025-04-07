@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.poseidon.entity.Board;
@@ -17,6 +21,7 @@ public class BoardService {
 
 	private final BoardRepository boardRepository;
 
+	// 이건 이제 안 써요. 2025-04-07 : paging추가하면서 사용 안 함
 	public List<Board> findAll() {
 		return boardRepository.findAll();
 	}
@@ -62,6 +67,20 @@ public class BoardService {
 
 	public void insert(Board board) {
 		boardRepository.save(board);
+	}
+
+	//  JPA 페이지 사용해보기 입니다. 
+	public Page<Board> list(int pageNo) {
+		// 1. 정렬옵션 사용해보기 ORDER BY bno
+		List<Sort.Order> sorts = new ArrayList<Sort.Order>();
+		sorts.add(Sort.Order.desc("bno"));
+		
+		// 2. pageable 사용해보기 LIMIT
+		Pageable pageable = PageRequest.of(pageNo - 1, 10, Sort.by(sorts)); // 0 * 10  = 0
+		//                                 페이지번호, 한 페이지에 보여줄 페이지 수, 정렬옵션
+		
+		//return boardRepository.findAllByOrderByBnoDesc(pageable); 
+		return boardRepository.findAll(pageable); 
 	}
 
 }

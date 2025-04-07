@@ -3,6 +3,7 @@ package com.poseidon.controller;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,11 +27,19 @@ public class BoardController {
 		
 	@Operation(summary = "보드 출력", description = "게시판을 출력하는 코드입니다.")
 	@GetMapping({"/", "/board"})
-	public String board(Model model) {
+	public String board(Model model, @RequestParam(name="pageNo", required = false, defaultValue="1") int pageNo) {
+		// 페이지 번호 가져오기 = pageNo                  http://localhost/board?pageNo=1
+		//                                                http://localhost/board
+		//                                                http://localhost/
+		
+		System.out.println("클라이언트에서 오는 pageNo : " + pageNo);
+		
 		// DB에 데이터 불러오기
-		List<Board> List = boardService.findAll();
+		// List<Board> List = boardService.findAll();
+		Page<Board> List = boardService.list(pageNo);
 		// model에 붙이기
 		model.addAttribute("list", List);
+		model.addAttribute("pageNo", pageNo);
 				
 		return "board";
 	}
