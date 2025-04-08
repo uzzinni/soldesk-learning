@@ -25,7 +25,7 @@
 		</tr>
 	</table>
 	<!-- paging -->
-	<div>
+	<!-- <div>
 		 서버에서 오는 값 확인해보기 <br>
 		 pageNo : [[${pageNo}]] <br>
 		 Page&lt;Board&gt;에서 오는 값 : totalPage : [[${list.totalPages}]]<br>
@@ -37,26 +37,26 @@
 		 isLast : [[${list.isLast}]]<br>
 		 NumberOfElements : [[${list.numberOfElements}]] <br>
 		 nextPageable :[[${list.nextPageable}]]<br>
-	</div>
+	</div> -->
 	
-	<div class="paging m-3">
+	<div class="paging m-3" th:with="start=${(list.number / 10) * 10 + 1}, last=(${start + 9 < list.totalPages ?  start + 9   :  list.totalPages    }) ">
 		<ul class="pagination justify-content-center">
 			<li class="page-item" th:classappend="${list.isFirst} ? disabled">
 				<a class="page-link" th:href="@{|?pageNo=1|}">처음</a>
 			</li>
-			<li class="page-item" th:classappend="${pageNo - 1} lt 1 ? disabled">
-				<a class="page-link" th:href="@{|?pageNo=${pageNo - 1}|}">이전</a>
+			<li class="page-item" th:classappend="${pageNo - 10} lt 1 ? disabled">
+				<a class="page-link" th:href="@{|?pageNo=${pageNo - 10}|}">이전</a>
 			</li>
-			<li class="page-item" th:each="row : ${#numbers.sequence(1, list.totalPages)}" th:classappend="${row eq pageNo} ? active">
+			<li class="page-item" th:each="row : ${#numbers.sequence(start, last)}" th:classappend="${row eq pageNo} ? active">
 				<a class="page-link" th:text="${row}" th:href="@{|?pageNo=${row}|}"></a>
 			</li>
-			<li class="page-item" th:classappend="${pageNo + 1 gt list.totalPages} ? disabled">
-				<a class="page-link" th:href="@{|?pageNo=${pageNo + 1}|}">다음</a>
+			<li class="page-item" th:classappend="${pageNo + 10 gt list.totalPages} ? disabled">
+				<a class="page-link" th:href="@{|?pageNo=${pageNo + 10}|}">다음</a>
 			</li>
 			<li class="page-item" th:classappend="${list.isLast} ? disabled">
 				<a class="page-link" th:href="@{|?pageNo=${list.totalPages}|}">끝</a>
 			</li>
-		</ul>		
+		</ul>
 	</div>
 	
 	
@@ -77,3 +77,4 @@ JPA 페이징
 
  
  -->
+ 
