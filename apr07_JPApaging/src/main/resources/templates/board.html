@@ -19,7 +19,7 @@
 		<tr th:each="row : ${list}">
 			<td th:text="${row.bno}"></td>
 			<td th:onclick="|location.href='@{/detail(bno=${row.bno}, pageNo=1)}'|">[[${row.btitle}]]</td>
-			<td th:text="${row.name}"></td>
+			<td th:text="${row.Member.mname}"></td>
 			<td th:text="${row.bdate}"></td>
 			<td><button th:onclick="|location.href='@{/delete(bno=${row.bno})}'|">삭제</button></td>
 		</tr>
@@ -39,7 +39,7 @@
 		 nextPageable :[[${list.nextPageable}]]<br>
 	</div> -->
 	
-	<div class="paging m-3" th:with="start=${(list.number / 10) * 10 + 1}, last=(${start + 9 < list.totalPages ?  start + 9   :  list.totalPages    }) ">
+	<div class="paging m-3" th:with="start=${(list.number / 10) * 10 + 1}, last=(${start + 9 lt list.totalPages ?  start + 9   :  list.totalPages    }) ">
 		<ul class="pagination justify-content-center">
 			<li class="page-item" th:classappend="${list.isFirst} ? disabled">
 				<a class="page-link" th:href="@{|?pageNo=1|}">처음</a>
@@ -77,4 +77,3 @@ JPA 페이징
 
  
  -->
- 
