@@ -7,8 +7,8 @@ import org.apache.commons.mail.SimpleEmail;
 
 public class Email {
 	//email 정보는 여기에 static으로 만들겠습니다.
-	static String emailAddr = "yujin7154@gmail.com";	//보내는 이메일
-	static String passwd = "kiah nypy ikqb kxhy";	// 앱 비밀번호
+	static String emailAddr = "";	//보내는 이메일
+	static String passwd = "";	// 앱 비밀번호
 	static String hostName = "smtp.gmail.com";	//고정
 	static String name = "[Admin]";
 	static int port = 587;	//고정
