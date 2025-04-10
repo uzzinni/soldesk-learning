@@ -1,5 +1,6 @@
 package com.poseidon.util;
 
+import org.apache.commons.mail.EmailAttachment;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 import org.apache.commons.mail.SimpleEmail;
@@ -45,7 +46,13 @@ public class Email {
 		mail.addTo(email);
 		mail.setSubject(title);
 		//mail.setMsg(content);		//이전 방법
-		mail.setHtmlMsg(content);
+		mail.setHtmlMsg(content);	//html tag를 사용할 수 있는 방법
+		
+		//파일 첨부하기
+		EmailAttachment file = new EmailAttachment();
+		
+		file.setPath("c:\\temp\\swagger.pdf");
+		mail.attach(file);
 		mail.send();
 	}
 }
