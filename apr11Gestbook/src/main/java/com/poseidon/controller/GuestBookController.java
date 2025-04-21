@@ -1,5 +1,8 @@
 package com.poseidon.controller;
 
+import java.time.LocalDateTime;
+
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,6 +52,12 @@ public class GuestBookController {
 		return "read";
 	}
 	
+	//@Scheduled(fixedDelay = 2000) // 2초 후 실행
+	@Scheduled(cron="*/2 * * * * *", zone = "Asia/Seoul")
+	public void print2Second() {
+		String time = LocalDateTime.now().toString();
+		System.out.println("daytime : " + time);
+	}
 	
 	
 }
