@@ -59,7 +59,7 @@ public class ExcelController {
 	}
 
 	@PostMapping("/readExcel")
-	public String read(@RequestParam("file") MultipartFile upFile) throws IOException {
+	public String read(@RequestParam("file") MultipartFile upFile, Model model) throws IOException {
 		//엔티티 만들어주고 올게요. 나중에.
 		List<Map<String, Object>> data = new ArrayList<>();
 		
@@ -99,8 +99,8 @@ public class ExcelController {
 			data.add(dataMap);
 		}// end for I
 		System.out.println(data); //최종 출력
-				
-		return "upfile";
+		model.addAttribute("data", data);
+		return "admin/upfile";
 	}
 	
 }

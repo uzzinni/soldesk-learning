@@ -53,10 +53,15 @@ public class GuestBookController {
 	}
 	
 	//@Scheduled(fixedDelay = 2000) // 2초 후 실행
-	@Scheduled(cron="*/2 * * * * *", zone = "Asia/Seoul")
+	@Scheduled(cron="0 */10 * * * *", zone = "Asia/Seoul")
 	public void print2Second() {
 		String time = LocalDateTime.now().toString();
 		System.out.println("daytime : " + time);
+	}
+	// 평일 17:40~22:40까지 40분 마다 호출
+	@Scheduled(cron="0 40 17-22 * * 1-5", zone = "Asia/Seoul")
+	public void print3() {
+		System.out.println("수업시작입니다");
 	}
 	
 	

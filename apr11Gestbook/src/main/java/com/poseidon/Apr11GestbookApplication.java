@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableJpaAuditing
-@EnableScheduling	//스케쥴러 사용
+@EnableScheduling //스케쥴러 사용
 public class Apr11GestbookApplication {
 
 	public static void main(String[] args) {
