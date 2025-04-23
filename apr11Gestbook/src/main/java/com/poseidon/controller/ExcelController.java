@@ -54,7 +54,7 @@ public class ExcelController {
 	@PostMapping("/readExcel")
 	public String read(@RequestParam("file") MultipartFile upFile, Model model) throws IOException {
 		//서비스로 이동해주세요.
-		List<Map<String, Object>> data = excelService.readExcel(upFile);
+		List<Map<String, Object>> data = excelService.readExcel(upFile); // upfile을 열어서 리스트로
 		
 		//System.out.println(data); //최종 출력
 		excelService.readExcel(data); //서비스 통해서 JPA로 데이터베이스에 저장하기

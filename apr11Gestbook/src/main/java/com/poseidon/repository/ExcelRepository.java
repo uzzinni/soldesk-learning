@@ -10,6 +10,5 @@ public interface ExcelRepository extends JpaRepository<Iplog, Integer> {
 
 	List<Iplog> findAllByOrderByInoDesc();
 	// SELECT * FROM iplog ORDER BY ino DESC;
-	
 
 }
