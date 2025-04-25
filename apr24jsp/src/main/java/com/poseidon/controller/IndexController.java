@@ -20,4 +20,7 @@ public class IndexController {
 		model.addAttribute("toSize", testService.toSize());
 		return "index";
 	}
+	
+	//application.properties의 데이터 읽어오기
+	
 }
