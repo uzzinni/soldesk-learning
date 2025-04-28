@@ -19,9 +19,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.poseidon.util.Util;
+
+import lombok.RequiredArgsConstructor;
 
 @Controller
+@RequiredArgsConstructor
 public class AirController {
+	
+	private final Util util;
 
 	@Value("${air.url}")
 	private String url;
@@ -36,7 +42,7 @@ public class AirController {
 		StringBuilder sb = new StringBuilder(url);
 		sb.append("?serviceKey=" + key);   //물음표는 URL뒤에 파라미터 적기 위해서 처음 시작할 때 
 		sb.append("&returnType=json");
-		sb.append("&searchDate=2025-04-25"); //여기는 오늘 날짜. 여기도 변수처리 하겠습니다.
+		sb.append("&searchDate=" + util.today()); //여기는 오늘 날짜. 여기도 변수처리 하겠습니다.
 		
 		URL url = new URL(sb.toString());
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -72,21 +78,20 @@ public class AirController {
 		
 		//System.out.println("map : " + map);
 		String informGrade = (String) map.get("informGrade");
-		System.out.println("informGrade : " + informGrade);
+		//System.out.println("informGrade : " + informGrade);
 		//아래 이모지 넣을 리스트
 		List<String> list = new ArrayList<String>();
 		
 		String[] data = informGrade.split(",");
 		for (int i = 0; i < data.length; i++) {
-			String[] item = data[i].split(" : ");	//서울, 보통
-			// 윈도우키 + . 이모지가 나와요
-			// System.out.println(item[1]);	//보통😊, 좋음😁, 나쁨😒
-			list.add(item[0] + " "
+			String[] item = data[i].split(" : "); // 서울, 보통
+			// 윈도우키 + . 이모지가 나와요 // 보통😊, 좋음😁, 나쁨😒
+			list.add(item[0] + " " 
 					+ (item[1].equals("보통") ? "😊" : item[1].equals("좋음") ? "😁" : "😒")
 					);
 		}
 		model.addAttribute("list", list);
-		
+				
 		model.addAttribute("map", map);
 		
 		return "air"; // air.jsp
