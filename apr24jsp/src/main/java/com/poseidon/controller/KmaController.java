@@ -6,12 +6,15 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.poseidon.dto.KmaDTO;
 import com.poseidon.service.KmaService;
 
 import lombok.RequiredArgsConstructor;
@@ -71,5 +74,11 @@ public class KmaController {
 		return "완료";
 	}
 	
-	
+	// 데이터베이스에서 365개 데이터를 읽어와 화면에 출력합니다.
+	@GetMapping("/kma2")
+	public String kma2(Model model) {
+		List<KmaDTO> list = kmaService.kmaSelect();
+		model.addAttribute("list", list);
+		return "kma";
+	}
 }

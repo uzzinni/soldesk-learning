@@ -13,6 +13,10 @@ import com.poseidon.dto.KmaDTO;
 public interface KmaDAO {
 
 	public int kmaInsert(List<KmaDTO> list);
+	
+	public void kmaClear();
+	
+	public List<KmaDTO> kmaSelect();
 }
 
 
