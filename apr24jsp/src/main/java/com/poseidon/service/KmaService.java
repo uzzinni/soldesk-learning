@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.poseidon.dao.KmaDAO;
 import com.poseidon.dto.KmaDTO;
 
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -35,20 +36,20 @@ public class KmaService {
 	private final KmaDAO kmaDAO;
 	
 	private static KmaDTO map2Dto(Map<String, Object> map) {
-	      KmaDTO dto = KmaDTO.builder()
-	            .tm(LocalDate.parse((String)map.get("tm"),DateTimeFormatter.ISO_DATE))
-	            .avgTa(Double.parseDouble((String) map.get("avgTa")))
-	            .minTa(Double.parseDouble((String) map.get("minTa")))
-	            .maxTa(Double.parseDouble((String) map.get("maxTa")))
-	            .build();
-	      return dto;
-	   }
+		KmaDTO dto = KmaDTO.builder()
+				.tm(LocalDate.parse((String)map.get("tm"),DateTimeFormatter.ISO_DATE))
+				.avgTa(Double.parseDouble((String) map.get("avgTa")))
+				.minTa(Double.parseDouble((String) map.get("minTa")))
+				.maxTa(Double.parseDouble((String) map.get("maxTa")))
+				.build();
+		return dto;
+	}
 	
 	public int kmaToDB() throws IOException {
 		StringBuilder urlBuilder = new StringBuilder(url); /*URL*/
         urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "="+key); /*Service Key*/
         urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*페이지번호 Default : 1*/
-        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("100", "UTF-8")); /*한 페이지 결과 수 Default : 10*/
+        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("365", "UTF-8")); /*한 페이지 결과 수 Default : 10*/
         urlBuilder.append("&" + URLEncoder.encode("dataType","UTF-8") + "=" + URLEncoder.encode("JSON", "UTF-8")); /*요청자료형식(XML/JSON) Default : XML*/
         urlBuilder.append("&" + URLEncoder.encode("dataCd","UTF-8") + "=" + URLEncoder.encode("ASOS", "UTF-8")); /*자료 분류 코드(ASOS)*/
         urlBuilder.append("&" + URLEncoder.encode("dateCd","UTF-8") + "=" + URLEncoder.encode("DAY", "UTF-8")); /*날짜 분류 코드(DAY)*/
@@ -85,15 +86,14 @@ public class KmaService {
         // 데이터를 DTO로 변경합니다.
         System.out.println(list);
         System.out.println(list.size());
+        // DAO에게 일 시키기는 여기에...
         List<KmaDTO> dtoList = list.stream().map(KmaService::map2Dto).collect(Collectors.toList());
         System.out.println(dtoList);
-        System.out.println(dtoList);
         System.out.println(dtoList.size());
-        
-        // DAO에게 일 시키기는 여기에...
+               
+        //DAO에게 일 시키기
         int result = kmaDAO.kmaInsert(dtoList);
         System.out.println("result : " + result);
-        
 		return result;
 	}
 }
