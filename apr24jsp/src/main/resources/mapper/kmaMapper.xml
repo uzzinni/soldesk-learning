@@ -7,9 +7,16 @@
 		VALUES 
 		<foreach collection="list" item="dto" separator=",">
 			(#{dto.tm}, #{dto.avgTa}, #{dto.minTa}, #{dto.maxTa})
-		</foreach>	
+		</foreach>
 		
 	</insert>
 	
+	<select id="kmaClear">
+		TRUNCATE TABLE kma
+	</select>
+	
+	<select id="kmaSelect" resultType="KmaDTO">
+		SELECT kno, tm, avgTa, minTa, maxTa FROM kma
+	</select>
 	
 </mapper>
