@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.poseidon.dao.KmaDAO">
+	<insert id="kmaInsert" parameterType="list">
+		INSERT INTO kma (tm, avgTa, minTa, maxTa) 
+		VALUES 
+		<foreach collection="list" item="dto" separator=",">
+			(#{dto.tm}, #{dto.avgTa}, #{dto.minTa}, #{dto.maxTa})
+		</foreach>
+		
+	</insert>
+	
+	<select id="kmaClear">
+		TRUNCATE TABLE kma
+	</select>
+	
+	<select id="kmaSelect" resultType="KmaDTO">
+		SELECT kno, tm, avgTa, minTa, maxTa FROM kma
+	</select>
+	
+</mapper>
