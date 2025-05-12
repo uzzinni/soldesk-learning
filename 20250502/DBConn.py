@@ -44,7 +44,6 @@ class ScoreDAO:
         cursor.execute(sql, data)
         self.conn.commit()
         cursor.close()
-        return "수정되었습니다"
 
     def scoreDelete(self, names):
         cursor = self.conn.cursor()
@@ -58,3 +57,5 @@ class ScoreDAO:
         finally: # 예외 발생과 상관없이 반드시 실행할 문장
             cursor.close()
         return '삭제 완료'
+        return "수정되었습니다"
+
