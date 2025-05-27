@@ -1,1 +1,13 @@
 jupyter/babynames/
+/.gitattributes
+/src/main/resources/application.properties
+/build.gradle
+/.gradle/8.14/checksums/sha1-checksums.bin
+/.idea/vcs.xml
+.gradle
+/.idea
+gradle
+/gradlew
+/gradlew.bat
+/HELP.md
+/settings.gradle
