@@ -1,12 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <title>board</title>
 </head>
 <body>
 	<h1>[[${count }]]</h1>
-	<h1>[[${test }]]</h1>
-	<h1>[[${list }]]</h1>
+	<!-- table -->
+	<div>
+		<table>
+			<tr>
+				<th>번호</th>
+				<th>제목</th>
+				<th>날짜</th>
+				<th>글쓴사람</th>
+				<th>읽음수</th>
+			</tr>
+			<tr th:each="row : ${list}">
+				<td>[[${row.board_no}]]</td>
+				<td th:text="${row.board_title}"></td>
+				<td th:text="${row.board_date}"></td>
+				<td th:text="${row.user_no}"></td>
+				<td th:text="${row.board_like}"></td>
+			</tr>
+		</table>
+		<!-- 페이징 -->
+		<!-- 글쓰기 로그인 한 사람만 보이게 합니다. ::: th:if=""   ::: 세션이 있는 사람만 보입니다. -->
+		<!-- 
+			HttpSession session = request.getSession();
+			session.settribute("name","홍길동");
+		 -->
+		<div th:if="${session.name != null}">
+			<button onclick="location.href='/write'">글쓰기</button>
+			<a href="/logout">로그아웃</a>
+		</div>
+		<div th:if="${session.name == null}">
+			로그인 해주세요. <a href="/login">로그인</a>
+		</div>
+	</div>
 </body>
 </html>

@@ -18,6 +18,6 @@ public class BoardDTO {
 	private String board_content;
 	private int user_no;
 	private LocalDateTime board_date;
-	private int user_like;
-	private int user_del;
+	private int board_like;
+	private int board_del;
 }
