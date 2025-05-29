@@ -4,16 +4,124 @@
 <meta charset="UTF-8">
 <title>로그인</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script type="text/javascript">
+	/*
+	$(document).ready(function(){
+		// jquery 문장 시작	
+	});
+	*/
+	// jquery 시작
+	$(function(){
+		// 이 페이지가 모두 읽어졌다면 -> 컴퓨터에 쿠키를 가져오기
+		// 쿠키 2개를 만들어 사용합니다.
+		// 1. 사용자 ID를 저장하는 쿠키
+		// 2. 사용자가 y라고 누른 정보값 쿠키
+		
+		let userInputId = getCookie("userInputId");  //사용자가 저장한 id를 가져오는 함수
+		let setCookieYN = getCookie("setCookieYN"); // 사용자가 누른 Y/N값이 저장된 쿠기
+		//console.log(userInputId + "/" + setCookieYN);
+		
+		// Y라면, checked, input에 id 출력하기
+		if(setCookieYN == "Y"){
+			$("#saveID").prop("checked", true); // v
+			//id 에 저장된 id를 찍어주기
+			$("#id").val(userInputId);
+		} else {
+			$("#saveID").prop("checked", false); // X
+		}
+		
+		// 명령
+		$(".check").click(function(){
+			// 기능
+			//alert(".check를 클릭했습니다");
+			// id 칸에 있는 값 가져오기, pw 칸에 있는 값 가져오기
+			// 변수 var, let, const //// 호이스팅 
+			// 자바스크립트 + 데이터타입  = 타입스크립트
+			let id = $("#id").val();
+			let pw = $("#pw").val();
+			
+			//alert("id : " + id.length);
+			//console.log("pw : " + pw.length);
+			// 검사하기
+			if(id.length < 4){
+				alert("올바른 아이디를 입력하세요.");
+				$("#id").focus();
+				return false;
+			}
+			if(pw == "" || pw.length < 5){
+				alert("암호를 입력하세요. 암호는 5글자 이상이어야 합니다.");
+				$("#pw").focus();
+				return false;
+			}
+			
+			//alert("위 검사를 모두 통과했습니다.");
+			//return false;
+			
+			//사용자가 아이디 저장하기를 클릭했는지 알아오기
+			//alert(   $("#saveID").is(":checked")   );
+			if(      $("#saveID").is(":checked")     ){
+				// 쿠키 만들어보기
+				setCookie("userInputId", id, 7);
+				setCookie("setCookieYN", "Y", 7);
+			} else {
+				//쿠키 삭제하기 ::: 아직 안 만들었습니다.
+				deleteCookie("userInputId");
+				deleteCookie("setCookieYN");
+			}
+			
+		});
+		// 명령 끝.
+		
+		
+	});// jquery  밖
+	// 쿠키 읽어오기
+ 	function getCookie(cookieName){
+		//alert('쿠키 읽어오기 함수');
+		let cookies = document.cookie.split(";");
+		//console.log(cookies); //userInputId=poseidon; setCookieYN=Y
+		//값 담을 변수 지정하고 갈게욤.
+		let x, y; // 쿠키 이름, 값;
+		for(let i = 0; i < cookies.length; i++){
+			x = cookies[i].substr(0, cookies[i].indexOf("=")); // userInputId
+			y = cookies[i].substr(cookies[i].indexOf("=")+1); // =poseidon
+			x = x.replace(/^\s+|\s+$/g, ''); // 앞과 뒤의 공백 제거하기
+			if(x == cookieName){
+				return unescape(y);
+			}
+		}
+	}
+	
+	// 쿠키 저장하기 (쿠키 이름, 쿠키 값, 쿠키 만료시간)
+	function setCookie(cookieName, value, exdays){
+		//날짜 계산
+		let exdate = new Date();
+		//날짜 + exdays
+		exdate.setDate(exdate.getDate() + exdays)
+		//실제 저장하는 코드 saveID=poseidon;expires=2025-05-29
+		let cookieValue = escape(value) + ((exdays == null)?"":"; expires="+exdate.toGMTString());
+		document.cookie = cookieName + "=" + cookieValue;
+	}
+	
+	//쿠키 삭제하기  시간 = 오늘시간 -1;;;;; max-age=0;
+	function deleteCookie(cookieName){
+		let exdate = new Date();
+		exdate.setDate(exdate.getDate() - 1)
+		document.cookie = cookieName + "=; expires=" + exdate.toGMTString();
+		//document.cookie = cookieName + "=; max-age=0";    //  saveID=; max-age=0
+	}
+	
+</script>
 </head>
 <body>
 	<div>
 		<form action="/login" method="post">
-			<input type="text" name="id" id="" class="" required="required">
-			<input type="password" name="pw" required>
+			<input type="text" name="id" id="id">
+			<input type="password" name="pw" id="pw">
 			<button type="reset">reset</button>
-			<button type="submit">submit</button>
+			<button type="submit" class="check">submit</button>
 			<div>
-				<input type="checkbox">
+				<input type="checkbox" id="saveID">
+				<label for="saveID">아이디 저장</label>
 			</div>
 		</form>
 	</div>
