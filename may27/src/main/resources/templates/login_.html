@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="" name="description">
+<meta content="" name="keywords">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<title>로그인</title>
+<script type="text/javascript">
+$(function(){
+	var userInputId = getCookie("userInputId");
+    var setCookieYN = getCookie("setCookieYN");
+    
+    if(setCookieYN == 'Y') {
+        $(".saveID").prop("checked", true);
+    } else {
+        $(".saveID").prop("checked", false);
+    }
+    $("#id").val(userInputId);
+    
+    $(".check").click(function(){
+    	var id = $("#id").val();
+    	var pw = $("#pw").val()
+    	if(id == '' || id.length < 4){
+    		alert("아이디를 입력하세요.");
+    		$("#id").focus();
+    		return false;
+    	}
+    	if(pw == '' || pw.length < 4){
+    		alert("비밀번호를 입력하세요.");
+    		$("#pw").focus();
+    		return false;
+    	}
+    	if($(".saveID").is(":checked")){ 
+            var userInputId = $("#id").val();
+            setCookie("userInputId", userInputId, 60); 
+            setCookie("setCookieYN", "Y", 60);
+        } else {
+            deleteCookie("userInputId");
+            deleteCookie("setCookieYN");
+        }
+    	 document.loginForm.submit();
+    });
+    
+});
+//쿠키값 Set
+function setCookie(cookieName, value, exdays){
+    var exdate = new Date();
+    exdate.setDate(exdate.getDate() + exdays);
+    var cookieValue = escape(value) + ((exdays==null) ? "" : "; expires=" + exdate.toGMTString());
+    document.cookie = cookieName + "=" + cookieValue;
+}
+
+//쿠키값 Delete
+function deleteCookie(cookieName){
+    var expireDate = new Date();
+    expireDate.setDate(expireDate.getDate() - 1);
+    document.cookie = cookieName + "= " + "; expires=" + expireDate.toGMTString();
+		document.cookie = cookieName + "=; max-age=0";//이것도 가능
+}
+
+//쿠키값 가져오기
+function getCookie(cookie_name) {
+    var x, y;
+    var val = document.cookie.split(';');
+    //alert(val);
+    for (var i = 0; i < val.length; i++) {
+        x = val[i].substr(0, val[i].indexOf('='));
+        y = val[i].substr(val[i].indexOf('=') + 1);
+        x = x.replace(/^\s+|\s+$/g, ''); // 앞과 뒤의 공백 제거하기
+        
+        if (x == cookie_name) {
+          return unescape(y); // unescape로 디코딩 후 값 리턴
+        }
+    }
+}
+</script>
+</head>
+<body>
+	<main id="main">
+		<h1>login</h1>
+		<div id="loginForm">
+			<form action="./login" name="loginForm" method="post">
+				<div class="md-3">
+				<label class="form-label" for="id">아이디</label>
+				<input type="text" class="form-control" name="id" id="id" placeholder="아이디를 입력하세요">
+				</div>
+				<div class="md-3">
+				<label class="form-label" for="pw">비밀번호</label>
+				<input type="password" class="form-control" name="pw" id="pw" placeholder="암호를 입력하세요">
+				</div>
+				<div class="md-3">
+				<input type="checkbox" class="saveID" id="saveID">
+    			<label for="saveID">아이디 저장</label>
+				</div>
+				<div class="md-3">
+				<button type="reset" class="btn btn-danger">초기화</button>
+				<button type="submit" class="check">로그인</button>
+				</div>
+			</form>
+		</div>
+		
+	</main>
+</body>
+</html>
