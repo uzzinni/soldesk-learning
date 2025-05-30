@@ -36,6 +36,19 @@ public class LoginController {
 	public String login() {
 		return "login";
 	}
+	
+	@GetMapping("/join")
+	public String join() {
+		return "join";
+	}
+	
+	@PostMapping("/join")
+	public String join(@RequestParam("id") String id, @RequestParam("pw") String pw) {
+		System.out.println(id);
+		System.out.println(pw);
+		
+		return "redirect:/login";
+	}
 
 	//사용자가 입력한 아이디/비밀번호와 데이터베이스의 값을 비교하는 로그인 메소드
 	// form tag
