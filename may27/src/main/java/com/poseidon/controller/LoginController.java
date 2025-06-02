@@ -3,15 +3,13 @@ package com.poseidon.controller;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.hibernate.id.IntegralDataTypeHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -61,8 +59,8 @@ public class LoginController {
 	public String login(@RequestParam(name = "id", required = true) String id, 
 					    @RequestParam(value = "pw", required = true) String pw) {
 		
-		//System.out.println("id >>> " + id);
-		//System.out.println("pw >>> " + pw);
+		System.out.println("id >>> " + id);
+		System.out.println("pw >>> " + pw);
 		// Map
 		Map<String, Object> login = new HashMap<String, Object>();
 		login.put("id", id);
@@ -94,7 +92,23 @@ public class LoginController {
 		return "redirect:/login";
 	}
 	
-	
+	// 아이디 검사하는 ajax
+	@PostMapping("/checkId")
+	@ResponseBody // json 형태로 응답합니다.
+	public Map<String, Boolean> checkID(@RequestParam("id") String id) {
+		//System.out.println("ajax >>> " + id);
+		//데이터베이스에 전송
+		// { available :false }
+		Map<String, Boolean> response = new HashMap<String, Boolean>();
+		
+		//데이터베이스에 물어보기
+		boolean checkId = loginService.checkId(id);
+		
+		response.put("available", checkId); // 아이디 있음
+		System.out.println(response);
+		return response;
+		
+	}
 	
 	
 }

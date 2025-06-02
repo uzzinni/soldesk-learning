@@ -15,4 +15,6 @@ public interface LoginDAO {
 
 	void join(JoinDTO dto);
 
+	int checkId(String id);
+
 }

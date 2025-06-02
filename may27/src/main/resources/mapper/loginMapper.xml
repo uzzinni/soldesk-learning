@@ -11,4 +11,10 @@
 		VALUES(#{id }, #{pw }, #{name }, #{email })
 	</insert>
 
+
+	<select id="checkId" parameterType="String" resultType="Integer">
+		SELECT count(*) FROM user WHERE user_id=#{id }
+	
+	</select>
+	
 </mapper>

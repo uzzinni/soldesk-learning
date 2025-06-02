@@ -18,7 +18,10 @@ public class LoginService {
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	public Map<String, Object> login(Map<String, Object> login) {
-		return loginDAO.login(login);
+		Map<String, Object> result = loginDAO.login(login);
+		boolean check = bCryptPasswordEncoder.matches((String)login.get("pw"), (String)result.get("user_pw"));
+		System.out.println("check >>. " + check);
+		return result;
 	}
 
 	public void join(JoinDTO dto) {
@@ -27,6 +30,15 @@ public class LoginService {
 		//System.out.println(bCryptPasswordEncoder.matches("0000", pw));
 		System.out.println(dto.toString());
 		loginDAO.join(dto);
+	}
+
+	public boolean checkId(String id) {
+		int result = loginDAO.checkId(id);
+		if(result == 0) {
+			return true;
+		} else {			
+			return false;
+		}
 	}
 
 
