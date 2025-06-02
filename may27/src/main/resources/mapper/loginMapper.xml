@@ -5,5 +5,10 @@
 	<select id="login" parameterType="HashMap" resultType="Map">
 		 SELECT count(*) as count, user_name FROM user WHERE user_id=#{id} AND user_pw=#{pw}
 	</select>
+	
+	<insert id="join" parameterType="JoinDTO">
+		INSERT INTO user (user_id, user_pw, user_name, user_email)
+		VALUES(#{id }, #{pw }, #{name }, #{email })
+	</insert>
 
 </mapper>

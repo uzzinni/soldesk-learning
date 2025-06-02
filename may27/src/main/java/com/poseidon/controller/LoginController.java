@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.poseidon.dto.JoinDTO;
 import com.poseidon.service.LoginService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -43,9 +44,13 @@ public class LoginController {
 	}
 	
 	@PostMapping("/join")
-	public String join(@RequestParam("id") String id, @RequestParam("pw") String pw) {
-		System.out.println(id);
-		System.out.println(pw);
+	public String join(JoinDTO dto) {
+		System.out.println(dto.getId());
+		System.out.println(dto.getPw());
+		System.out.println(dto.getName());
+		System.out.println(dto.getEmail());
+		
+		loginService.join(dto);
 		
 		return "redirect:/login";
 	}
