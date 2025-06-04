@@ -10,4 +10,15 @@
 		SELECT * FROM board WHERE board_del=1 ORDER BY board_no DESC LIMIT 10
 	</select>
 
+	<select id="ajaxList" parameterType="Integer" resultType="HashMap">
+		<![CDATA[
+			SELECT board_no, board_title,  user_no, board_date, 
+					board_like
+			FROM board 
+			WHERE board_del=1 
+			ORDER BY board_no DESC 
+			LIMIT #{pageNo}, 10
+		]]>		
+	</select>
+
 </mapper>

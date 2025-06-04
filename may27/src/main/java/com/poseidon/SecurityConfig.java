@@ -16,9 +16,12 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 	//접속 허용리스트 = 누구나 다 접근 가능
-	private static final String[] ALLOW_LIST = {"/", "/index", "/join", "/error", "/checkId"};
+	private static final String[] ALLOW_LIST = {"/", "/index", "/join", "/error", "/checkId", "/board2", "/ajaxBoard"};
 	// 리소스 리스트 = 누구나 다 접근 가능 
 	private static final String[] SOURCE_LIST = {"/img/**"};
+	// 로그인 한 사용자
+	// 로그인 한 관리자 
+	
 	
 
 	@Bean

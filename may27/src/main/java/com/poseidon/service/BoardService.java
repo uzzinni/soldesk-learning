@@ -1,6 +1,7 @@
 package com.poseidon.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -22,5 +23,9 @@ public class BoardService {
 	
 	public List<BoardDTO> boardList(){
 		return boardDAO.boardList();
+	}
+
+	public List<Map<String, Object>> ajaxList(int pageNo) {
+		return boardDAO.ajaxList(pageNo - 1);
 	}
 }
