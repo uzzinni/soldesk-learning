@@ -9,13 +9,11 @@
 <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css">
 <script type="text/javascript">
 $(document).ready(function(){
-	// alert("!");
 	let num = 1;
 	ajaxBoard(num);
 });
 
 function ajaxBoard(num){
-	//alert("ajaxBoard()가 호출되었습니다.");
 	$.ajax({
 		url : "/ajaxBoard",
 		type : "POST",
@@ -27,17 +25,17 @@ function ajaxBoard(num){
 			//$("#ajax-board").text(JSON.stringify(response)); // json 내부 데이터 다 보기
 			const pageNo = response.pageNo;
 			const totalCount = response.totalCount;
-			console.log(pageNo);
-			console.log(totalCount);
+			//console.log(pageNo);
+			//console.log(totalCount);
 			
 			const list = response.list;
-			let temp = "<table>";
+			let temp = "<table class='table table-hover'>";
 			temp += "<tr>";
-			temp += "<td>번호</td>";
-			temp += "<td>제목</td>";
-			temp += "<td>글쓴이</td>";
-			temp += "<td>쓴날짜</td>";
-			temp += "<td>좋아요</td>";
+			temp += "<th>번호</th>";
+			temp += "<th>제목</th>";
+			temp += "<th>글쓴이</th>";
+			temp += "<th>쓴날짜</th>";
+			temp += "<th>좋아요</th>";
 			temp += "</tr>";
 			
 			/* 다른 것도 보여드리기 위해 주석
@@ -52,22 +50,20 @@ function ajaxBoard(num){
 			}*/
 			
 			$.each(list, function(index){
-				temp += "<tr><td>" + list[index].board_no + "</td>";
-				temp += "<td>" + list[index].board_title + "</td>";
-				temp += "<td>" + list[index].user_no + "</td>";
-				temp += "<td>" + list[index].board_date + "</td>";
-				temp += "<td>" + list[index].board_like + "</td></tr>";
+				temp += "<tr><td class='board_no text-center'>" + list[index].board_no + "</td>";
+				temp += "<td class='title'>" + list[index].board_title + "</td>";
+				temp += "<td class='text-center'>" + list[index].user_no + "</td>";
+				temp += "<td class='text-center'>" + list[index].board_date + "</td>";
+				temp += "<td class='text-center'>" + list[index].board_like + "</td></tr>";
 			});
-			
-			temp += "</table>";
-			
+			temp += "</table>";			
 			$("#ajax-board").html(temp);
+			paging(totalCount, pageNo);
 		},
 		error : function(xhr, status, error){
 			$("#ajax-board").empty();
 			//문제가 발생했다면 == 통신문제, 백앤드 문제 등등등
-			// $("#ajax-board").text("<h1>문제가 발생했습니다.</h1>");
-			// $("#ajax-board").html("<h1>문제가 발생했습니다.</h1>");
+			// $("#ajax-board").text("<h1>문제가 발생했습니다.</h1>"); // $("#ajax-board").html("<h1>문제가 발생했습니다.</h1>");
 			$("#ajax-board").append("<h1>문제가 발생했습니다.</h1>");
 			/* 
 			.html()   : html 코드를 붙임       : 기존 내용 삭제
@@ -79,13 +75,81 @@ function ajaxBoard(num){
 		}
 	});
 }
+function paging(totalCount, pageNo){
+	$(".paging").empty();
+	//페이징하기
+	let pages = totalCount / 10;
+	if(totalCount % 10 != 0){pages += 1;}
+	startPage = pageNo;
+	endPage = startPage + 10 < pages ? startPage + 9 : pages;
+
+	//   << < 1 2 3 4 5 6 7 8 10 > >>
+	if(pageNo - 10 > 0){
+		$(".paging").append("<button class='start'>◀◀</button>");
+	}else{
+		$(".paging").append("<button disabled='disabled'>◀◀</button>");
+	}
+	if(pageNo - 1 > 0){
+		$(".paging").append("<button class='backward'>◀</button>");
+	}else{
+		$(".paging").append("<button disabled='disabled'>◀</button>");
+	}
+	for (let i=startPage; i <= endPage; i++) {
+		$(".paging").append("<button type='button' class='page'>" + i + "</button>");
+	}
+	if(pageNo + 1 < pages){
+		$(".paging").append("<button class='forward'>▶</button>");
+	}else{
+		$(".paging").append("<button disabled='disabled'>▶</button>");
+	}
+	if(pageNo + 10 < pages){
+		$(".paging").append("<button class='end'>▶▶</button>");
+	}else{
+		$(".paging").append("<button disabled='disabled'>▶▶</button>");
+	}
+}
+
+//동적으로 생성된 버튼 클릭하기
+$(document).on("click", ".page", function() {
+	pageNo = $(this).text();
+	ajaxBoard(pageNo);
+});
+$(document).on("click", ".start", function(){
+	pageNo = pageNo - 10;
+	ajaxBoard(pageNo);
+});
+$(document).on("click", ".backward", function(){
+	pageNo = pageNo - 1;
+	ajaxBoard(pageNo);
+});
+$(document).on("click", ".forward", function(){
+	pageNo = pageNo + 1;
+	ajaxBoard(pageNo);
+});
+$(document).on("click", ".end", function(){
+	pageNo = pageNo + 10;
+	ajaxBoard(pageNo);
+});
+
+//상세보기 만들기 -> 다음에 모달로 만들기
+$(document).on("click", ".title", function(){
+	//형제요소 찾기 board_no 
+	//이전 요소 prev()
+	let board_no = $(this).prev().text();
+	alert(board_no + " / " + $(this).text());
+});
 </script>
+<style type="text/css">
+
+</style>
 </head>
 <body>
 	<h1>board</h1>
 	
 	<div id="ajax-board">
 		안녕하세요.
+	</div>
+	<div class="paging text-center">
 	</div>
 </body>
 </html>
