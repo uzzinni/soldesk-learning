@@ -1,5 +1,10 @@
 package com.poseidon;
 
+import java.io.IOException;
+
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 // 2025-06-09 데이터 분석을 위한 텍스트 마이닝 구측 실습
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -77,10 +83,14 @@ public class LoginController {
 		return "redirect:/board";
 	}
 	
+	
+	   //2025-06-10 웹 크롤링
+	   @GetMapping("/jsoup")
+	   public @ResponseBody String jsoup() throws IOException{
+	      Document doc = Jsoup.connect("https://www.naver.com").get();
+	      System.out.println(doc);
+	      return "실행되었습니다.";
+	   }
 }
-
-
-
-
 
 
