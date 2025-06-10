@@ -28,6 +28,7 @@ public class LoginService {
 		dto.setPw(bCryptPasswordEncoder.encode(dto.getPw()));
 		//$2a$10$VZiI.t/siCWdw57I5dIQKe6iAX1zKaMb6Rd.odfageFRCZxYik5Mm
 		//System.out.println(bCryptPasswordEncoder.matches("0000", pw));
+		dto.setRole("ROLE_USER");
 		System.out.println(dto.toString());
 		loginDAO.join(dto);
 	}
