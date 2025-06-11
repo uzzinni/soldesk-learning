@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 <meta charset="UTF-8">
 <title>board</title>
@@ -37,6 +37,12 @@
 		<div th:if="${session.name == null}">
 			로그인 해주세요. <a href="/login">로그인</a>
 		</div>
+		
+		<!-- sec 사용하기 -->
+		<button onclick="location.href='/login'">로그인</button>
+		<button onclick="location.href='/logout'">로그아웃</button>
+		
+		<button onclick="location.href='/write'">글쓰기</button>
 	</div>
 </body>
 </html>

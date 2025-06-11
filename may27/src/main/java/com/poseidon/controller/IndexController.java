@@ -1,9 +1,15 @@
 package com.poseidon.controller;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +28,13 @@ public class IndexController {
 	
 	private final BoardService boardService;
 
+	// write 시큐리티가 제어하게 연습하기
+	@Secured({"ROLE_USER"})
+	@GetMapping("/write")
+	public String write() {
+		return "write";
+	}
+	
 	@GetMapping({"/", "/index"})
 	public String index() {
 		return "index";
@@ -30,6 +43,23 @@ public class IndexController {
 	//이번은 mybatis로 테스트해봅니다.
 	@GetMapping("/board")
 	public String board(Model model) {
+		//시큐리티 사용시 사용자 로그인 정보 얻어오기 연습
+		String id;     // 로그인한 아이디
+		String role;   // 권한
+		
+		id = SecurityContextHolder.getContext().getAuthentication().getName();
+		System.out.println("로그인한 아이디 >>> " + id);
+				
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		System.out.println(authentication.getAuthorities());
+		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+		Iterator<? extends GrantedAuthority> i = authorities.iterator();
+		GrantedAuthority auth = i.next();
+		role = auth.getAuthority();
+		System.out.println("role >>> " + role);
+		
+		
+		
 		//데이터베이스에서 데이터를 불러오기 = board테이블에서
 		// DB -> xml -> dao -> service -> controller -> html
 		int count = boardService.count();
@@ -69,28 +99,3 @@ public class IndexController {
 		return result;
 	}
 }
-
-
-
-// 2025-05-30 데이터 분석을 위한 텍스트 마이닝 구축 실습
-// 시큐리티
-
-/*
- * 
- * 
- *    지금까지 우리가 했던 방식
- *    
- *    사용자 --------> controller -> service -> dao -> ORM(mybatis)--->    ----------> DB
- *    
- *    
- *    디비 암호화											암호화 구간
- *     											------------------------------------------
- *    사용자 --------> controller -> service -> dao -> ORM(mybatis)---> --------------> DB
- * 
- * 
- * 
- *    스프링 시큐리티  -------------------------------------------------------------------
- *    사용자 --------> controller -> service -> dao -> ORM(mybatis)---> --------------> DB
- * */
-
-

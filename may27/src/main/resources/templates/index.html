@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -8,5 +8,13 @@
 	<h1>전자정부로 실행합니다</h1>
 	
 	<img alt="home" src="/img/home.png">
+	
+	<div sec:authorize="!isAuthenticated()">
+		<button onclick="location.href='/login'">로그인</button>
+	</div>
+	<div sec:authorize="isAuthenticated()">
+		<button onclick="location.href='/logout'">로그아웃</button>
+		<button onclick="location.href='/write'">글쓰기</button>
+	</div>
 </body>
 </html>
