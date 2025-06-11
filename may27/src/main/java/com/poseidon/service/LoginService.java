@@ -23,7 +23,7 @@ public class LoginService {
 	public Map<String, Object> login(Map<String, Object> login) {
 		Map<String, Object> result = loginDAO.login(login);
 		boolean check = bCryptPasswordEncoder.matches((String)login.get("pw"), (String)result.get("user_pw"));
-		System.out.println("check >>. " + check);
+		System.out.println("check >>> " + check);
 		return result;
 	}
 
@@ -34,7 +34,7 @@ public class LoginService {
 		//dto.setRole("ROLE_USER");
 		//System.out.println(dto.toString());
 		//loginDAO.join(dto);
-		// dto -> entity 변경 작업
+		// dto -> entity 변경작업
 		
 		User user = User.builder()
 				.user_id(dto.getId())
@@ -42,7 +42,6 @@ public class LoginService {
 				.user_name(dto.getName())
 				.user_email(dto.getEmail())
 				.build();
-		
 		//리포지토리에게 일 시키기
 		User result = userRepository.save(user);
 		System.out.println("loginService >>> " + result);

@@ -29,11 +29,12 @@ public class IndexController {
 	private final BoardService boardService;
 
 	// write 시큐리티가 제어하게 연습하기
-	@Secured({"ROLE_USER"})
+	@Secured({"ROLE_ADMIN"}) // SecurityConfig에 추가해준 후 사용 가능
 	@GetMapping("/write")
 	public String write() {
 		return "write";
 	}
+	
 	
 	@GetMapping({"/", "/index"})
 	public String index() {
@@ -99,3 +100,28 @@ public class IndexController {
 		return result;
 	}
 }
+
+
+
+// 2025-05-30 데이터 분석을 위한 텍스트 마이닝 구축 실습
+// 시큐리티
+
+/*
+ * 
+ * 
+ *    지금까지 우리가 했던 방식
+ *    
+ *    사용자 --------> controller -> service -> dao -> ORM(mybatis)--->    ----------> DB
+ *    
+ *    
+ *    디비 암호화											암호화 구간
+ *     											------------------------------------------
+ *    사용자 --------> controller -> service -> dao -> ORM(mybatis)---> --------------> DB
+ * 
+ * 
+ * 
+ *    스프링 시큐리티  -------------------------------------------------------------------
+ *    사용자 --------> controller -> service -> dao -> ORM(mybatis)---> --------------> DB
+ * */
+
+

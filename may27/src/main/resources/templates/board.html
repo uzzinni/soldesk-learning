@@ -25,24 +25,16 @@
 			</tr>
 		</table>
 		<!-- 페이징 -->
-		<!-- 글쓰기 로그인 한 사람만 보이게 합니다. ::: th:if=""   ::: 세션이 있는 사람만 보입니다. -->
-		<!-- 
-			HttpSession session = request.getSession();
-			session.settribute("name","홍길동");
-		 -->
-		<div th:if="${session.name != null}">
+		
+		
+		<!-- sec사용하기 -->
+		<div sec:authorize="!isAuthenticated()">
+			<button onclick="location.href='/login'">로그인</button>
+		</div>
+		<div sec:authorize="isAuthenticated()">
+			<button onclick="location.href='/logout'">로그아웃</button>
 			<button onclick="location.href='/write'">글쓰기</button>
-			<a href="/logout">로그아웃</a>
 		</div>
-		<div th:if="${session.name == null}">
-			로그인 해주세요. <a href="/login">로그인</a>
-		</div>
-		
-		<!-- sec 사용하기 -->
-		<button onclick="location.href='/login'">로그인</button>
-		<button onclick="location.href='/logout'">로그아웃</button>
-		
-		<button onclick="location.href='/write'">글쓰기</button>
 	</div>
 </body>
 </html>

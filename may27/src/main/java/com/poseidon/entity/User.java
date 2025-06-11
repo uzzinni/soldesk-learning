@@ -40,11 +40,12 @@ public class User {
 	
 	@ColumnDefault(value = "1")
 	@Column(nullable = false)
-	@Builder.Default
-	private int user_del = 1;
+	@Builder.Default      //Builder를 이용하게 되면 null/0이 들어가는 것을 방지.
+	private int user_del = 1; // 1
 	
 	@ColumnDefault(value = "ROLE_USER")
 	@Column(nullable = false)
 	@Builder.Default
-	private String user_role = "ROLE_USER";
+	private String user_role = "ROLE_USER"; // ROLE_USER
+	
 }
