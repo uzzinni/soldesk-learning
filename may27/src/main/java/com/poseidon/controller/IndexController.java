@@ -14,11 +14,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.poseidon.dto.BoardDTO;
+import com.poseidon.dto.WriteDTO;
 import com.poseidon.service.BoardService;
+import com.poseidon.service.CustomUserDetails;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,11 +32,38 @@ public class IndexController {
 	private final BoardService boardService;
 
 	// write 시큐리티가 제어하게 연습하기
-	@Secured({"ROLE_ADMIN"}) // SecurityConfig에 추가해준 후 사용 가능
+	@Secured({"ROLE_USER", "ROLE_ADMIN"}) // SecurityConfig에 추가해준 후 사용 가능
 	@GetMapping("/write")
 	public String write() {
 		return "write";
 	}
+	
+	//글쓰기에서 저장하기 누르면 post로 갑니다.
+	@Secured({"ROLE_USER", "ROLE_ADMIN"}) 
+	@PostMapping("/write")
+	public String write(WriteDTO writeDTO) {
+		System.out.println("write Post >>> " + writeDTO);
+		
+		// 이녀석도 실은 서비스에서 작업해야 합니다.
+		CustomUserDetails cud = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		System.out.println("write Post 아이디 >>> " +  cud.getUsername()); //아이디
+		
+		//아이디를 dto에 저장하기
+		writeDTO.setId(cud.getUsername()); //서비스에서 entity로 변경하는 작업
+		//서비스로 보내기
+		writeDTO = boardService.write(writeDTO);
+		System.out.println("저장된 bno는 >>> " + writeDTO.getNo());
+		
+		
+		Collection<? extends GrantedAuthority> auth = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+		Iterator<? extends GrantedAuthority> i = auth.iterator();
+		GrantedAuthority grant = i.next();
+		System.out.println("write Post 권한 >>> "  + grant.getAuthority()); //권한
+		
+		return "redirect:/board";
+	}
+	
+	
 	
 	
 	@GetMapping({"/", "/index"})

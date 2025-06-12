@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.poseidon.dao.BoardDAO;
 import com.poseidon.dto.BoardDTO;
+import com.poseidon.dto.WriteDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,5 +28,11 @@ public class BoardService {
 
 	public List<Map<String, Object>> ajaxList(int pageNo) {
 		return boardDAO.ajaxList(pageNo - 1);
+	}
+
+	public WriteDTO write(WriteDTO writeDTO) {
+		// dto -> jpa entity로 변환작업
+		
+		return null;
 	}
 }
