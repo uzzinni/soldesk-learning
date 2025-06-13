@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import com.poseidon.dao.LoginDAO;
 import com.poseidon.dto.LoginDTO;
+import com.poseidon.entity.Member;
+import com.poseidon.repository.JpamemberRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,20 +19,21 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService{
 	//데이터베이스에서 해당 ID의 모든 정보 가져오기
-	private final LoginDAO loginDAO;
+	//private final LoginDAO loginDAO;
+	private final JpamemberRepository jpamemberRepository;
 
 	@Override
 	public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
-		Optional<LoginDTO> userData = loginDAO.login(id);
-		//mapper만들어야해요.
-		System.out.println(userData.isEmpty());
-		System.out.println(userData.isPresent());
-		System.out.println(userData.toString());
+		Optional<Member> userData = jpamemberRepository.findByMid(id);
+		//System.out.println("CustomUserDetailsService >>> " + userData.isEmpty());
+		//System.out.println("CustomUserDetailsService >>> " + userData.isPresent());
+		//System.out.println("CustomUserDetailsService >>> " + userData.toString());
 		
 		if(userData.isPresent()) { //이렇게 하시는게....
 			return new CustomUserDetails(userData.get()); //추출
 		}		
-		return null;
+		//return null;
+		throw new UsernameNotFoundException(id + "라는 회원은 없습니다.");
 	}
 
 }

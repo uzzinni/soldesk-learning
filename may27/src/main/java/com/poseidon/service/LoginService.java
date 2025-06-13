@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.poseidon.dao.LoginDAO;
 import com.poseidon.dto.JoinDTO;
-import com.poseidon.entity.User;
-import com.poseidon.repository.UserRepository;
+import com.poseidon.entity.Member;
+import com.poseidon.repository.JpamemberRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,7 +18,7 @@ public class LoginService {
 	
 	private final LoginDAO loginDAO;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
-	private final UserRepository userRepository;
+	private final JpamemberRepository jpamemberRepository;
 
 	public Map<String, Object> login(Map<String, Object> login) {
 		Map<String, Object> result = loginDAO.login(login);
@@ -28,23 +28,16 @@ public class LoginService {
 	}
 
 	public void join(JoinDTO dto) {
-		dto.setPw(bCryptPasswordEncoder.encode(dto.getPw()));
-		//$2a$10$VZiI.t/siCWdw57I5dIQKe6iAX1zKaMb6Rd.odfageFRCZxYik5Mm
-		//System.out.println(bCryptPasswordEncoder.matches("0000", pw));
-		//dto.setRole("ROLE_USER");
-		//System.out.println(dto.toString());
-		//loginDAO.join(dto);
-		// dto -> entity 변경작업
-		
-		User user = User.builder()
-				.user_id(dto.getId())
-				.user_pw(dto.getPw())
-				.user_name(dto.getName())
-				.user_email(dto.getEmail())
+		dto.setPw(bCryptPasswordEncoder.encode(dto.getPw()));// 평문 암호를 암호화 하는 문장.
+		Member member = Member.builder() // dto -> entity
+				.mid(dto.getId())
+				.mpw(dto.getPw())
+				.mname(dto.getName())
+				.memail(dto.getEmail())
+				.mrole("ROLE_USER")
 				.build();
-		//리포지토리에게 일 시키기
-		User result = userRepository.save(user);
-		System.out.println("loginService >>> " + result);
+		member = jpamemberRepository.save(member);
+		System.out.println("loginService >>> " + member.getMno());
 	}
 
 	public boolean checkId(String id) {

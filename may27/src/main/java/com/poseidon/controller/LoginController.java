@@ -43,10 +43,10 @@ public class LoginController {
 	
 	@PostMapping("/join")
 	public String join(JoinDTO dto) {
-		System.out.println(dto.getId());
-		System.out.println(dto.getPw());
-		System.out.println(dto.getName());
-		System.out.println(dto.getEmail());
+		//System.out.println(dto.getId());
+		//System.out.println(dto.getPw());
+		//System.out.println(dto.getName());
+		//System.out.println(dto.getEmail());
 		
 		loginService.join(dto);
 		
@@ -55,6 +55,7 @@ public class LoginController {
 
 	//사용자가 입력한 아이디/비밀번호와 데이터베이스의 값을 비교하는 로그인 메소드
 	// form tag
+	/*
 	@PostMapping("/login")
 	public String login(@RequestParam(name = "id", required = true) String id, 
 					    @RequestParam(value = "pw", required = true) String pw) {
@@ -91,6 +92,8 @@ public class LoginController {
 		session.invalidate();
 		return "redirect:/login";
 	}
+	*/
+	
 	
 	// 아이디 검사하는 ajax
 	@PostMapping("/checkId")
