@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<!-- Default Layout Import-->
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/defaultLayout}"
+      layout:fragment="content"
+>
+	<head>
+	    <title>index</title>
+	    
+	    <!-- inline CSS 영역-->
+	    <style th:inline="css" type="text/css">
+	        
+	    </style>
+	
+	    <!-- inline JS 영역-->
+	    <script th:inline="javascript" type="text/javascript">
+	        $(document).ready(() => {
+	            $("#btn").text("[[${title}]]");
+	        });
+	    </script>
+	</head>
+
+	<body>
+		<div class="content">
+			<h1>[[${title}]] 영역</h1>
+			<button id="btn" class="btn btn-info">info</button>
+			<button class="btn btn-success" onclick="location.href='/main'">main</button>
+		</div>
+	</body>
+</html>
