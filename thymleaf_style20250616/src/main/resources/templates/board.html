@@ -10,12 +10,11 @@
 	</head>
 	<body>
 		<div class="content">
-			<h1>[[${title}]] 영역</h1>
-			<div class="vh-50">
-				<th:block th:each="row : ${#numbers.sequence(1, 10)}">
-				<div class="text-center w-100">[[${row}]]</div>
-				</th:block>
-			</div>
+			
+			<!-- sec:authorize="isAuthenticated()" 
+			로그인 검사, 시큐리티 사용할 수 있어야 쓸 수 있습니다. -->
+			
+			
 		</div>
 	</body>
 </html>

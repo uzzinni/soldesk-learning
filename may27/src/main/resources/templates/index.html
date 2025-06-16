@@ -1,20 +1,46 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-	<h1>전자정부로 실행합니다</h1>
-	
-	<img alt="home" src="/img/home.png">
-	
-	<div sec:authorize="!isAuthenticated()">
-		<button onclick="location.href='/login'">로그인</button>
-	</div>
-	<div sec:authorize="isAuthenticated()">
-		<button onclick="location.href='/logout'">로그아웃</button>
-		<button onclick="location.href='/write'">글쓰기</button>
-	</div>
-</body>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/defaultLayout}"
+      layout:fragment="content"
+>
+	<head>
+	    <title>index</title>
+	    <style th:inline="css" type="text/css"></style>
+	    <script th:inline="javascript" type="text/javascript">
+	    $(function(){
+        	$('#btn').text([[${title}]]);
+        });
+	    </script>
+	</head>
+	<body>
+		<div class="container">
+			<h1 sec:authorize="isAuthenticated()">로그인시 보임</h1>
+			<button id="btn" class="btn btn-info">info</button>
+			<button class="btn btn-success" onclick="location.href='/main'">main</button>
+		</div>
+	</body>
 </html>
+
+
+<!-- 
+
+ localhost/index
+        ↓
+  indexController/index
+        ↓
+  index.html 호출시  - > defaultLayout.html - > config.html
+												header.html
+												footer.html
+
+
+
+
+
+ index호출시 header, footer 파일을 불러옴
+
+
+
+
+
+ -->
