@@ -1,12 +1,14 @@
 package com.poseidon.service;
 
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.poseidon.dao.LoginDAO;
 import com.poseidon.dto.JoinDTO;
+import com.poseidon.dto.LoginDTO;
 import com.poseidon.entity.Member;
 import com.poseidon.repository.JpamemberRepository;
 
@@ -47,6 +49,18 @@ public class LoginService {
 		} else {			
 			return false;
 		}
+	}
+
+	public LoginDTO info(String id) {
+		Optional<Member> member = jpamemberRepository.findByMid(id);
+		LoginDTO dto = new LoginDTO();
+		dto.setUno(member.get().getMno());
+		dto.setName(member.get().getMname());
+		dto.setId(member.get().getMid());
+		dto.setEmail(member.get().getMemail());
+		dto.setRole(member.get().getMrole());
+		//가입일은.......
+		return dto;
 	}
 
 

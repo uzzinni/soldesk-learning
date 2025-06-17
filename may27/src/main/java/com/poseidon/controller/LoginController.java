@@ -3,21 +3,22 @@ package com.poseidon.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.poseidon.dto.JoinDTO;
+import com.poseidon.dto.LoginDTO;
+import com.poseidon.service.CustomUserDetails;
 import com.poseidon.service.LoginService;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -30,6 +31,21 @@ public class LoginController {
 	//@PostMapping
 	//@PutMapping
 	//@DeleteMapping
+	
+	//  /info
+	@Secured("ROLE_USER")
+	@GetMapping("/info")
+	public String info(Model model) {
+		// 저장된 정보 가져오기
+		CustomUserDetails cud =
+				(CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		 
+		System.out.println("로그인 사용자의 아이디 >>> " + cud.getID());
+		//데이터베이스에 물어보기 = model
+		LoginDTO loginDTO = loginService.info(cud.getID());
+		model.addAttribute("info", loginDTO);
+		return "info";
+	}
 	
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login() {

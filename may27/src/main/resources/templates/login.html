@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{common/defaultLayout}"
+    layout:fragment="content">
 <head>
-<meta charset="UTF-8">
-<title>로그인</title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<title layout:fragment="title">로그인</title>
 <script type="text/javascript">
 	/*
 	$(document).ready(function(){
@@ -113,13 +115,15 @@
 </script>
 </head>
 <body>
-	<div>
-		<img alt="login" src="img/login.png">
+	<div class="container text-center">
+		<img class="mb-3" alt="login" src="img/login.png">
 		<form action="/login" method="post">
-			<input type="text" name="id" id="id">
-			<input type="password" name="pw" id="pw">
-			<button type="reset">reset</button>
-			<button type="submit" class="check">submit</button>
+			<div class="w-75">
+				<input type="text" class="form-control" name="id" id="id">
+				<input type="password" class="form-control" name="pw" id="pw">
+				<button type="reset" class="btn btn-danger">reset</button>
+				<button type="submit" class="btn btn-success check">submit</button>
+			</div>
 			<div>
 				<input type="checkbox" id="saveID">
 				<label for="saveID">아이디 저장</label>

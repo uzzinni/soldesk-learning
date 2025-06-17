@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{common/defaultLayout}"
+    layout:fragment="content">
 <head>
-<meta charset="UTF-8">
-<title>error</title>
-
+<title layout:fragment="title">에러</title>
 </head>
 <body>
 	<div>

@@ -1,14 +1,18 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/defaultLayout}" layout:fragment="content">
 <head>
-<meta charset="UTF-8">
-<title>board</title>
+<title layout:fragment="title">board</title>
+<style th:inline="css" type="text/css"></style>
+<script th:inline="javascript" type="text/javascript"></script>
 </head>
 <body>
 	<h1>[[${count }]]</h1>
 	<!-- table -->
-	<div>
-		<table>
+	<div class="container">
+		<table class="table table-hover">
 			<tr>
 				<th>번호</th>
 				<th>제목</th>
@@ -25,8 +29,8 @@
 			</tr>
 		</table>
 		<!-- 페이징 -->
-		
-		
+
+
 		<!-- sec사용하기 -->
 		<div sec:authorize="!isAuthenticated()">
 			<button onclick="location.href='/login'">로그인</button>
