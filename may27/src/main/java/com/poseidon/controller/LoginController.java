@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.poseidon.dto.JoinDTO;
 import com.poseidon.dto.LoginDTO;
+import com.poseidon.entity.Member;
 import com.poseidon.service.CustomUserDetails;
 import com.poseidon.service.LoginService;
 
@@ -40,10 +41,13 @@ public class LoginController {
 		CustomUserDetails cud =
 				(CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		 
-		System.out.println("로그인 사용자의 아이디 >>> " + cud.getID());
+		//System.out.println("로그인 사용자의 아이디 >>> " + cud.getID());
 		//데이터베이스에 물어보기 = model
 		LoginDTO loginDTO = loginService.info(cud.getID());
+		
 		model.addAttribute("info", loginDTO);
+		Member member = cud.getMember(); 
+		model.addAttribute("info2", member);
 		return "info";
 	}
 	
@@ -124,7 +128,7 @@ public class LoginController {
 		boolean checkId = loginService.checkId(id);
 		
 		response.put("available", checkId); // 아이디 있음
-		System.out.println(response);
+		//System.out.println(response);
 		return response;
 		
 	}

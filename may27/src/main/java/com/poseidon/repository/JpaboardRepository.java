@@ -7,5 +7,4 @@ import com.poseidon.entity.Board;
 public interface JpaboardRepository extends JpaRepository<Board, Integer>{
 	
 	
-
 }

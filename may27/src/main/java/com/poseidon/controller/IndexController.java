@@ -1,27 +1,21 @@
 package com.poseidon.controller;
 
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.poseidon.dto.BoardDTO;
 import com.poseidon.dto.WriteDTO;
 import com.poseidon.service.BoardService;
-import com.poseidon.service.CustomUserDetails;
 
 import lombok.RequiredArgsConstructor;
 
@@ -57,33 +51,42 @@ public class IndexController {
 	}
 	
 	//이번은 mybatis로 테스트해봅니다.
-	@GetMapping("/board")
-	public String board(Model model) {
+	@GetMapping("/board")             // http://locahost/board 이런 호출도 허용해주기 위해서 
+	public String board(@RequestParam(value = "pageNo", required = false, defaultValue = "1") int pageNo, 
+			Model model) {
 		//시큐리티 사용시 사용자 로그인 정보 얻어오기 연습
-		String id;     // 로그인한 아이디
-		String role;   // 권한
-		
-		id = SecurityContextHolder.getContext().getAuthentication().getName();
-		System.out.println("로그인한 아이디 >>> " + id);
-				
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		System.out.println(authentication.getAuthorities());
-		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-		Iterator<? extends GrantedAuthority> i = authorities.iterator();
-		GrantedAuthority auth = i.next();
-		role = auth.getAuthority();
-		System.out.println("role >>> " + role);
+		/*
+		 * String id; // 로그인한 아이디 String role; // 권한
+		 * 
+		 * id = SecurityContextHolder.getContext().getAuthentication().getName();
+		 * //System.out.println("로그인한 아이디 >>> " + id);
+		 * 
+		 * Authentication authentication =
+		 * SecurityContextHolder.getContext().getAuthentication();
+		 * //System.out.println(authentication.getAuthorities()); Collection<? extends
+		 * GrantedAuthority> authorities = authentication.getAuthorities(); Iterator<?
+		 * extends GrantedAuthority> i = authorities.iterator(); GrantedAuthority auth =
+		 * i.next(); role = auth.getAuthority();
+		 */
+		//System.out.println("role >>> " + role);
 		
 		
 		
 		//데이터베이스에서 데이터를 불러오기 = board테이블에서
 		// DB -> xml -> dao -> service -> controller -> html
+		// mybatis -> jpa로 변경합니다.
+		/*
 		int count = boardService.count();
 		model.addAttribute("count", count);
 		model.addAttribute("test", "테스트"); // 컨트롤러에서 타임리프로 데이터를 보낼 때 사용.
 		
 		List<BoardDTO> list = boardService.boardList();
 		model.addAttribute("list", list);
+		*/
+		// jpa 사용하기 // jpa 페이징
+		Page<BoardDTO> list = boardService.list(pageNo);
+		model.addAttribute("list", list); // jpa paging을 사용합니다.
+		model.addAttribute("pageNo", pageNo); // 현 페이지 번호를 다시 보냅니다.
 		
 		return "board";
 	}

@@ -9,7 +9,7 @@
 <script th:inline="javascript" type="text/javascript"></script>
 </head>
 <body>
-	<h1>[[${count }]]</h1>
+	<h1>게시판</h1>
 	<!-- table -->
 	<div class="container">
 		<table class="table table-hover">
@@ -24,8 +24,8 @@
 				<td>[[${row.board_no}]]</td>
 				<td th:text="${row.board_title}"></td>
 				<td th:text="${row.board_date}"></td>
-				<td th:text="${row.user_no}"></td>
-				<td th:text="${row.board_like}"></td>
+				<td th:text="${row.name}"></td>
+				<td th:text="${row.board_read}"></td>
 			</tr>
 		</table>
 		<!-- 페이징 -->

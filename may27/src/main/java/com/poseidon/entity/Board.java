@@ -48,12 +48,13 @@ public class Board {
 	
 	
 	//글쓴이
-	@ManyToOne(fetch = FetchType.LAZY)
+	//@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER) // 즉시로딩으로 변경했습니다.
 	@JoinColumn(name = "mname")
 	private Member member;
 	
  	//댓글 연결하기
-	@OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "board", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@OrderBy("id asc")
 	private List<Comment> commentList;
 	

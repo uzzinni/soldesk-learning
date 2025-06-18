@@ -2,13 +2,11 @@ package com.poseidon.service;
 
 import java.util.Optional;
 
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import com.poseidon.dao.LoginDAO;
-import com.poseidon.dto.LoginDTO;
+
 import com.poseidon.entity.Member;
 import com.poseidon.repository.JpamemberRepository;
 

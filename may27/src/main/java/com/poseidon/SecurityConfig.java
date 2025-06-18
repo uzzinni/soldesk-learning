@@ -15,20 +15,22 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(securedEnabled = true, prePostEnabled = true) //메소드 제어
+@EnableMethodSecurity(securedEnabled = true, prePostEnabled = true) // 메소드 제어
 public class SecurityConfig {
 	// 접속 허용리스트 = 누구나 다 접근 가능
-	private static final String[] ALLOW_LIST = { "/", "/index", "/join", "/error", "/checkId", "/board2", "/ajaxBoard" };
+	private static final String[] ALLOW_LIST = { "/", "/index", "/join", "/error", 
+												"/checkId", "/board", "/board2", "/ajaxBoard" };
 	// 리소스 리스트 = 누구나 다 접근 가능
 	private static final String[] SOURCE_LIST = { "/img/**", "/css/**", "/js/**" };
 	// 로그인 한 사용자
-	private static final String[] USER_LIST = { "/board",  "/write", "/info" };
+	private static final String[] USER_LIST = { "/write", "/info", "/logout" };
 	// 로그인 한 관리자
-	private static final String[] ADMIN_LIST = { "/admin/**" }; // localhost/admin/모든거 없습니다.
+	private static final String[] ADMIN_LIST = { "/admin/**" }; 
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests(auth -> auth.requestMatchers(ADMIN_LIST).hasRole("ADMIN") // 관리자만 접근 가능
+		http.authorizeHttpRequests(auth -> auth
+				.requestMatchers(ADMIN_LIST).hasRole("ADMIN") // 관리자만 접근 가능
 				.requestMatchers(USER_LIST).hasAnyRole("USER", "ADMIN") // 로그인한 USER, ADMIN만 접근 가능
 				.requestMatchers(ALLOW_LIST).permitAll() // 허용 리스트
 				.requestMatchers(SOURCE_LIST).permitAll() // 소스 리스트
@@ -42,13 +44,12 @@ public class SecurityConfig {
 				.usernameParameter("id") // 사용자 id 변수명
 				.passwordParameter("pw") // 사용자 pw 변수명
 				.permitAll());
-		
+
 		// 로그아웃 설정
-		http.logout(logout -> logout
-				.logoutUrl("/logout") // 로그아웃 페이지.
+		http.logout(logout -> logout.logoutUrl("/logout") // 로그아웃 페이지.
 				.invalidateHttpSession(true) // 세션 무효화
 				.logoutSuccessUrl("/login") // 로그아웃 성공하고 어디로 갈거야?
-				.permitAll() // 누구나 다 들어와
+		// .permitAll() // 로그인 한 사용자만 들어오게 변경
 		);
 
 		// CSRF
@@ -56,10 +57,6 @@ public class SecurityConfig {
 
 		return http.build();
 	}
-
-	// login.html --->
-
-	// 회원 가입 ---> 저장
 
 	// 암호화 도구
 	@Bean

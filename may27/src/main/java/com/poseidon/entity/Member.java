@@ -31,7 +31,7 @@ public class Member {
 	@Column(unique = true)
 	private String mid;
 	
-	@Column(length = 5, nullable = false)
+	//@Column(length = 5, nullable = false)
 	private String mname;
 	
 	private String mpw;

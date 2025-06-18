@@ -46,4 +46,9 @@ public class CustomUserDetails implements UserDetails{
 		return member.getMid(); // 사용자 아이디 가져오기
 	}
 	
+	// 신규
+	public Member getMember() { // 로그인한 사용자 객체 던지기
+		return member;
+	}
+	
 }
