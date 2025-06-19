@@ -29,8 +29,38 @@
 			</tr>
 		</table>
 		<!-- 페이징 -->
-
-
+	list.totalPages : [[${list.totalPages}]] / pageNo : [[${pageNo}]] / 
+	이전으로 :[[${list.hasPrevious}]] / 다음으로 : [[${list.hasNext}]] /
+	한페이지에 보여지는 글 수 size : [[${list.size}]] /
+	eq ==, ge >=, le <=, lt <, gt >, ne != / number : [[${list.number}]]
+	ul에 추가 : 시작번호 start/ 끝번호 end
+	
+		<div class="paging">
+			<ul class="pagination justify-content-center"
+			th:with="start=${(list.number/10) * 10 + 1},
+			 end=${start + 9 lt list.totalPages ? start + 9 : list.totalPages}"
+			>
+				<li class="page-item" th:classappend="${!list.hasPrevious} ? 'disabled'">
+					<a class="page-link" th:href="@{|?pageNo=1|}"><<</a>
+				</li>
+				<li class="page-item" th:classappend="${!list.hasPrevious} ? 'disabled'">
+					<a class="page-link" th:href="@{|?pageNo=${pageNo-1}|}">이전</a>
+				</li>
+				
+				<li th:each="page : ${#numbers.sequence(start, end)}" class="page-item"
+					th:classappend="${page == pageNo} ? 'active'">
+					<a class="page-link" th:href="@{|?pageNo=${page}|}">[[${page}]]</a>
+				</li>
+				
+				<li class="page-item" th:classappend="${!list.hasNext} ? 'disabled'">
+					<a class="page-link" th:href="@{|?pageNo=${pageNo+1}|}">다음</a>
+				</li>
+				<li class="page-item" th:classappend="${!list.hasNext} ? 'disabled'">
+					<a class="page-link" th:href="@{|?pageNo=${list.totalPages}|}">>></a>
+				</li>
+			</ul>
+		</div>
+	
 		<!-- sec사용하기 -->
 		<div sec:authorize="!isAuthenticated()">
 			<button onclick="location.href='/login'">로그인</button>
