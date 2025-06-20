@@ -35,7 +35,7 @@
 			</tr>
 			<tr th:each="row : ${list}">
 				<td class="td1">[[${row.board_no}]]</td>
-				<td class="w-50" th:text="${row.board_title}"></td>
+				<td class="w-50" th:text="${row.board_title}" th:onclick="|location.href='@{/detail(bno=${row.board_no}, pageNo=${pageNo})}'|"></td>
 				<td class="td1">
 					<!-- 오늘 글은 시:분 -->
 					<span th:if="${#temporals.format(row.board_date, 'yyyy-MM-dd') eq #dates.format(#calendars.createNow(), 'yyyy-MM-dd')}">
