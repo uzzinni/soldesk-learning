@@ -41,6 +41,7 @@
 		</div>
 		<button th:onclick="|location.href='@{/board(pageNo=${pageNo})}'|">게시판으로</button>
 		</div>
+		[[${detail.commentCount}]]개의 댓글이 있습니다.
 	</div>
 </body>
 </html>

@@ -17,9 +17,12 @@ import org.springframework.stereotype.Service;
 
 import com.poseidon.dao.BoardDAO;
 import com.poseidon.dto.BoardDTO;
+import com.poseidon.dto.CommentDTO;
 import com.poseidon.dto.WriteDTO;
 import com.poseidon.entity.Board;
+import com.poseidon.entity.Comment;
 import com.poseidon.entity.Member;
+import com.poseidon.repository.JpaCommentRepository;
 import com.poseidon.repository.JpaboardRepository;
 import com.poseidon.repository.JpamemberRepository;
 
@@ -34,6 +37,7 @@ public class BoardService {
 	//JpaboardRepository 만들어서 연결합니다.
 	private final JpaboardRepository jpaboardRepository;
 	private final JpamemberRepository jpamemberRepository;
+	private final JpaCommentRepository jpaCommentRepository;
 
 	public static BoardDTO entityToDto(Board board) {
 		BoardDTO dto = new BoardDTO();
@@ -43,6 +47,7 @@ public class BoardService {
 		dto.setName(board.getMember().getMname());
 		dto.setBoard_date(board.getDate());
 		dto.setBoard_read(board.getBread());
+		dto.setCommentCount(board.getCommentList().size());
 		return dto;
 	}
 	
@@ -81,7 +86,7 @@ public class BoardService {
 		if(board.isPresent()) {
 			Board detail = board.get();
 			detail.setBread(detail.getBread() + 1);
-			jpaboardRepository.save(detail);
+			jpaboardRepository.save(detail); // 읽음 수 올리기
 		}
 		BoardDTO dto = entityToDto(board.get());
 		return dto;
@@ -99,11 +104,24 @@ public class BoardService {
 	public Page<BoardDTO> list(int pageNo) {
 		List<Sort.Order> sorts = new ArrayList<>();
 		sorts.add(Sort.Order.desc("bno"));
-		Pageable pageable = PageRequest.of(pageNo-1, 10, Sort.by(sorts));
-		Page<Board> list = jpaboardRepository.findAll(pageable);
+		Pageable pageable = PageRequest.of(pageNo-1, 10, Sort.by(sorts)); //옵션
+		Page<Board> list = jpaboardRepository.findAll(pageable); // 실제 데이터베이스에서 읽어오는 작업
+		
 		List<BoardDTO> dtoList = list.getContent().stream().map(BoardService::entityToDto).collect(Collectors.toList());
 		
 		return new PageImpl<>(dtoList, pageable, list.getTotalElements());
+	}
+
+
+	public List<CommentDTO> commentList(int bno) {
+		// bno를 가지고 있는 댓글 리스트 뽑기
+		// JpaCommentRepository 만들어주기
+		//Board board = Board.builder().bno(bno).build();
+		Optional<Board> board = jpaboardRepository.findByBno(bno);
+		
+		List<Comment> commentList = board.get().getCommentList();
+		//System.out.println(commentList.size());
+		return null;
 	}
 
 }

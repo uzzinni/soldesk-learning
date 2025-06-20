@@ -19,5 +19,6 @@ public class BoardDTO {
 	private String name; 				// int user_no -> String name
 	private LocalDateTime board_date;
 	private int board_read; 			// like -> read
+	private int commentCount;   		// 댓글 수 
 	//private int board_del;			 //삭제
 }
