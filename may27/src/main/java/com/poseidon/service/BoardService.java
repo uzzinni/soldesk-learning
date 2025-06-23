@@ -26,6 +26,7 @@ import com.poseidon.repository.JpaCommentRepository;
 import com.poseidon.repository.JpaboardRepository;
 import com.poseidon.repository.JpamemberRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -38,6 +39,19 @@ public class BoardService {
 	private final JpaboardRepository jpaboardRepository;
 	private final JpamemberRepository jpamemberRepository;
 	private final JpaCommentRepository jpaCommentRepository;
+	
+	
+	public static CommentDTO entityToCommentDTO(Comment comm) {
+		CommentDTO dto = CommentDTO.builder()
+				.cno(comm.getCno())
+				.bno(comm.getBoard().getBno())
+				.ccomment(comm.getCcomment())
+				.cdate(comm.getCdate())
+				.name(comm.getMember().getMname())
+				.clike(comm.getClike())
+				.build();
+		return dto;
+	}
 
 	public static BoardDTO entityToDto(Board board) {
 		BoardDTO dto = new BoardDTO();
@@ -80,26 +94,32 @@ public class BoardService {
 		
 		return null;
 	}
-
+	
+	// Transactional : 스프링 프레임워크 트랜젝션을 사용하겠다고 선언하는 어노테이션
+	// 한 자원에 대해서 여러 작업을 묶어서 처리하기.
+	// 여러 메소드를 만들어 하나의 @Transactional 하위에서 작업하면 모두 하나의 묶음으로 처리
+	// 메소드 중 한 메소드가 문제 발생시, 전체 취소(롤백) 가능
+	
+	@Transactional
 	public BoardDTO detail(int bno) {
 		Optional<Board> board = jpaboardRepository.findByBno(bno);
 		if(board.isPresent()) {
 			Board detail = board.get();
 			detail.setBread(detail.getBread() + 1);
-			jpaboardRepository.save(detail); // 읽음 수 올리기
+			// jpaboardRepository.save(detail); // 읽음 수 올리기
 		}
 		BoardDTO dto = entityToDto(board.get());
 		return dto;
 	}
 
-	public void liekUp(int bno) {
-		Optional<Board> detail = jpaboardRepository.findByBno(bno);
-		if(detail.isPresent()) {
-			Board board = detail.get(); 
-			board.setBread(detail.get().getBread() + 1);
-			jpaboardRepository.save(board);
-		}
-	}
+
+	
+	/*
+	 * public void liekUp(int bno) { Optional<Board> detail =
+	 * jpaboardRepository.findByBno(bno); if(detail.isPresent()) { Board board =
+	 * detail.get(); board.setBread(detail.get().getBread() + 1); //
+	 * jpaboardRepository.save(board); } }
+	 */
 
 	public Page<BoardDTO> list(int pageNo) {
 		List<Sort.Order> sorts = new ArrayList<>();
@@ -119,9 +139,12 @@ public class BoardService {
 		//Board board = Board.builder().bno(bno).build();
 		Optional<Board> board = jpaboardRepository.findByBno(bno);
 		
-		List<Comment> commentList = board.get().getCommentList();
-		//System.out.println(commentList.size());
-		return null;
+		//List<Comment> commentList = board.get().getCommentList();
+		List<Comment> commentList = jpaCommentRepository.findByBoard(board.get());
+		System.out.println(commentList.size());
+		List<CommentDTO> commList = commentList.stream().map(BoardService::entityToCommentDTO).collect(Collectors.toList());
+		System.out.println(commList);
+		return commList;
 	}
 
 }

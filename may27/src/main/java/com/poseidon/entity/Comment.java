@@ -36,7 +36,7 @@ public class Comment {
 	private Board board;
 	
 	//글쓴이와 연결하기
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "mname")
 	private Member member;
 
