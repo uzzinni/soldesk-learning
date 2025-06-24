@@ -11,4 +11,6 @@ public interface JpaCommentRepository extends JpaRepository<Comment, Integer>{
 
 	List<Comment> findByBoard(Board board);
 
+	List<Comment> findByBoardOrderByCnoDesc(Board board);
+
 }

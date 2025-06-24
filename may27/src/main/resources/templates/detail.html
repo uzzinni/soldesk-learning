@@ -8,14 +8,42 @@
 <style th:inline="css" type="text/css"></style>
 <script th:inline="javascript" type="text/javascript"></script>
 <style type="text/css">
-		.bcontent {min-height: 300px; height: auto; width:100%;}
-		.bcontent > p {width: 100% !important;}
-		.bcontent > p > img {width: 100% !important;}
-		.vertical {color: #c0c0c0;margin: 0px 10px;}
-	</style>
+.bcontent {
+	min-height: 300px;
+	height: auto;
+	width: 100%;
+}
+
+.bcontent>p {
+	width: 100% !important;
+}
+
+.bcontent>p>img {
+	width: 100% !important;
+}
+
+.vertical {
+	color: #c0c0c0;
+	margin: 0px 10px;
+}
+
+#comment {
+	width: 90%;
+	height: 100px;
+	margin-right: -5px;
+	vertical-align: middle;
+}
+
+#commentbtn {
+	width: 10%;
+	height: 100px;
+	margin-left: -5px;
+	vertical-align: middle;
+}
+</style>
 </head>
 <body>
-	<div class="container m-3 p-3">
+	<div class="container">
 		<h1>톺아보기</h1>
 		<div class="m-3 p-3 shadow">
 			<div class="row fs-2">
@@ -23,25 +51,69 @@
 			</div>
 			<div class="row px-3 py-1">
 				<div class="col-12 col-md-auto">
-					<i class="fa-regular fa-eye me-2"></i>[[${detail.board_read }]]<span class="vertical">|</span>
-					<i class="fa-regular fa-clock me-2"></i>[[${detail.board_date }]]
+					<i class="fa-regular fa-eye me-2"></i>[[${detail.board_read }]]<span
+						class="vertical">|</span> <i class="fa-regular fa-clock me-2"></i>[[${detail.board_date
+					}]]
 				</div>
 			</div>
 			<div class="row px-3 py-1 mb-3 bg-light">
 				<div class="col-12 col-md-auto">
-					<button class="btn btn-outline-primary btn-sm" id="updateBtn"><i class="fa-regular fa-pen-to-square"></i>수정</button>
-					<button class="btn btn-outline-danger btn-sm" id="deleteBtn"><i class="fa-regular fa-trash-can"></i>삭제</button>
+					<button class="btn btn-outline-primary btn-sm" id="updateBtn">
+						<i class="fa-regular fa-pen-to-square"></i>수정
+					</button>
+					<button class="btn btn-outline-danger btn-sm" id="deleteBtn">
+						<i class="fa-regular fa-trash-can"></i>삭제
+					</button>
 					<i class="fa-regular fa-user me-2"></i>[[${detail.name }]]님
 				</div>
 				<div class="col-12 col-md text-md-end"></div>
 			</div>
-			<div class="bcontent row">
-				[[${detail.board_content }]]
-			</div>
+			<div class="bcontent row">[[${detail.board_content }]]</div>
 		</div>
 		<button th:onclick="|location.href='@{/board(pageNo=${pageNo})}'|">게시판으로</button>
-		</div>
 		[[${detail.commentCount}]]개의 댓글이 있습니다.
+		<!-- 댓글 입력창 -->
+		<div class="p-2 m-2 rounded shadow" sec:authorize="isAuthenticated()">
+			<!-- 댓글을 쓰려면, bno가 있어야 합니다. = [[${detail.board_no}]] -->
+			<form action="/comment" method="post">
+				<input type="hidden" name="bno" th:value="${detail.board_no}">
+				<textarea name="comment" id="comment"></textarea>
+				<button type="submit" class="btn btn-info" id="commentbtn">댓글쓰기</button>
+			</form>
+		</div>
+		<!-- 댓글 출력창 CommentDTO(cno=1, bno=136, ccomment=댓글입니다, name=홍길동, cdate=2025-06-20T18:11:18, clike=1) -->
+		<!-- 댓글이 있을 경우 -->
+		<div class="shadow p-2 m-2 rounded" th:if="${commlist ne null}">
+			<div th:each="row : ${commlist}">
+				<div class="p-2 m-0 row" style="background-color: #c0c0c0">
+					<div class="col">[[${row.name}]]님</div>
+					<div class="col row">
+						<div class="col text-end">[[${row.clike}]]</div>
+						<div class="col text-end">
+							<!-- [[${#temporals.format(row.cdate, 'yyyy년 MM월 dd일 HH시 mm분 ss초')}]] -->
+							<!-- [[${#temporals.format(row.cdate, 'yyyy-MM-dd HH:mm:ss')}]] -->
+							<!-- 오늘 글은 시:분 -->
+							<span th:if="${#temporals.format(row.cdate, 'yyyy-MM-dd') eq #dates.format(#calendars.createNow(), 'yyyy-MM-dd')}">
+								[[${#temporals.format(row.cdate, 'HH:mm')}]]
+							</span>
+							<!-- 지난 글은 년-월-일 -->
+							<span th:unless="${#temporals.format(row.cdate, 'yyyy-MM-dd') eq #dates.format(#calendars.createNow(), 'yyyy-MM-dd')}">
+								[[${#temporals.format(row.cdate, 'MM-dd')}]]
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="p-2 m-3 mt-0 row" style="min-height: 100px;">
+					<div class="col" th:utext="${row.ccomment}"></div>
+				</div>
+			</div>
+		</div>
+		<!-- 댓글이 없을 경우 -->
+		<div class="shadow p-2 m-2 rounded" th:unless="${commlist ne null}">
+			<h1>댓글이 없습니다.</h1>
+		</div>
+
+	</div>
 	</div>
 </body>
 </html>

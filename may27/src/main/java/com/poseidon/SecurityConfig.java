@@ -23,7 +23,7 @@ public class SecurityConfig {
 	// 리소스 리스트 = 누구나 다 접근 가능
 	private static final String[] SOURCE_LIST = { "/img/**", "/css/**", "/js/**" };
 	// 로그인 한 사용자
-	private static final String[] USER_LIST = { "/write", "/info", "/logout" };
+	private static final String[] USER_LIST = { "/write", "/info", "/logout", "/comment" };
 	// 로그인 한 관리자
 	private static final String[] ADMIN_LIST = { "/admin/**" }; 
 
