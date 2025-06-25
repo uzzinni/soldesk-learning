@@ -9,6 +9,8 @@ import com.poseidon.entity.Board;
 public interface JpaboardRepository extends JpaRepository<Board, Integer>{
 
 	Optional<Board> findByBno(int bno);
+
+	void delete(Board board);
 	
 	
 }

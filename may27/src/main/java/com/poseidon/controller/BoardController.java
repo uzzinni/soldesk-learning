@@ -24,6 +24,21 @@ import lombok.RequiredArgsConstructor;
 public class BoardController {
 
 	private final BoardService boardService;
+	
+	// post /deletePost 글 삭제하기
+	@Secured({ "ROLE_USER", "ROLE_ADMIN" })
+	@PostMapping("/deletePost")
+	public String deletePost(@RequestParam("bno") int bno) {
+		//System.out.println("bno >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + bno);
+		int result = boardService.deletePost(bno);
+		//System.out.println("처리결과 >>> " + result);
+		if (result == 0){
+			return "error";
+		}
+		return "redirect:/board";
+	}
+	
+	
 
 	// write 시큐리티가 제어하게 연습하기
 	@Secured({ "ROLE_USER", "ROLE_ADMIN" }) // SecurityConfig에 추가해준 후 사용 가능
@@ -120,7 +135,7 @@ public class BoardController {
 		}
 
 		model.addAttribute("pageNo", pageNo);
-		return "detail";
+		return "detail"; // detail
 	}
 
 	/*

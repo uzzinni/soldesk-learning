@@ -59,6 +59,8 @@ public class Board {
 	@OneToMany(mappedBy = "board", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	@OrderBy("id asc")
 	private List<Comment> commentList;
-	
 
+	// 아이피 추가
+	@Column(length = 50)
+	private String ip;
 }

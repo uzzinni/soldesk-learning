@@ -38,45 +38,17 @@ public class BoardService {
 	private final BoardDAO boardDAO;
 	private final Util util;
 	
-	//그 다음, DAO랑 연결합니다.
-	//JpaboardRepository 만들어서 연결합니다.
 	private final JpaboardRepository jpaboardRepository;
 	private final JpamemberRepository jpamemberRepository;
-	private final JpaCommentRepository jpaCommentRepository;
-	
-	
-	public static CommentDTO entityToCommentDTO(Comment comm) {
-		CommentDTO dto = CommentDTO.builder()
-				.cno(comm.getCno())
-				.bno(comm.getBoard().getBno())
-				.ccomment(comm.getCcomment())
-				.cdate(comm.getCdate())
-				.name(comm.getMember().getMname())
-				.clike(comm.getClike())
-				.build();
-		return dto;
-	}
-
-	public static BoardDTO entityToDto(Board board) {
-		BoardDTO dto = new BoardDTO();
-		dto.setBoard_no(board.getBno());
-		dto.setBoard_title(board.getTitle());
-		dto.setBoard_content(board.getContent());
-		dto.setName(board.getMember().getMname());
-		dto.setBoard_date(board.getDate());
-		dto.setBoard_read(board.getBread());
-		dto.setCommentCount(board.getCommentList().size());
-		return dto;
-	}
-	
+	private final JpaCommentRepository jpaCommentRepository;	
+	private final ConvertService convertService;
+	// 여기 있던 static 메소드를 위 convertService로 이사.
 	
 	public List<Map<String, Object>> ajaxList(int pageNo) {
 		return boardDAO.ajaxList(pageNo - 1);
 	}
 
 	public WriteDTO write(WriteDTO writeDTO) {
-		// dto -> jpa entity로 변환작업
-		
 		//로그인한 사용자 정보 가져오기
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		CustomUserDetails cuds = (CustomUserDetails) authentication.getPrincipal(); // 로그인한 사용자 정보가 들어있어요. 
@@ -93,6 +65,7 @@ public class BoardService {
 				.title(writeDTO.getTitle())
 				.content(writeDTO.getContent())
 				.member(member.get()) // Member Entity객체입니다.
+				.ip(util.getIP()) //아이피 추가
 				.build();
 		jpaboardRepository.save(board);
 		
@@ -112,7 +85,8 @@ public class BoardService {
 			detail.setBread(detail.getBread() + 1);
 			// jpaboardRepository.save(detail); // 읽음 수 올리기
 		}
-		BoardDTO dto = entityToDto(board.get());
+		//BoardDTO dto = entityToDto(board.get()); 아래처럼 변경
+		BoardDTO dto = convertService.entityToDto(board.get());
 		return dto;
 	}
 
@@ -130,9 +104,7 @@ public class BoardService {
 		sorts.add(Sort.Order.desc("bno"));
 		Pageable pageable = PageRequest.of(pageNo-1, 10, Sort.by(sorts)); //옵션
 		Page<Board> list = jpaboardRepository.findAll(pageable); // 실제 데이터베이스에서 읽어오는 작업
-		
-		List<BoardDTO> dtoList = list.getContent().stream().map(BoardService::entityToDto).collect(Collectors.toList());
-		
+		List<BoardDTO> dtoList = list.getContent().stream().map(convertService::entityToDto).collect(Collectors.toList());
 		return new PageImpl<>(dtoList, pageable, list.getTotalElements());
 	}
 
@@ -144,12 +116,11 @@ public class BoardService {
 		//Optional<Board> board = jpaboardRepository.findByBno(bno); //데이터베이스 접근하지 않게 하려면?		
 		//List<Comment> commentList = jpaCommentRepository.findByBoardOrderByCnoDesc(board.get());
 		List<Comment> commentList = jpaCommentRepository.findByBoardOrderByCnoDesc(Board.builder().bno(bno).build());
-		List<CommentDTO> commList = commentList.stream().map(BoardService::entityToCommentDTO).collect(Collectors.toList());
+		List<CommentDTO> commList = commentList.stream().map(convertService::entityToCommentDTO).collect(Collectors.toList());
 		return commList;
 	}
 
 	public CommentDTO commentWrite(CommentRequest commentRequest) {
-		// bno, comment ==== 사용자 ID가 오게
 		//String id = util.getId();
 		//System.out.println("getId() : " + id);
 		//Optional<Member> member = jpamemberRepository.findByMid(id);
@@ -166,6 +137,7 @@ public class BoardService {
 		comment.setMember(member);
 		Board board = Board.builder().bno(commentRequest.getBno()).build(); // 여기에 글 번호만 저장했습니다.
 		comment.setBoard(board);
+		comment.setIp(util.getIP()); //아이피 추가 : 빌더 사용하실거면 통일하시는 게 편합니다.
 		
 		//데이터베이스에 저장하기
 		comment = jpaCommentRepository.save(comment);
@@ -178,4 +150,15 @@ public class BoardService {
 		return dto;
 	}
 
+	public int deletePost(int bno) {
+		// 다시
+		Optional<Board> board= jpaboardRepository.findByBno(bno);
+		//String id = util.getMember().getMid();
+		if(board.isPresent() && util.idCheck(board.get().getMember())) { // bno에 해당하는 게시글이 있을 때
+			jpaboardRepository.deleteById(bno); //내가 쓴 글만 지우기 위해서
+			// 댓글이 있을 경우 삭제 불가.
+			return 1;
+		}
+		return 0;		
+	}
 }

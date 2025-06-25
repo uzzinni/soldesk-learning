@@ -21,9 +21,9 @@ public class SecurityConfig {
 	private static final String[] ALLOW_LIST = { "/", "/index", "/join", "/error", 
 												"/checkId", "/board", "/board2", "/ajaxBoard", "/detail"};
 	// 리소스 리스트 = 누구나 다 접근 가능
-	private static final String[] SOURCE_LIST = { "/img/**", "/css/**", "/js/**" };
+	private static final String[] SOURCE_LIST = { "/img/**", "/css/**", "/js/**", "/summernote/**"};
 	// 로그인 한 사용자
-	private static final String[] USER_LIST = { "/write", "/info", "/logout", "/comment" };
+	private static final String[] USER_LIST = { "/write", "/info", "/logout", "/comment", "/deletePost" };
 	// 로그인 한 관리자
 	private static final String[] ADMIN_LIST = { "/admin/**" }; 
 

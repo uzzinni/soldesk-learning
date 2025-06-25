@@ -40,7 +40,141 @@
 	margin-left: -5px;
 	vertical-align: middle;
 }
+
+#commentInsertForm {
+	/* max-height와 opacity 속성이 0.5초 동안 부드럽게 변하도록 설정 */
+	transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+	/* 초기 상태는 자바스크립트에서 설정했으니 여기선 transition만! */
+}
 </style>
+<script type="text/javascript">
+/*
+	$(document).ready(function(){
+		//기본	
+	});
+$(function(){
+	// commentInsertForm 숨기기
+	$("#commentInsertForm").hide();
+	
+	// 댓글쓰기 버튼(commentInsertBtn)을 누르면 보이게하기
+	$("#commentInsertBtn").click(function(){
+		//$("#commentInsertForm").show(); 아래처럼 변경합니다
+		$("#commentInsertForm").slideToggle("slow");
+		if($(this).text() === "닫기"){			
+			$("#commentInsertBtn").text("댓글쓰기");
+		} else {
+			$("#commentInsertBtn").text("닫기");			
+		}
+	});
+});
+1:1면담 7/15~7/16
+1차 프로젝트 7/10 ~ 7/29
+2차 프로젝트 7/29 ~ 8/26
+8/15 보충수업	09:30 ~ 15:30
+8/22 리허설
+8/26 발표
+8/28 이력서 최종완성
+8/29 종강		09:30 ~ 13:30
+
+프레임워크 :
+라이브러리 :
+
+오버로드 : 
+오버라이드 :
+	
+= : 대입
+== : 같아?
+=== : 같아?
+	
+자바 스크립트 변수 var, let, const :
+호이스팅 :
+ECMA script :
+*/
+document.addEventListener('DOMContentLoaded', function() {
+    // 요소들 가져오기 (jQuery의 $() 대신 document.getElementById 사용)
+    const commentInsertForm = document.getElementById("commentInsertForm");
+    const commentInsertBtn = document.getElementById("commentInsertBtn");
+
+    // 폼 초기 상태 설정
+    // 처음에는 폼을 완전히 숨겨놔 (display: none)
+    commentInsertForm.style.display = 'none';
+    // 애니메이션을 위해 max-height와 opacity도 초기화해줘.
+    // overflow: hidden은 애니메이션 중에 내용이 튀어나오지 않게 해줘!
+    commentInsertForm.style.maxHeight = '0';
+    commentInsertForm.style.opacity = '0';
+    commentInsertForm.style.overflow = 'hidden';
+
+    // #commentInsertBtn의 초기 글자를 '댓글쓰기'로 설정
+    commentInsertBtn.textContent = "댓글쓰기";
+
+    // 댓글쓰기 버튼 클릭 이벤트 리스너 (jQuery의 .click() 대신 .addEventListener 사용)
+    commentInsertBtn.addEventListener('click', function() {
+        // 현재 폼이 숨겨져 있는지 확인
+        const isHidden = commentInsertForm.style.display === 'none';
+
+        if (isHidden) {
+            // 폼 보이기 로직
+            commentInsertForm.style.display = 'block'; // 먼저 display를 block으로 바꿔서 요소가 화면에 나타나게 해
+            // 이 부분이 중요해! display 속성을 바꾼 직후에 max-height를 설정하면 애니메이션이 바로 적용 안 될 수 있거든.
+            // offsetHeight를 한 번 호출해서 브라우저가 레이아웃을 다시 계산하게 강제하는 거야.
+            commentInsertForm.offsetHeight; 
+            commentInsertForm.style.maxHeight = commentInsertForm.scrollHeight + 'px'; // 실제 콘텐츠 높이만큼 max-height 설정
+            commentInsertForm.style.opacity = '1'; // 투명도를 1로 만들어서 보이게 해
+        } else {
+            // 폼 숨기기 로직
+            // 현재 높이로 max-height를 설정해서 애니메이션 시작점을 확보해.
+            commentInsertForm.style.maxHeight = commentInsertForm.scrollHeight + 'px';
+            commentInsertForm.offsetHeight; // 이것도 애니메이션 시작 전 레이아웃 강제 업데이트!
+            commentInsertForm.style.maxHeight = '0'; // max-height를 0으로 줄여서 위로 스르륵 올라가게 해
+            commentInsertForm.style.opacity = '0'; // 투명도를 0으로 만들어서 사라지게 해
+        }
+
+        // 버튼 글자 변경 로직 (this는 이벤트가 발생한 commentInsertBtn을 가리켜)
+        if (this.textContent === "댓글쓰기") {
+            this.textContent = "닫기";
+        } else {
+            this.textContent = "댓글쓰기";
+        }
+    });
+
+    // 애니메이션 완료 후 처리 (display: none으로 깔끔하게 마무리)
+    // transitionend 이벤트는 CSS 트랜지션이 끝났을 때 발생해.
+    commentInsertForm.addEventListener('transitionend', function() {
+        // 폼이 완전히 숨겨진 상태라면 display: none으로 바꿔서 공간을 차지하지 않게 해
+        if (commentInsertForm.style.maxHeight === '0px' && commentInsertForm.style.opacity === '0') {
+            commentInsertForm.style.display = 'none';
+        } 
+        // 폼이 완전히 보이는 상태라면 max-height를 'none'으로 돌려놔서
+        // 나중에 내용이 추가되어도 잘리지 않고 유연하게 늘어나게 해줘.
+        else if (commentInsertForm.style.maxHeight !== '0px' && commentInsertForm.style.opacity === '1') {
+             commentInsertForm.style.maxHeight = 'none'; // 'auto'도 가능하지만 'none'이 더 유연해
+        }
+    });
+});
+
+$(function(){
+	//버튼을 누르면 삭제하기 기능 수행
+	//#deleteBtn
+	$("#deleteBtn").click(function(){
+		if(confirm('삭제하시겠습니까?')){
+			//location.href="/deletePost?bno=111";
+			//위 방식은 get방식입니다. URL에 남아요.
+			
+			//POST방식으로 전송 = 가상 form만들기
+			let form = $("<form></form>");
+			form.attr("action","/deletePost");
+			form.attr("method","post");
+			form.append($("<input>",{type:'hidden', name:'bno', value:[[${detail.board_no}]]}));
+			form.appendTo("body");
+			form.submit();
+			// 시큐리티 로그인한 사용자만 사용하게 풀어주기 = "/deletePost"
+			// BoardController에 post /deletePost추가하기
+		}
+		
+	});
+});
+
+</script>
 </head>
 <body>
 	<div class="container">
@@ -51,9 +185,8 @@
 			</div>
 			<div class="row px-3 py-1">
 				<div class="col-12 col-md-auto">
-					<i class="fa-regular fa-eye me-2"></i>[[${detail.board_read }]]<span
-						class="vertical">|</span> <i class="fa-regular fa-clock me-2"></i>[[${detail.board_date
-					}]]
+					<i class="fa-regular fa-eye me-2"></i>[[${detail.board_read }]] <span
+						class="vertical">|</span> <i class="bi-arrow-right-circle fs-5"></i>[[${detail.board_date}]]
 				</div>
 			</div>
 			<div class="row px-3 py-1 mb-3 bg-light">
@@ -64,16 +197,20 @@
 					<button class="btn btn-outline-danger btn-sm" id="deleteBtn">
 						<i class="fa-regular fa-trash-can"></i>삭제
 					</button>
-					<i class="fa-regular fa-user me-2"></i>[[${detail.name }]]님
+					<i class="fa-regular fa-user me-2"></i>[[${detail.name }]]님 / [[${detail.ip}]]
 				</div>
 				<div class="col-12 col-md text-md-end"></div>
 			</div>
-			<div class="bcontent row">[[${detail.board_content }]]</div>
+			<div class="bcontent row" th:utext="${detail.board_content }">[(${detail.board_content })]</div>
 		</div>
-		<button th:onclick="|location.href='@{/board(pageNo=${pageNo})}'|">게시판으로</button>
+		<button class="btn btn-info"
+			th:onclick="|location.href='@{/board(pageNo=${pageNo})}'|">게시판으로</button>
 		[[${detail.commentCount}]]개의 댓글이 있습니다.
 		<!-- 댓글 입력창 -->
-		<div class="p-2 m-2 rounded shadow" sec:authorize="isAuthenticated()">
+		<button id="commentInsertBtn" class="btn btn-info"
+			sec:authorize="isAuthenticated()">댓글 쓰기</button>
+		<div id="commentInsertForm" class="p-2 m-2 rounded shadow"
+			sec:authorize="isAuthenticated()">
 			<!-- 댓글을 쓰려면, bno가 있어야 합니다. = [[${detail.board_no}]] -->
 			<form action="/comment" method="post">
 				<input type="hidden" name="bno" th:value="${detail.board_no}">
@@ -86,20 +223,20 @@
 		<div class="shadow p-2 m-2 rounded" th:if="${commlist ne null}">
 			<div th:each="row : ${commlist}">
 				<div class="p-2 m-0 row" style="background-color: #c0c0c0">
-					<div class="col">[[${row.name}]]님</div>
+					<div class="col">[[${row.name}]]님 / [[${row.ip}]]</div>
 					<div class="col row">
 						<div class="col text-end">[[${row.clike}]]</div>
 						<div class="col text-end">
 							<!-- [[${#temporals.format(row.cdate, 'yyyy년 MM월 dd일 HH시 mm분 ss초')}]] -->
 							<!-- [[${#temporals.format(row.cdate, 'yyyy-MM-dd HH:mm:ss')}]] -->
 							<!-- 오늘 글은 시:분 -->
-							<span th:if="${#temporals.format(row.cdate, 'yyyy-MM-dd') eq #dates.format(#calendars.createNow(), 'yyyy-MM-dd')}">
-								[[${#temporals.format(row.cdate, 'HH:mm')}]]
-							</span>
+							<span
+								th:if="${#temporals.format(row.cdate, 'yyyy-MM-dd') eq #dates.format(#calendars.createNow(), 'yyyy-MM-dd')}">
+								[[${#temporals.format(row.cdate, 'HH:mm')}]] </span>
 							<!-- 지난 글은 년-월-일 -->
-							<span th:unless="${#temporals.format(row.cdate, 'yyyy-MM-dd') eq #dates.format(#calendars.createNow(), 'yyyy-MM-dd')}">
-								[[${#temporals.format(row.cdate, 'MM-dd')}]]
-							</span>
+							<span
+								th:unless="${#temporals.format(row.cdate, 'yyyy-MM-dd') eq #dates.format(#calendars.createNow(), 'yyyy-MM-dd')}">
+								[[${#temporals.format(row.cdate, 'MM-dd')}]] </span>
 						</div>
 					</div>
 				</div>

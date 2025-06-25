@@ -1,21 +1,50 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    layout:decorate="~{common/defaultLayout}"
-    layout:fragment="content">
-	<head>
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/defaultLayout}" layout:fragment="content">
+<head>
 <head>
 <title layout:fragment="title">글쓰기</title>
+<script type="text/javascript"
+	src="//code.jquery.com/jquery-3.6.0.min.js"></script>
+<link href="summernote/summernote-bs5.css" rel="stylesheet">
+<script src="summernote/summernote-bs5.js"></script>
+<script src="summernote/summernote-ko-KR.js"></script>
 </head>
 <body>
-	<div class="m-5 p-5">
+	<div>
 		<h1>글쓰기</h1>
 		<!-- dto로 받기(유효성 검사) -> 서비스에서 엔티티로 변경하기 -> jpa에 던지기 -->
 		<form class="form-control" action="/write" method="post">
-			<input type="text" name="title" placeholder="제목을 입력하세요">
-			<textarea class="form-control my-3" name="content"></textarea>
-			<button class="btn btn-info" type="submit">글쓰기</button>
+			<input type="text" id="title" class="form-control my-3" name="title" placeholder="제목을 입력하세요">
+			<textarea id="summernote" class="form-control" name="content"></textarea>
+			<button class="btn btn-info mt-3" type="submit">글쓰기</button>
 		</form>
 	</div>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('#summernote').summernote({height : 500, lang : "ko-KR"});
+			// 글쓰기 버튼을 눌렀을 때 동작합니다.
+			$("form").submit(function(event) {
+				//제목 가져오기
+				let title = $("#title").val().trim();
+				if(title === ""){
+					alert("제목을 입력하세요.");
+					$("#title").focus();
+					event.preventDefault(); // 전송 중지
+					return false;
+				}
+				//alert("글쓰기 버튼을 눌렀습니다. 제목 : " + title.length);
+				// 본문 가져오기
+				let content = $('#summernote').summernote('code'); //내부에 <p><br></p>
+				if(content === "<p><br></p>" || content === ""){					
+					alert("내용을 입력하세요.");
+					event.preventDefault(); // 전송 중지
+					return false; // 함수 중지
+				}
+			});
+			
+		}); // 제이쿼리 닫기
+	</script>
 </body>
 </html>

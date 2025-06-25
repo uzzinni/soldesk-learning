@@ -14,5 +14,5 @@ public class CommentDTO {
 	private String name;
 	private LocalDateTime cdate;
 	private int clike;
-	
+	private String ip;			 // ip
 }

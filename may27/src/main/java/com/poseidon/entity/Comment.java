@@ -48,4 +48,8 @@ public class Comment {
 	
 	@ColumnDefault("1")
 	private int clike;
+	
+	//ip
+	@Column(length = 50)
+	private String ip;
 }
