@@ -47,6 +47,7 @@
 	/* 초기 상태는 자바스크립트에서 설정했으니 여기선 transition만! */
 }
 </style>
+<th:block sec:authorize="isAuthenticated()">
 <script type="text/javascript">
 /*
 	$(document).ready(function(){
@@ -94,7 +95,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // 요소들 가져오기 (jQuery의 $() 대신 document.getElementById 사용)
     const commentInsertForm = document.getElementById("commentInsertForm");
     const commentInsertBtn = document.getElementById("commentInsertBtn");
-
     // 폼 초기 상태 설정
     // 처음에는 폼을 완전히 숨겨놔 (display: none)
     commentInsertForm.style.display = 'none';
@@ -103,15 +103,12 @@ document.addEventListener('DOMContentLoaded', function() {
     commentInsertForm.style.maxHeight = '0';
     commentInsertForm.style.opacity = '0';
     commentInsertForm.style.overflow = 'hidden';
-
     // #commentInsertBtn의 초기 글자를 '댓글쓰기'로 설정
     commentInsertBtn.textContent = "댓글쓰기";
-
     // 댓글쓰기 버튼 클릭 이벤트 리스너 (jQuery의 .click() 대신 .addEventListener 사용)
     commentInsertBtn.addEventListener('click', function() {
         // 현재 폼이 숨겨져 있는지 확인
         const isHidden = commentInsertForm.style.display === 'none';
-
         if (isHidden) {
             // 폼 보이기 로직
             commentInsertForm.style.display = 'block'; // 먼저 display를 block으로 바꿔서 요소가 화면에 나타나게 해
@@ -128,7 +125,6 @@ document.addEventListener('DOMContentLoaded', function() {
             commentInsertForm.style.maxHeight = '0'; // max-height를 0으로 줄여서 위로 스르륵 올라가게 해
             commentInsertForm.style.opacity = '0'; // 투명도를 0으로 만들어서 사라지게 해
         }
-
         // 버튼 글자 변경 로직 (this는 이벤트가 발생한 commentInsertBtn을 가리켜)
         if (this.textContent === "댓글쓰기") {
             this.textContent = "닫기";
@@ -136,7 +132,6 @@ document.addEventListener('DOMContentLoaded', function() {
             this.textContent = "댓글쓰기";
         }
     });
-
     // 애니메이션 완료 후 처리 (display: none으로 깔끔하게 마무리)
     // transitionend 이벤트는 CSS 트랜지션이 끝났을 때 발생해.
     commentInsertForm.addEventListener('transitionend', function() {
@@ -151,15 +146,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
-
+/*
 $(function(){
 	//버튼을 누르면 삭제하기 기능 수행
-	//#deleteBtn
 	$("#deleteBtn").click(function(){
 		if(confirm('삭제하시겠습니까?')){
 			//location.href="/deletePost?bno=111";
 			//위 방식은 get방식입니다. URL에 남아요.
-			
 			//POST방식으로 전송 = 가상 form만들기
 			let form = $("<form></form>");
 			form.attr("action","/deletePost");
@@ -170,11 +163,78 @@ $(function(){
 			// 시큐리티 로그인한 사용자만 사용하게 풀어주기 = "/deletePost"
 			// BoardController에 post /deletePost추가하기
 		}
-		
 	});
+});*/
+
+//삭제 코드를 자바스크립트로 변경
+document.addEventListener('DOMContentLoaded', function() {
+    const deleteBtn = document.getElementById('deleteBtn');
+    if (deleteBtn) {
+        deleteBtn.addEventListener('click', function() {
+            if (confirm('삭제하시겠습니까?')) {
+                let form = document.createElement('form');
+                form.setAttribute('action', '/deletePost');
+                form.setAttribute('method', 'post');
+
+                let input = document.createElement('input');
+                input.setAttribute('type', 'hidden');
+                input.setAttribute('name', 'bno');
+                input.setAttribute('value', '[[${detail.board_no}]]'); // Thymeleaf 표현식은 그대로 유지됩니다.
+                form.appendChild(input);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        });
+    }
 });
 
+
+	function deleteComm(cno) {
+		//alert("댓글 삭제를 눌렀습니다 댓글번호 : " + cno);
+		if (confirm('삭제하시겠습니까?')) {
+			let form = document.createElement('form');
+			form.setAttribute('action', '/deleteComm');
+			form.setAttribute('method', 'post');
+			let input = document.createElement('input');
+			input.setAttribute('type', 'hidden');
+			input.setAttribute('name', 'cno');
+			input.setAttribute('value', cno);
+			form.appendChild(input);
+			
+			let bno = document.createElement('input');
+			bno.setAttribute('type', 'hidden');
+			bno.setAttribute('name', 'bno');
+			bno.setAttribute('value', [[${detail.board_no}]]);
+			form.appendChild(bno);
+			
+			let pageNo = document.createElement('input');
+			pageNo.setAttribute('type', 'hidden');
+			pageNo.setAttribute('name', 'pageNo');
+			pageNo.setAttribute('value', [[${pageNo}]]);
+			form.appendChild(pageNo);
+			
+			document.body.appendChild(form);
+			form.submit();
+		}
+	}
+	
+	// 댓글 수정하기
+	function updateComm(cno){
+		if (confirm('해당 댓글을 수정하시겠습니까?')) {
+			location.href="/updateComm?cno="+cno+"&bno=[[${detail.board_no}]]&pageNo=[[${pageNo}]]";
+		}
+	}
+	
+	// post 수정하기
+	$(document).ready(function(){
+		$("#updateBtn").click(function(){
+			if(confirm("내용을 수정하시겠습니까?")){
+				location.href="update?bno=[[${detail.board_no}]]&pageNo=[[${pageNo}]]"
+			}
+		});		
+	});
 </script>
+</th:block>
 </head>
 <body>
 	<div class="container">
@@ -191,13 +251,17 @@ $(function(){
 			</div>
 			<div class="row px-3 py-1 mb-3 bg-light">
 				<div class="col-12 col-md-auto">
-					<button class="btn btn-outline-primary btn-sm" id="updateBtn">
-						<i class="fa-regular fa-pen-to-square"></i>수정
-					</button>
-					<button class="btn btn-outline-danger btn-sm" id="deleteBtn">
-						<i class="fa-regular fa-trash-can"></i>삭제
-					</button>
-					<i class="fa-regular fa-user me-2"></i>[[${detail.name }]]님 / [[${detail.ip}]]
+					<!-- 로그인여부(시큐리티) + 내글? 시큐리티에서 id를 가져오고 + detail에서 글쓴이 ID를 가져와서 비교해봅니다  -->
+					<th:block sec:authorize="isAuthenticated()" th:if="${#authentication.principal.ID eq detail.id}">
+						<!-- 로그인한 사용자의 ID : [[${#authentication.principal.ID}]] / 글쓴이의 ID : [[${detail.id}]] -->
+						<button class="btn btn-outline-primary btn-sm" id="updateBtn">
+							<i class="fa-regular fa-pen-to-square"></i>수정
+						</button>
+						<button class="btn btn-outline-danger btn-sm" id="deleteBtn">
+							<i class="fa-regular fa-trash-can"></i>삭제
+						</button>
+					</th:block>
+					<i class="fa-regular fa-user me-2"></i>[[${detail.name }]]님 / [[${detail.ip}]] / 
 				</div>
 				<div class="col-12 col-md text-md-end"></div>
 			</div>
@@ -207,10 +271,8 @@ $(function(){
 			th:onclick="|location.href='@{/board(pageNo=${pageNo})}'|">게시판으로</button>
 		[[${detail.commentCount}]]개의 댓글이 있습니다.
 		<!-- 댓글 입력창 -->
-		<button id="commentInsertBtn" class="btn btn-info"
-			sec:authorize="isAuthenticated()">댓글 쓰기</button>
-		<div id="commentInsertForm" class="p-2 m-2 rounded shadow"
-			sec:authorize="isAuthenticated()">
+		<button id="commentInsertBtn" class="btn btn-info" sec:authorize="isAuthenticated()">댓글 쓰기</button>
+		<div id="commentInsertForm" class="p-2 m-2 rounded shadow" sec:authorize="isAuthenticated()">
 			<!-- 댓글을 쓰려면, bno가 있어야 합니다. = [[${detail.board_no}]] -->
 			<form action="/comment" method="post">
 				<input type="hidden" name="bno" th:value="${detail.board_no}">
@@ -223,7 +285,14 @@ $(function(){
 		<div class="shadow p-2 m-2 rounded" th:if="${commlist ne null}">
 			<div th:each="row : ${commlist}">
 				<div class="p-2 m-0 row" style="background-color: #c0c0c0">
-					<div class="col">[[${row.name}]]님 / [[${row.ip}]]</div>
+					<div class="col">
+						<th:block class="col" sec:authorize="isAuthenticated()" th:if="${#authentication.principal.ID eq row.id}">
+							<!-- 로그인 사용자인지 검사하기, row.id와 로그인 정보가 같은지 검사하기 -->
+							<!-- [[${#authentication.principal.ID}]] // [[${row.id}]] -->
+							<button class="btn btn-outline-primary btn-sm" th:onclick="updateComm([[${row.cno}]])">수정</button>
+							<button class="btn btn-outline-danger btn-sm" th:onclick="deleteComm([[${row.cno}]])">삭제</button>
+						</th:block>
+						[[${row.name}]]님 / [[${row.ip}]]</div>
 					<div class="col row">
 						<div class="col text-end">[[${row.clike}]]</div>
 						<div class="col text-end">

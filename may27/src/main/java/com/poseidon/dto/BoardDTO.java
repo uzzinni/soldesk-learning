@@ -22,4 +22,5 @@ public class BoardDTO {
 	private int commentCount;   		// 댓글 수 
 	//private int board_del;			// 삭제
 	private String ip;					// ip
+	private String id;					// id
 }

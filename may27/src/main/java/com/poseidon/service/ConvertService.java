@@ -24,6 +24,7 @@ public class ConvertService {
 				.name(comm.getMember().getMname())
 				.clike(comm.getClike())
 				.ip(util.ipMasking(comm.getIp()))
+				.id(comm.getMember().getMid())  // id 추가
 				.build();		
 		return dto;
 	}
@@ -33,11 +34,12 @@ public class ConvertService {
 		dto.setBoard_no(board.getBno());
 		dto.setBoard_title(board.getTitle());
 		dto.setBoard_content(board.getContent());
-		dto.setName(board.getMember().getMname());
+		dto.setName(board.getMember().getMname());  // 사용자 정보에서 name가져오기
 		dto.setBoard_date(board.getDate());
 		dto.setBoard_read(board.getBread());
 		dto.setIp(util.ipMasking(board.getIp()));
 		dto.setCommentCount(board.getCommentList().size());
+		dto.setId(board.getMember().getMid());  // 사용자 정보에서 id가져오기
 		return dto;
 	}
 }

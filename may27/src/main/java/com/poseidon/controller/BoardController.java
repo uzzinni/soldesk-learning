@@ -3,6 +3,7 @@ package com.poseidon.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.annotation.Secured;
@@ -12,11 +13,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.poseidon.dto.BoardDTO;
 import com.poseidon.dto.CommentDTO;
 import com.poseidon.dto.CommentRequest;
 import com.poseidon.dto.WriteDTO;
 import com.poseidon.service.BoardService;
+import com.poseidon.util.Util;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -24,6 +27,61 @@ import lombok.RequiredArgsConstructor;
 public class BoardController {
 
 	private final BoardService boardService;
+	private final Util util;
+	
+	@Secured("ROLE_USER")
+	@GetMapping("/updateComm")
+	public String updateComm(@RequestParam("cno") int cno, @RequestParam("bno") int bno, 
+			@RequestParam("pageNo") int pageNo, Model model) {
+		System.out.println(cno);
+		System.out.println(bno);
+		System.out.println(pageNo);
+		return "redirect:/detail?bno="+bno+"&pageNo="+pageNo;
+	}
+	
+	
+	@Secured("ROLE_USER")
+	@GetMapping("/update")
+	public String update(@RequestParam("bno") int bno, @RequestParam("pageNo") int pageNo, Model model) {
+		Optional<BoardDTO> dto = boardService.detail(bno);
+		// 로그인 한 사람의 글인지 검사 필요. 로그인정보값 dto안에 id 비교하기
+		//System.out.println(dto.isEmpty());
+		//System.out.println(dto.isPresent());
+		//System.out.println(dto.get());
+		if(dto.isPresent() && (util.getId()).equals(dto.get().getId())){			
+			//dto에 값이 있어야 하고, dto에 id와 로그인한 사람의 id가 일치해야 통과함.
+			model.addAttribute("update", dto.get());
+			//pageNo 모델에 담기
+			model.addAttribute("pageNo", pageNo);
+			return "update";
+		} else {
+			return "error";
+		}
+	}
+	
+	@Secured("ROLE_USER")
+	@PostMapping("/update")
+	public String update(WriteDTO dto) {
+		// boardService -> entity로 변경 -> repository.update()
+		int result = boardService.updatePost(dto);
+		return "redirect:/board";
+	}
+	
+	
+	@Secured({ "ROLE_USER", "ROLE_ADMIN" })
+	@PostMapping("/deleteComm")
+	public String deleteComm(@RequestParam("cno") int cno, 
+			@RequestParam("bno") int bno, @RequestParam("pageNo") int pageNo) {
+		//System.out.println("cno    : >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + cno);
+		//System.out.println("bno    : >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + bno);
+		//System.out.println("pageNo : >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + pageNo);
+		int result = boardService.deleteComm(cno);
+		if(result == 1) {
+			return "redirect:/detail?bno="+bno+"&pageNo="+pageNo; // 이렇게 두 값을 보내려면 두개 더 받아오셔야 합니다.			
+		} else {
+			return "error";
+		}
+	}
 	
 	// post /deletePost 글 삭제하기
 	@Secured({ "ROLE_USER", "ROLE_ADMIN" })
@@ -91,7 +149,7 @@ public class BoardController {
 		model.addAttribute("list", list); // jpa paging을 사용합니다.
 		model.addAttribute("pageNo", pageNo); // 현 페이지 번호를 다시 보냅니다.
 
-		return "board";
+		return "board"; //다시 읽어오기
 	}
 
 	// 2025-06-04
@@ -104,10 +162,10 @@ public class BoardController {
 	// ajaxBoard
 	@PostMapping("/ajaxBoard")
 	public @ResponseBody Map<String, Object> ajaxBoard(@RequestParam("pageNo") int pageNo) {
-		System.out.println("pageNo >>> " + pageNo);
+		//System.out.println("pageNo >>> " + pageNo);
 
 		List<Map<String, Object>> list = boardService.ajaxList(pageNo);
-		System.out.println(list);
+		//System.out.println(list);
 		// [{board_like=0, board_title=1111111111, board_date=2025-03-26 21:14:43.0,
 		// board_no=52, user_no=1}, {}, {} ]
 		// { list : [{board_like=0, board }] }
@@ -116,7 +174,7 @@ public class BoardController {
 		result.put("totalCount", 55);
 		result.put("pageNo", pageNo);
 
-		System.out.println("result >>> " + result);
+		//System.out.println("result >>> " + result);
 
 		return result;
 	}
@@ -125,37 +183,40 @@ public class BoardController {
 	public String detail(@RequestParam(name = "bno", required = true) int bno,
 			@RequestParam(name = "pageNo", required = true) int pageNo, Model model) {
 		// model.addAttribute("commentRequest", new CommentRequest());
-		BoardDTO detail = boardService.detail(bno);
-		model.addAttribute("detail", detail);
-
-		// 댓글처리
-		if (detail.getCommentCount() > 0) {
-			List<CommentDTO> commlist = boardService.commentList(bno);
-			model.addAttribute("commlist", commlist);
+		Optional<BoardDTO> detail = boardService.detail(bno); //여기 수정하고 시작하겠습니다.
+		if(detail.isPresent()) {
+			model.addAttribute("detail", detail.get());// bno=0이라면 여기로 들어오지 못합니다.
+			// 댓글처리
+			if (detail.get().getCommentCount() > 0) {
+				List<CommentDTO> commlist = boardService.commentList(bno);
+				model.addAttribute("commlist", commlist);
+			}
+			model.addAttribute("pageNo", pageNo);
+			return "detail";			
+		} else {
+			return "error";
 		}
-
-		model.addAttribute("pageNo", pageNo);
-		return "detail"; // detail
 	}
 
 	/*
 	 * @Secured({ "ROLE_USER" })
-	 * 
-	 * @PostMapping("/liekUp") public @ResponseBody void liekUp(@RequestBody int
-	 * bno) { boardService.liekUp(bno); }
+	 * @PostMapping("/liekUp")
+	 * public @ResponseBody void liekUp(@RequestBody int bno) {
+	 * boardService.liekUp(bno);
+	 * }
 	 */
 
 	// 댓글 쓰기
 	@Secured({ "ROLE_USER", "ROLE_ADMIN" })
 	@PostMapping("/comment")
 	public String comment(CommentRequest commentRequest) {
-		System.out.println(commentRequest);
+		//System.out.println(commentRequest);
 		// 데이터베이스에 저장하는 작업
 		CommentDTO dto = boardService.commentWrite(commentRequest);
 		if (dto.getCno() < 0) { // 임시
 			return "error";
 		}
-		return "redirect:/detail?bno=" + commentRequest.getBno() + "&pageNo=1";
+		return "redirect:/detail?bno=" + commentRequest.getBno() + "&pageNo=1";// 여기가 잘못 됨
 	}
 
 }

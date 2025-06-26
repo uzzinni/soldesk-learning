@@ -18,12 +18,13 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity(securedEnabled = true, prePostEnabled = true) // 메소드 제어
 public class SecurityConfig {
 	// 접속 허용리스트 = 누구나 다 접근 가능
-	private static final String[] ALLOW_LIST = { "/", "/index", "/join", "/error", 
-												"/checkId", "/board", "/board2", "/ajaxBoard", "/detail"};
+	private static final String[] ALLOW_LIST = { "/", "/index", "/join", "/error", "/checkId",
+												 "/board", "/board2", "/ajaxBoard", "/detail"};
 	// 리소스 리스트 = 누구나 다 접근 가능
 	private static final String[] SOURCE_LIST = { "/img/**", "/css/**", "/js/**", "/summernote/**"};
 	// 로그인 한 사용자
-	private static final String[] USER_LIST = { "/write", "/info", "/logout", "/comment", "/deletePost" };
+	private static final String[] USER_LIST = { "/write", "/info", "/logout", "/comment", 
+													"/deletePost", "/deleteComm", "/update", "/updateComm" };
 	// 로그인 한 관리자
 	private static final String[] ADMIN_LIST = { "/admin/**" }; 
 
@@ -51,7 +52,10 @@ public class SecurityConfig {
 				.logoutSuccessUrl("/login") // 로그아웃 성공하고 어디로 갈거야?
 		// .permitAll() // 로그인 한 사용자만 들어오게 변경
 		);
-
+		
+		// 세션관리 정책 // 세션 안 만듬
+		//http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+		
 		// CSRF
 		http.csrf(auth -> auth.disable());
 
