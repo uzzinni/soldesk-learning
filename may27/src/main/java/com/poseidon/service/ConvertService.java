@@ -14,6 +14,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ConvertService {
 	private final Util util;
+
+	//없는 것 : commentDTOToEntity
+	//			boardDTOToEntity
+	// 단 필요한지 부터 확인하기
+	
 	
 	public CommentDTO entityToCommentDTO(Comment comm) {
 		CommentDTO dto = CommentDTO.builder()

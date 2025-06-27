@@ -8,6 +8,8 @@ import lombok.Data;
 public class CommentRequest {
 	private int bno;
 	
+	private int pageNo;
+	
 	@NotBlank(message = "댓글을 입력하세요.")
 	private String comment;
 }

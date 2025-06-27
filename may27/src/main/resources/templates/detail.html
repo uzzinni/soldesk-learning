@@ -233,6 +233,25 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		});		
 	});
+	
+	function clike(no, element){
+	      //alert(no + "번을 클릭했습니다.");
+	      if (confirm("댓글에 좋아요를 누르시겠습니까?")){
+	         fetch( "/clike", // URL
+	               {
+	                  method : "post",
+	                  headers: { "Content-Type" : "application/json"},
+	                  body: JSON.stringify(no)  // 문자열 형식
+	               }
+	            )
+	         .then(response => response.json()) // 응답이 오면 json타입으로 변경해서 넘겨줌
+	         .then(data => {
+	        	 element.textContent = data.result;
+	        	 }) // 실제 데이터를 받아서 작업
+	         .catch(error => alert(error)) // 통신 에러
+	      }
+	   }
+
 </script>
 </th:block>
 </head>
@@ -267,21 +286,22 @@ document.addEventListener('DOMContentLoaded', function() {
 			</div>
 			<div class="bcontent row" th:utext="${detail.board_content }">[(${detail.board_content })]</div>
 		</div>
-		<button class="btn btn-info"
-			th:onclick="|location.href='@{/board(pageNo=${pageNo})}'|">게시판으로</button>
-		[[${detail.commentCount}]]개의 댓글이 있습니다.
+		<button class="btn btn-info" th:onclick="|location.href='@{/board(pageNo=${pageNo})}'|">게시판으로</button>
+		
 		<!-- 댓글 입력창 -->
 		<button id="commentInsertBtn" class="btn btn-info" sec:authorize="isAuthenticated()">댓글 쓰기</button>
 		<div id="commentInsertForm" class="p-2 m-2 rounded shadow" sec:authorize="isAuthenticated()">
 			<!-- 댓글을 쓰려면, bno가 있어야 합니다. = [[${detail.board_no}]] -->
 			<form action="/comment" method="post">
 				<input type="hidden" name="bno" th:value="${detail.board_no}">
+				<input type="hidden" name="pageNo" th:value="${pageNo}">
 				<textarea name="comment" id="comment"></textarea>
 				<button type="submit" class="btn btn-info" id="commentbtn">댓글쓰기</button>
 			</form>
 		</div>
 		<!-- 댓글 출력창 CommentDTO(cno=1, bno=136, ccomment=댓글입니다, name=홍길동, cdate=2025-06-20T18:11:18, clike=1) -->
 		<!-- 댓글이 있을 경우 -->
+		[[${detail.commentCount}]]개의 댓글이 있습니다.
 		<div class="shadow p-2 m-2 rounded" th:if="${commlist ne null}">
 			<div th:each="row : ${commlist}">
 				<div class="p-2 m-0 row" style="background-color: #c0c0c0">
@@ -294,7 +314,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						</th:block>
 						[[${row.name}]]님 / [[${row.ip}]]</div>
 					<div class="col row">
-						<div class="col text-end">[[${row.clike}]]</div>
+						<div class="col text-end clike" th:onclick="clike([[${row.cno}]], this)">[[${row.clike}]]</div>
 						<div class="col text-end">
 							<!-- [[${#temporals.format(row.cdate, 'yyyy년 MM월 dd일 HH시 mm분 ss초')}]] -->
 							<!-- [[${#temporals.format(row.cdate, 'yyyy-MM-dd HH:mm:ss')}]] -->
@@ -319,7 +339,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			<h1>댓글이 없습니다.</h1>
 		</div>
 
-	</div>
 	</div>
 </body>
 </html>

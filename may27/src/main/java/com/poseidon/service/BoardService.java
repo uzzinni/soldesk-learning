@@ -90,6 +90,40 @@ public class BoardService {
 		}
 		return dto;
 	}
+	//jpa save 동작방식
+	/*
+	1. 엔티티에 @Id가 없으면(기본값이거나 null일경우) insert로 동작합니다.
+
+	2. 엔티티에 @Id가 있으면 UPDATE로 동작합니다.
+		@Id로 SELECT로 질의를 던집니다. -> 해당 데이터가 있으면(실제 데이터가 있으면) UPDATE로 동작합니다.(marge)
+		 								-> 해당 데이터가 없으면 INSERT로 동작합니다.
+		 								
+	=================================================================
+	@transactional 어노테이션이 있으면 영속성 관리를 시작함.
+	로드된 값을 변경하게 되면 기존의 값(스넵샷)과 비교하여 메소드 종료시 변경값을 반영함.
+	dirty-checking (변경을 감지하여 UPDATE 수행합니다.)
+	
+	결론 : save로 INSERT/UPDATE를 수행함.
+	
+	명령어			기능
+	--------------------------------------------------------------------------------
+	save(엔티티)  	엔티티 저장/수정, @Id값의 유무로 결정함.
+	delete(엔티티)	엔티티로 삭제.
+	count()			엔티티 수
+	existsById(id)	해당 id가 있는지 boolean값 반환
+	findAll()		모든 엔티티 조회하기
+	findById(id)	ID기준으로 조회하기, 결과는 Optional<엔티티>로 출력
+	findTop10ByBnoOrderByBnoDesc
+	@Query			쿼리문 작성하기
+					@Query("SELECT * FROM jpaboard ORDER BY bno DESC LIMIT 0, 10")
+					List<Member> findTop10ByBnoOrderByBnoDesc
+					
+					@Query("SELECT * FROM jpaboard WHERE mname = :mname")
+					List<Member> findByMname(@param("mname") String mname)
+					
+	 */
+
+	
 
 	/*
 	 * public void liekUp(int bno) { Optional<Board> detail =
@@ -190,5 +224,31 @@ public class BoardService {
 		} else {
 			return 0;
 		}
+	}
+
+	public Optional<CommentDTO> updateComm(int cno) { // 댓글 수정화면으로 데이터 붙이기 
+		Optional<CommentDTO> comment = Optional.ofNullable(null);
+		if (jpaCommentRepository.existsById(cno)) {
+			Optional<Comment> comm = jpaCommentRepository.findById(cno);
+			if(comm.isPresent() && util.getId().equals(comm.get().getMember().getMid())) {
+				CommentDTO dto = convertService.entityToCommentDTO(comm.get());				
+				// converter사용합니다. 해당 서비스 가서 수정해야 합니다.
+				String reText = (dto.getCcomment()).replaceAll("<br>", "\r\n");
+				dto.setCcomment(reText);
+				comment = Optional.of(dto);
+			}
+		}		
+		return comment;
+	}
+	
+	@Transactional
+	public void updateComm(CommentDTO dto) { // 사용자가 댓글을 수정하고 DB에 저장하기 직전
+		// 변환작업
+		 Optional<Comment> comment = jpaCommentRepository.findById(dto.getCno());
+		// 위 updatPost보시면 됩니다.
+		 // 단, <br>작업도 해주셔야 합니다.
+		 Comment data = comment.get();
+		 data.setCcomment(dto.getCcomment().replaceAll("\r\n", "<br>"));
+		 //리턴이 없습니다. 
 	}
 }

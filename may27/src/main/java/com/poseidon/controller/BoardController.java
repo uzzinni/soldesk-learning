@@ -5,12 +5,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.json.simple.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -29,14 +31,54 @@ public class BoardController {
 	private final BoardService boardService;
 	private final Util util;
 	
+	// 댓글 좋아요 올리기
+	@Secured("ROLE_USER")
+	@PostMapping("/clike")
+	public @ResponseBody String clike(@RequestBody int no) {
+		JSONObject json = new JSONObject();
+		json.put("result", "1");
+		System.out.println(no);
+		
+		return json.toJSONString();
+	}
+	
+	
+	@Secured("ROLE_USER")
+	@PostMapping("/updateComm")
+	public String updateComm(CommentDTO dto) {
+		System.out.println(dto);
+		//CommentDTO(cno=39, bno=87, ccomment=1234567, name=null, cdate=null, clike=0, ip=null, id=null, pageNo=5)
+		boardService.updateComm(dto);
+		//페이지 이동도 만들어 주세요.
+		return "redirect:/detail?bno="+dto.getBno()+"&pageNo="+dto.getPageNo();
+		
+	}
+/*
+ * 오버라이드 오버라이딩         오버로드 오버로딩
+같은 이름의 메소드를 파라미터만 다르게 하여 여러개 만들어 주는 기술 : 
+부모에 만들어진 메소드를 자식 클래스에서 재정의해서 사용하는 기술   : @Override
+*/	
+	
+	
+	
 	@Secured("ROLE_USER")
 	@GetMapping("/updateComm")
 	public String updateComm(@RequestParam("cno") int cno, @RequestParam("bno") int bno, 
 			@RequestParam("pageNo") int pageNo, Model model) {
-		System.out.println(cno);
-		System.out.println(bno);
-		System.out.println(pageNo);
-		return "redirect:/detail?bno="+bno+"&pageNo="+pageNo;
+		//1. 새로운 페이지에 댓글 수정을 만들어주기
+		//		1. 데이터베이스에 물어보기 -> Dto -> updatecomm.html 화면에 출력하기
+		Optional<CommentDTO> dto = boardService.updateComm(cno);
+		if (dto.isPresent()){
+			//모델에 담기
+			//pageNo도 dto에 담아주겠습니다.
+			dto.get().setPageNo(pageNo);
+			model.addAttribute("dto", dto.get());
+			return "updatecomm";
+		} else {
+			return "error";
+		}
+		//2. 상세보기 화면에서 댓글 수정을 하기
+		//return "redirect:/detail?bno="+bno+"&pageNo="+pageNo;
 	}
 	
 	
@@ -216,7 +258,7 @@ public class BoardController {
 		if (dto.getCno() < 0) { // 임시
 			return "error";
 		}
-		return "redirect:/detail?bno=" + commentRequest.getBno() + "&pageNo=1";// 여기가 잘못 됨
+		return "redirect:/detail?bno=" + commentRequest.getBno() + "&pageNo="+commentRequest.getPageNo();
 	}
 
 }

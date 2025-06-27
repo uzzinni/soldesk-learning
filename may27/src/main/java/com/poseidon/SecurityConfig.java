@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -24,7 +25,7 @@ public class SecurityConfig {
 	private static final String[] SOURCE_LIST = { "/img/**", "/css/**", "/js/**", "/summernote/**"};
 	// 로그인 한 사용자
 	private static final String[] USER_LIST = { "/write", "/info", "/logout", "/comment", 
-													"/deletePost", "/deleteComm", "/update", "/updateComm" };
+													"/deletePost", "/deleteComm", "/update", "/updateComm", "/clike" };
 	// 로그인 한 관리자
 	private static final String[] ADMIN_LIST = { "/admin/**" }; 
 
@@ -53,8 +54,8 @@ public class SecurityConfig {
 		// .permitAll() // 로그인 한 사용자만 들어오게 변경
 		);
 		
-		// 세션관리 정책 // 세션 안 만듬
-		//http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+		// 세션관리 정책 // STATELESS 세션 안 만듬 --- JWT
+		// http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 		
 		// CSRF
 		http.csrf(auth -> auth.disable());

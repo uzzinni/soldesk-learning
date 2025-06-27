@@ -1,0 +1,25 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/defaultLayout}" layout:fragment="content">
+<head>
+<head>
+<title layout:fragment="title">댓글 수정하기</title>
+<script type="text/javascript" src="//code.jquery.com/jquery-3.6.0.min.js"></script>
+<link href="summernote/summernote-bs5.css" rel="stylesheet">
+<script src="summernote/summernote-bs5.js"></script>
+<script src="summernote/summernote-ko-KR.js"></script>
+</head>
+<body>
+	<div>
+		<h1>댓글 수정하기</h1>
+		<form class="form-control" action="/updateComm" method="post">
+			<textarea class="form-control" name="ccomment">[[${dto.ccomment}]]</textarea>
+			<input type="hidden" name="cno" th:value="${dto.cno}">
+			<input type="hidden" name="bno" th:value="${dto.bno}">
+			<input type="hidden" name="pageNo" th:value="${dto.pageNo}">
+			<button class="btn btn-info mt-3" type="submit">댓글 수정하기</button>
+		</form>
+	</div>
+</body>
+</html>
