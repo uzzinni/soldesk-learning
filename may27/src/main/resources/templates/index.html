@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" 
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{common/defaultLayout}"
       layout:fragment="content"
@@ -20,7 +21,13 @@
 			<button class="btn btn-success" onclick="location.href='/main'">main</button>
 			
 			<h1>[[${ip}]]</h1>
-			
+			<div sec:authorize="isAuthenticated()">
+				사용자 닉네임: <span th:text="${#authentication.principal.username}"></span>
+				<br>
+				사용자 아이디: <span th:text="${#authentication.principal.ID}"></span>
+				오늘 할 것 : 댓글 // 모달 // ajax 글 삭제, 글 아래 수정나타나게 하기
+				제가 할 것 : H2변경 / AOP / 
+			</div>
 		</div>
 	</body>
 </html>

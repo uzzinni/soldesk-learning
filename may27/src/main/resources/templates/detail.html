@@ -227,12 +227,91 @@ document.addEventListener('DOMContentLoaded', function() {
 	
 	// post 수정하기
 	$(document).ready(function(){
+		//글 수정하기
 		$("#updateBtn").click(function(){
 			if(confirm("내용을 수정하시겠습니까?")){
 				location.href="update?bno=[[${detail.board_no}]]&pageNo=[[${pageNo}]]"
 			}
-		});		
-	});
+		});	// 끝
+		
+		// 댓글 수정하기 updateComm
+		$(".updateComm").click(function(){
+			
+		
+			//alert($(this).data('cno')); // data-cno=43
+			const cno = $(this).data('cno');
+			//댓글 내용 가져오기 parent()바로 위 부모 찾아가기 
+			//alert(        $(this).parent().text()         );
+			
+			//closest함수는 모든 부모 요소를 대상으로하여 원하는 요소만 선택자로 가져올 수 있습니다. 
+			//alert(        $(this).closest('.row').text()         );
+			//alert(        $(this).closest('.row').next().text()         );
+			
+			//children()을 사용, 자식 및 하위 태그 모두에서 찾을 때는 find()를 사용
+			//alert(        $(this).closest('.row').next().children().html()         ); //우리가 원하는 값. = 댓글 내용
+			let comm = $(this).closest('.row').next().children().html();
+			//alert("댓글 내용 : " + comm);
+			// div 잡기
+			let div = $(this).closest('.row').next(); // 댓글 입장에서 부모의 부모
+			div.children().remove(); // 댓글의 부모
+			//글쓰기 창 만들기
+			let recommBox = '<div class="col">'
+			recommBox += '<textarea class="m-0 p-0 recommentTA" id="comment">'+comm+'</textarea>';
+			recommBox += '<button class="btn btn-info recommentBtn" data-cno='+cno+'>댓글 수정하기</button>';
+			recommBox += '</div>';
+			
+			// updateComm 모든 버튼 숨기기 : 이건 댓글 변수 만들기 위로 올려주시면 좋습니다.
+			// 삭제 버튼도 숨기기 => class 명이 없습니다. 만들고 작업하셔야 합니다.
+			$("#commentInsertBtn").hide(); // 댓글쓰기도 막기
+			$(".updateComm").hide(); // 다른 동작 막기
+			
+			div.append(recommBox); // div의 자식 추가 
+		}); //댓글 수정하기 창
+		
+		// 사용자가 댓글을 모두 수정하고 .recommentBtn를 눌렀을 때 동작.
+		//$(".recommentBtn").click(function(){ 이 형태를 사용할 수 없습니다 = 동적으로 생성된 선택자를 사용할 수 없습니다.
+		$(document).on('click', '.recommentBtn', function(){ // 동적 생성시 이렇게 사용해보겠습니다.
+			//alert("댓글 수정하기를 눌렀습니다.");
+			// 수정된 댓글 내용 가져오기 .prev() 선택한 요소의 바로 이전에 위치한 형제 요소를 선택한다.
+			//alert("댓글 : " + $(this).prev().val()   );
+			const comm = $(this).prev().val();
+			// cno값은 어떻게 ?
+			const cno = $(this).data('cno');
+			//alert("가져온 내용 : " + cno + " / " + comm);
+			let div = $(this).parents(".row");
+			//div.children().remove(); // class="col"
+			//ajax 전송 -> 서버 -> 저장 -> 화면내용 수정하기
+			$.ajax({
+				url  : "/recomment",
+				type : "post",
+				data : {cno : cno, comm : comm},
+				dataType : "json",
+				success : function(data){
+					if(data.result == 1){						
+						//alert("통신 성공 : " + data.result);
+						//화면바꾸기
+						div.children().remove();
+						//<div class="col" th:utext="${row.ccomment}"></div>
+						div.append('<div class="col">'+comm+'</div>');
+						
+						//숨김 했던 버튼들 다시 보이기
+						$("#commentInsertBtn").show();
+						$(".updateComm").show();
+						
+					} else {
+						alert("수정하지 못했습니다");
+					}
+					
+				},
+				error : function(error){
+					alert("에러가 발생했습니다 : " + error);
+				}
+			});
+			
+
+		});
+		
+	}); // jquery 끝
 	
 	function clike(no, element){
 	      //alert(no + "번을 클릭했습니다.");
@@ -309,10 +388,13 @@ document.addEventListener('DOMContentLoaded', function() {
 						<th:block class="col" sec:authorize="isAuthenticated()" th:if="${#authentication.principal.ID eq row.id}">
 							<!-- 로그인 사용자인지 검사하기, row.id와 로그인 정보가 같은지 검사하기 -->
 							<!-- [[${#authentication.principal.ID}]] // [[${row.id}]] -->
-							<button class="btn btn-outline-primary btn-sm" th:onclick="updateComm([[${row.cno}]])">수정</button>
+							<!-- <button class="btn btn-outline-primary btn-sm" th:onclick="updateComm([[${row.cno}]])">수정</button> -->
+							<!-- html data 속성 : html5에 추가, 커스텀 데이터 속성 data-단어="값" 숨김속성. -->
+							<button class="btn btn-outline-primary btn-sm updateComm" th:attr="data-cno=${row.cno}">수정</button>
 							<button class="btn btn-outline-danger btn-sm" th:onclick="deleteComm([[${row.cno}]])">삭제</button>
 						</th:block>
-						[[${row.name}]]님 / [[${row.ip}]]</div>
+						[[${row.name}]]님 / [[${row.ip}]]
+					</div>
 					<div class="col row">
 						<div class="col text-end clike" th:onclick="clike([[${row.cno}]], this)">[[${row.clike}]]</div>
 						<div class="col text-end">
@@ -340,5 +422,38 @@ document.addEventListener('DOMContentLoaded', function() {
 		</div>
 
 	</div>
+	
+	
+	
+	
+	
+	<!-- Modal 
+	$('#staticBackdrop').modal('show');
+	$('#staticBackdrop').modal('hide');
+	https://getbootstrap.com/docs/5.3/components/modal/#dismiss
+	 -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/comment" method="post">
+				<input type="hidden" name="bno" th:value="${detail.board_no}">
+				<input type="hidden" name="pageNo" th:value="${pageNo}">
+				<textarea name="comment" id="comment"></textarea>
+				<button type="submit" class="btn btn-info" id="commentbtn">댓글쓰기</button>
+		</form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>

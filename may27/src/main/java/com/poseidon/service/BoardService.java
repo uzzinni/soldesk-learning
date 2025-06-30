@@ -251,4 +251,19 @@ public class BoardService {
 		 data.setCcomment(dto.getCcomment().replaceAll("\r\n", "<br>"));
 		 //리턴이 없습니다. 
 	}
+	
+	@Transactional
+	public int recomment(int cno, String comm) {
+		int result = 0;
+		 
+		try {
+			Optional<Comment> comment = jpaCommentRepository.findByCno(cno);
+			Comment data = comment.get();			
+			data.setCcomment(comm.replaceAll("\r\n", "<br>"));
+			result = 1;
+		} catch (Exception e) {
+			
+		}		 
+		return result;
+	}
 }

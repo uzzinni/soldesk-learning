@@ -31,6 +31,21 @@ public class BoardController {
 	private final BoardService boardService;
 	private final Util util;
 	
+	// 댓글 수정하기
+	@Secured("ROLE_USER")
+	@PostMapping("/recomment")
+	public @ResponseBody String recomment(@RequestParam("comm") String comm, @RequestParam("cno") int cno) {
+		//System.out.println(comm);
+		//System.out.println(cno);
+		
+		int result = boardService.recomment(cno, comm);
+		
+		JSONObject json = new JSONObject();
+		json.put("result", result);
+		
+		return json.toJSONString(); // { result : 0 }
+	}
+	
 	// 댓글 좋아요 올리기
 	@Secured("ROLE_USER")
 	@PostMapping("/clike")

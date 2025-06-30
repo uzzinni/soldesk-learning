@@ -16,6 +16,14 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Component
 public class Util {
+	
+	//url가져오기
+	public String getURL() {
+		HttpServletRequest hsr = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+		return hsr.getRequestURI();  // /login   /board
+	}
+	
+	
 	public String ipMasking(String ip) {
 		String[] ipArr = getIP().split("[.]");
 		return ipArr[0]+".❤️."+ipArr[2]+"."+ipArr[3];
